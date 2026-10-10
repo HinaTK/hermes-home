@@ -6,7 +6,7 @@ Do not treat AH_analyse plans as cross-session memory. Within a session, follow 
 §
 When the user scopes a conversation to one product path, stay on that path until they change it; do not bring back other pipelines unprompted.
 §
-用户使用银河证券，自报佣金万分之一；是否适用于ETF及是否每笔最低5元尚未确认。
+用户要求ETF研究去重：research每次刷新全合格池、统一回测并重排；weekly仅调用研究结果、报告和维护连续周观察，不保留独立日线排名或小主题池。用户也通过港股通持有个股，关注ETF交易与底层港股税费的区别。
 §
 用户明确网格目标：可容忍短期底仓下跌，优先关注反复成交的净差价、资金周转与持续交易能力；不希望以短期浮亏或站上均线作为否决网格的主要依据。此前约20%回撤预算未明确取消。
 §
