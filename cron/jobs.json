@@ -233,7 +233,52 @@
       "enabled_toolsets": null,
       "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
       "fire_claim": null
+    },
+    {
+      "id": "e43e01e62fcc",
+      "name": "git 每日检查与推送",
+      "prompt": "每日 23:00 自动检查 git 状态并推送。\n\n运行脚本：python \"D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\git_daily_push.py\"\n\n该脚本会：\n1. git fetch origin\n2. git status --porcelain 检查本地变更\n3. 有变更则 git add -A + git commit \"[auto] daily push <date>\"\n4. git pull --rebase origin main（如有落后）\n5. git push origin main\n6. 输出简洁摘要\n\n如果有变更，自动提交并推送；如果 clean 且远端有更新，先 pull 再 push；如果推送被拒绝（non-fast-forward），输出错误并退出，不自动处理。",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "git_daily_push.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 23 * * *",
+        "display": "every day at 11pm"
+      },
+      "schedule_display": "every day at 11pm",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-10T15:51:35.652537+08:00",
+      "next_run_at": "2026-10-10T23:00:00+08:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": [
+        "terminal"
+      ],
+      "workdir": "D:\\Code\\AH_analyse"
     }
   ],
-  "updated_at": "2026-10-09T23:50:10.897619+08:00"
+  "updated_at": "2026-10-10T15:51:35.663822+08:00"
 }

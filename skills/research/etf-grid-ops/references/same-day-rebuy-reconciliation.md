@@ -1,0 +1,11 @@
+# Same-day rebuy after an ETF grid sell
+
+Reusable verification recipe; numerical illustration is a historical fixture, not a live instruction.
+
+1. Assert an exact, unique matching pending buy (code, side, lot, quantity, actual execution price), an outstanding rebuy obligation, and no duplicate booking in history. Never apply a multi-action ticket wholesale.
+2. Deduct `qty × actual price + provisional buy fee` from ledger cash. Add an identifiable rebuy lot with `bought=today`, `available_from=next trading session`, and sell target rounded from its actual buy price; clear only the matching rebuy obligation. Cash floor and per-ETF invested cap must still hold. Other orders remain unfilled.
+3. Re-evaluate the minimum target among remaining positive lots. The newly bought lot is not itself sellable today, but older T+1 shares may cover its *target sell order*. Check the total sell reservations in the broker, not just one row at a time. Replace a farther sell recommendation only after checking/cancelling any real old broker order; deleting a ticket row is NOT a broker cancellation.
+4. Refresh the pending ticket: keep lower pre-staged buys and other ETF actions; remove the now-filled rebuy and superseded sell suggestion. Mark new rows `suggested_not_broker_verified`; never call a proposal an already-resting order. Simulate refresh with a temporary ticket path before writing; verify history has one new fill, T+1 available pool excludes today's buy, and active ticket contains no duplicate/overcommitted sell.
+5. Day-high/low extrema include pre-rebuy prints. They cannot prove the replacement sell was touched after creation, nor can they detect a repeat touch at the same daily extreme; rely on timestamped intraday evidence or a fresh spot crossing, and ask the user to inspect broker fills.
+
+Historical test fixture (2026-09-29): 159992 sold C 9,400 @ 0.863, then bought back 9,400 @ 0.846. With *provisional* ¥5 buy fee, cash decreases ¥7,957.40 on rebuy; 27,700 total shares, 18,300 eligible that day. C target 9,400 @ 0.863 and B target 9,200 @ 0.880 would reserve 18,600 > 18,300, so only the nearer C suggestion can be active after reconciliation. The already-staged D buy 9,600 @ 0.829 is preserved. These are historical values and must be recomputed from the current ledger and actual broker orders.

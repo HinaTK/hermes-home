@@ -73,6 +73,15 @@ kanban/
 desktop-ui.sqlite
 .mcp-tokens/
 
+# ── Lock files / runtime state ───────────────────────────────────────────
+*.lock
+*.etag
+gateway-starts.log
+state.db.fts_rebuild.lock
+state.db.quarantine.lock
+kanban.db.dispatch.lock
+kanban.db.init.lock
+
 # ── Cron runtime ─────────────────────────────────────────────────────────
 cron/output/
 cron/.fire-*.lock
@@ -133,5 +142,4 @@ NUL
 
 # ── Skills store lock ────────────────────────────────────────────────────
 skills/.skills_store_lock.json
-skills/@user_*/
 skills/*/backup/
