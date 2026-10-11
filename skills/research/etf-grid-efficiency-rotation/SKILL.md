@@ -45,7 +45,11 @@ For each active ETF, use the local confirmed-fill ledger and confirmed current-s
 4. If fewer than 20 confirmed sessions exist, the last bar is not a confirmed close, dates are duplicated/out of order, or the quote is stale, return DATA_INSUFFICIENT. Do not infer low volatility.
 5. Keep this review ahead of any optional rebasing discussion. If an ETF is in an authorized exit-only migration, migration policy takes precedence over rebasing or rebuys.
 
-## Weekly same-class comparison
+## Weekly per-holding dual-track comparison (2026-10-11)
+
+最新用户授权以逐持仓双轨替代旧全局589720门槛：159363与589720各自作为基准，159992保持exit-only。以下旧same-class与single-baseline段落仅作历史解释，不能据此继续用589720挡住替换159363的候选。实施与验证遵循 `references/per-holding-pair-review.md`；正式同类/跨题材信号只消费官方已核taxonomy，未知分类仅观察。新pair连续周不继承旧global streak，数据降级仍显示完整候选比较但不推进复核。
+
+## Historical weekly same-class comparison
 
 1. Freeze the portfolio baseline first. For the current authorized migration, 589720 is the innovation-drug baseline replacing 159992; 159992 remains exit-only.
 2. **The candidate pool must include every live holding, not just same-class peers.** A hardcoded theme list that omits currently-held ETFs (e.g. 159363 创业板人工智能, 159992 创新药) silently drops them from the ranking and makes the report look as if they don't exist. Always maintain a `HOLDINGS` list — current positions that are fetched, simulated, and reported regardless of which theme bucket they fall into. Holdings are shown for reference and never trigger a switch review on their own.
@@ -92,6 +96,12 @@ For a staged migration:
 - target ETF: remain research-only until old orders, fills/cancellations, frozen funds, available cash, quote timestamp, spread/premium/discount, and shared cost cap are reconciled;
 - unaffected ETF: retain its existing policy;
 - account capital, grid gap, per-name/group caps, lot budgets, and cash floor remain unchanged unless explicitly authorized.
+
+## Pair comparison presentation (user correction)
+
+When presenting same-class or cross-theme priority candidates, show each candidate **alongside its own holding baseline**, not candidate counts alone or a separate holdings section. Required row: route; holding code/name → candidate code/name; full-window completed cycles holding → candidate; signed absolute cycle gap; recent20 cycles holding → candidate; signed recent gap. Compute gaps from the exact saved run in code. State the shared window and simulation-vs-confirmed-fill basis. If recent counts tie, say so explicitly: midterm leadership is not recent cycle-count superiority. Priority also considers capital efficiency, so distinguish count leadership from satisfying the full rule. Include retained-holding overlap warnings and coverage/valid-week status; a large cross-theme cycle advantage does not itself justify concentrating the portfolio. The same comparison format belongs in both chat summaries and generated weekly reports; a report with numbers scattered across separate sections is not sufficient.
+
+See `references/pair-comparison-reporting-and-validation.md` for the comparison template and taxonomy/state regression checks.
 
 ## Evidence and reporting
 

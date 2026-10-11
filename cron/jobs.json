@@ -186,7 +186,7 @@
     {
       "id": "5d8180a8d025",
       "name": "网格每周统一research重排与轮换复核",
-      "prompt": "周五15:25执行 grid_weekly_rotation.py 薄入口：仅调用 D:/Code/AH_analyse/tools/etf_research/research.py 的统一研究链路，刷新历史资格快照全321只ETF及全部当前持仓的5分钟数据，使用共同最近63个已收盘交易日、2%网格、T+1、万一最低1元佣金和滑点模型重新排名。不得另跑日线排名或固定小主题池。weekly只报告往返/净差价/资金效率与第三ETF互补视图、维护方法版本隔离的连续周状态；同候选连续两个不同周领先只触发人工复核，不自动买入/换仓/撤单/记成交。数据失败、排除及覆盖降级须明确，不可把旧缓存或模拟结果称实际成交。159992→589720授权迁移、159363持仓及真实账本/资金参数均不改变。休市或收盘未确认返回非执行说明。",
+      "prompt": "周五15:25执行 grid_weekly_rotation.py 薄入口：仅调用 D:/Code/AH_analyse/tools/etf_research 的统一research全历史资格快照池滚动63日5分钟研究一次。weekly消费同套full/early/late/recent20结果，159363与589720逐持仓双轨（官方已核同指数/同题材优化、跨题材轮换）分别比较；159992退出模式不建立新替换线。中期往返及单位平均占用成本净差价严格领先且近期两项不落后才priority，中期领先近期落后仅观察；未知分类仅待核。临时名称港股/恒生/H股过滤在报告披露且不改生产池。按持仓/候选/路线新版本独立连续周信号；相邻两个有效周仅触发人工复核，数据缺口只展示比较不推进，非生产验证不得读写生产信号。报告包含候选名称、近期/中期往返与效率、半段稳定性、库存占用和保留持仓相关性。禁止自动下单撤单、改账本或迁移配置；策略仍2%、账户10万，交易授权以用户实际确认独立核验。原调度原飞书渠道不变。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -259,16 +259,16 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 0
+        "completed": 1
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-11T23:00:00+08:00",
-      "last_run_at": null,
-      "last_status": null,
+      "next_run_at": "2026-10-12T23:00:00+08:00",
+      "last_run_at": "2026-10-10T23:00:24.629559+08:00",
+      "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
       "failure_streak": 0,
@@ -279,10 +279,10 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-10T23:00:11.588084+08:00",
-        "by": "MS-22110429259:37804:bad1a9eb52a64b5baa59ac2dd4173604"
+        "at": "2026-10-11T23:00:10.678879+08:00",
+        "by": "MS-22110429259:65084:bc134e890d9f47308997a786b471faf4"
       }
     }
   ],
-  "updated_at": "2026-10-10T23:00:11.590309+08:00"
+  "updated_at": "2026-10-11T23:00:10.680960+08:00"
 }
