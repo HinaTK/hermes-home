@@ -85,7 +85,7 @@ def main():
     if session_phase(now) != "execute":
         return
     hhmm = now.hour * 100 + now.minute
-    if hhmm < 935 or hhmm > 1457:
+    if hhmm < 900 or hhmm > 1500:
         return
     quotes = fetch_quotes()
     if not quotes or not quotes_are_live(quotes, now):

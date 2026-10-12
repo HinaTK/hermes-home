@@ -80,9 +80,17 @@ def main():
     book = load()
     if args.result:
         book, ticket = apply(book, args.result, today())
-        print(render(book, ticket))
-        print("")
         print(f"已记账：{args.result}")
+        print("")
+        # Re-plan immediately so the next grid suggestion is available now,
+        # not after the next cron tick.
+        quotes = fetch_quotes()
+        live = quotes_are_live(quotes, now) if quotes else False
+        if quotes and (phase != "execute" or live):
+            next_ticket = plan(book, quotes, today(), phase=phase, live=live)
+            print(render(book, next_ticket))
+        else:
+            print(render(book, ticket))
         return
     quotes = fetch_quotes()
     if not quotes:

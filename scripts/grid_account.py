@@ -25,7 +25,7 @@ INIT_CASH = 100_000.0
 CAP = {"sz159992": 40_000.0, "sz159363": 40_000.0, "sh589720": 40_000.0}
 TOTAL_CAP = 80_000.0
 CASH_FLOOR = 0.0
-GAP = 0.02
+GAP = 0.015
 LOT_BUDGET = {"sz159992": 8_000.0, "sz159363": 6_000.0, "sh589720": 8_000.0}
 # Preserve one original build lot as participation inventory in a one-way rise.
 # This is a total-share floor, not a particular tax lot or a broker-side restriction.
@@ -256,13 +256,14 @@ def next_sell_lot(pos, d, code=None):
     if policy and code == policy["source"] and policy.get("release_source_core"):
         core = 0
     capacity = max(0, int(pos["qty"]) - core) if code else int(pos["qty"])
-    eligible = [lot for lot in pos.get("lots", []) if 0 < lot["qty"] <= capacity]
-    # Among eligible lots, pick the one whose sell price is lowest AND whose
-    # qty does not exceed the pooled T+1 balance.  A lot with a lower sell
-    # price but more shares than we can actually sell is not actionable.
+    eligible = [lot for lot in pos.get("lots", []) if 0 < lot["qty"] <= capacity
+                 and lot.get("available_from", "9999-99-99") <= d.isoformat()]
     sellable = available(pos, d)
     actionable = [lot for lot in eligible if int(lot["qty"]) <= sellable]
-    return min(actionable, key=lambda x: (x["sell"], x["price"])) if actionable else None
+    if not actionable:
+        return None
+    # Lowest sell price first; ties broken by oldest settled lot.
+    return min(actionable, key=lambda x: (x["sell"], x["bought"]))
 
 
 def next_lot_id(pos) -> str:
@@ -464,6 +465,10 @@ def plan(book, quotes, d=None, phase="execute", live=True):
                 }
             )
             notes.append(f"{NAMES[code]} 挂卖{top['id']}格{top['qty']} 限价{top['sell']}")
+        # A pending rebuy already occupies the single buy slot for this ETF;
+        # do not stage additional down-grid buys on the same ticket.
+        if rebuy:
+            continue
         if working:
             # Do not impose a calendar-day one-grid cap. If price has crossed
             # several lower levels, stage each crossed level, subject to the
@@ -591,12 +596,21 @@ def apply(book, result: str, d=None):
             if remaining:
                 raise ValueError("可卖库存分配失败，未入账")
 
-            # 2) cost_cash = net invested: total buy costs minus total sell
+            # 2) The target lot's qty is consumed too.  A grid sell means
+            #    that level is done; leaving its qty nonzero lets plan()
+            #    re-issue the same sell on the next run.
+            target_lot_id = act.get("lot")
+            for lot in pos["lots"]:
+                if lot["id"] == target_lot_id:
+                    lot["qty"] = max(0, int(lot["qty"]) - qty)
+                    break
+
+            # 3) cost_cash = net invested: total buy costs minus total sell
             #    proceeds.  This matches the user's cost basis model, where
             #    a sell does not reduce the cost basis of remaining shares.
             pos["cost_cash"] = round(pos["cost_cash"] - proceeds, 2)
 
-            # 3) pos['qty'] must equal sum of lot qtys.
+            # 4) pos['qty'] must equal sum of lot qtys.
             sync_qty(pos)
 
             if not exiting:

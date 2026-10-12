@@ -44,8 +44,12 @@ def assess(code: str, book: dict, bars: list[dict], day: date) -> dict:
     close = closes[-1]
     policy = migration_policy()
     if policy and code == policy["source"]:
+        target_enabled = (policy.get("target_buy_enabled")
+                          and policy.get("target_buy_authorized_by_user"))
+        target_note = ("589720已启用自动买入/卖出" if target_enabled
+                       else "589720迁入尚未启用")
         return {"state": "MIGRATION_EXIT", "executable": False, "close": close,
-                "reason": "迁移退出：停止新增买入/接回；旧委托待核对，589720迁入尚未启用"}
+                "reason": f"迁移退出：停止新增买入/接回；旧委托待核对，{target_note}"}
     result = {"state": "HOLD_GRID", "executable": False, "close": close,
               "reason": "原2%网格保持，不追涨；有持仓继续按既有目标卖出，卖后按实际成交价接回"}
     pos = book["positions"][code]
@@ -125,7 +129,11 @@ def next_day_note(report: dict, day: date, phase: str) -> str:
     for code, item in report.get("decisions", {}).items():
         policy = migration_policy()
         if policy and code == policy["source"]:
-            lines.append(f"{NAMES[code]}：迁移退出；停买/停接回，旧委托待核对，589720迁入尚未启用。")
+            target_enabled = (policy.get("target_buy_enabled")
+                              and policy.get("target_buy_authorized_by_user"))
+            target_note = ("589720已启用自动买入/卖出" if target_enabled
+                           else "589720迁入尚未启用")
+            lines.append(f"{NAMES[code]}：迁移退出；停买/停接回，旧委托待核对，{target_note}。")
             continue
         state = item["state"]
         label = {"REVIEW_REBASE": "低库存上移候选", "WAIT_PULLBACK": "过热等回踩", "HOLD_GRID": "维持原网格", "ROTATION_REVIEW": "网格效率预警，研究替代"}.get(state, "数据不足")

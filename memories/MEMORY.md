@@ -2,8 +2,6 @@ SkillHub CN CLI 已装在本机：skillhub 2026.8.5，包装脚本 C:/Users/Admi
 §
 A-share cash auction 09:15–09:25, continuous 09:30. Grid ops must not lock limit prices at 09:10 (usually prev close). Scripts: hermes-home/scripts/grid_weixin_preview.py and grid_weixin_execute.py wrapping grid_weixin_ops.py --phase preview|execute. Execute falls back to preview if Tencent quote time is before 09:30 same day.
 §
-网格卖单排序纠错（2026-09-28）：同一ETF存在多个已到T+1可卖网格时，必须按卖出目标价从低到高、优先最近一格卖出，以提高往返成交和资金周转；不能用 max(sell) 选择最高价的远端A格。159992当时应卖C格9400@0.863，而不是A格9100@0.888；159363应卖B格4700@1.298，而不是A格4600@1.306。生成操作单前必须检查：当天新买不可卖、旧卖单需先核对是否成交/撤单，不能重复挂卖；挂单不等于成交。
-§
 网格关键规则（2026-09-28用户明确）：网格卖出不按买入lot绑定；同一ETF应维护“总可卖库存池”，只要T+1可卖库存足够，就可以用较早A/B格可卖份额为最新下跌格配置对应数量的+2%卖单。优先资金周转：159363 D格5100@1.169成交后，应撤/不保留远端B格4700@1.298，改挂D格5100@1.192；不能同时占用超过总可卖库存。默认采用方案A（最近成交格优先），卖出后按实际卖出数量生成对应接回价。
 §
 网格账本与操作单不能把“D格买入当日不可卖”误解为“D格对应卖价不可挂”：卖价可立即挂在A/B的T+1可卖库存上，只要可卖池覆盖数量；只有当日新买的D份额本身不能作为可卖库存。用户目标是反复成交净差价和资金周转，不能机械等待新lot T+1。
