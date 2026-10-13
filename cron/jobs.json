@@ -25,15 +25,15 @@
       "schedule_display": "weekdays at 9:10am",
       "repeat": {
         "times": null,
-        "completed": 16
+        "completed": 17
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:39:09.001076+08:00",
-      "next_run_at": "2026-10-13T09:10:00+08:00",
-      "last_run_at": "2026-10-12T09:10:28.540888+08:00",
+      "next_run_at": "2026-10-14T09:10:00+08:00",
+      "last_run_at": "2026-10-13T09:10:09.582018+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -73,15 +73,15 @@
       "schedule_display": "weekdays at 9:31am",
       "repeat": {
         "times": null,
-        "completed": 16
+        "completed": 17
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T15:28:08.339160+08:00",
-      "next_run_at": "2026-10-13T09:31:00+08:00",
-      "last_run_at": "2026-10-12T09:31:35.779482+08:00",
+      "next_run_at": "2026-10-14T09:31:00+08:00",
+      "last_run_at": "2026-10-13T09:31:16.255263+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 2958
+        "completed": 4379
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-12T23:01:00+08:00",
-      "last_run_at": "2026-10-12T23:00:49.350523+08:00",
+      "next_run_at": "2026-10-13T23:01:00+08:00",
+      "last_run_at": "2026-10-13T23:00:33.761185+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -161,15 +161,15 @@
       "schedule_display": "weekdays at 3:20pm",
       "repeat": {
         "times": null,
-        "completed": 10
+        "completed": 11
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-29T13:42:38.404710+08:00",
-      "next_run_at": "2026-10-13T15:20:00+08:00",
-      "last_run_at": "2026-10-12T15:21:01.017465+08:00",
+      "next_run_at": "2026-10-14T15:20:00+08:00",
+      "last_run_at": "2026-10-13T15:20:41.916070+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 2
+        "completed": 3
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-13T23:00:00+08:00",
-      "last_run_at": "2026-10-11T23:00:22.105207+08:00",
+      "next_run_at": "2026-10-14T23:00:00+08:00",
+      "last_run_at": "2026-10-12T23:00:59.809462+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,10 +279,53 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-12T23:00:47.701489+08:00",
-        "by": "MS-22110429259:35880:72943cae69e04561bff55522e87f59ee"
+        "at": "2026-10-13T23:00:31.278222+08:00",
+        "by": "MS-22110429259:35880:8f603a6b21f14ac8b07d7ba4a72dcb5d"
       }
+    },
+    {
+      "id": "ed9d5c85e0c4",
+      "name": "网格00:01持久化可卖份额同步",
+      "prompt": "每天北京时间00:01运行grid_midnight_rollover.py，从用户确认的589720交易列表重算持仓，将sellable_qty设为qty并持久化；不读旧票据，不更改其他ETF、不下单。",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "grid_midnight_rollover.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "1 0 * * *",
+        "display": "1 0 * * *"
+      },
+      "schedule_display": "1 0 * * *",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-13T19:58:55.899046+08:00",
+      "next_run_at": "2026-10-14T00:01:00+08:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "local",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home"
     }
   ],
-  "updated_at": "2026-10-12T23:00:49.358815+08:00"
+  "updated_at": "2026-10-13T23:00:33.763873+08:00"
 }

@@ -23,7 +23,7 @@ INIT_CASH = 100_000.0
 # 2026-10-08 用户授权从创新药迁移组合挪6,000元给159363：
 # 159992+589720共享40,000元，159363上限40,000元。
 CAP = {"sz159992": 40_000.0, "sz159363": 40_000.0, "sh589720": 40_000.0}
-TOTAL_CAP = 80_000.0
+TOTAL_CAP = 100_000.0
 CASH_FLOOR = 0.0
 GAP = 0.015
 LOT_BUDGET = {"sz159992": 8_000.0, "sz159363": 6_000.0, "sh589720": 8_000.0}
@@ -114,6 +114,28 @@ def migrate(book):
     return book
 
 
+def daily_recompute(book, d=None):
+    """Recompute sellable quantities from the trade list every day 00:01.
+
+    Each lot's available_from is re-derived from its own buy date in history,
+    so a sellable share count is never stale after a day boundary.  Lot ids,
+    prices and qtys are preserved; only available_from is refreshed.
+    """
+    d = d or today()
+    changed = False
+    for code, pos in book.get("positions", {}).items():
+        for lot in pos.get("lots", []):
+            bought = datetime.fromisoformat(lot["bought"]).date()
+            expected = next_session(bought).isoformat()
+            if lot.get("available_from") != expected:
+                lot["available_from"] = expected
+                changed = True
+        sync_qty(pos)
+    if changed:
+        save(book)
+    return book
+
+
 def save(book):
     ROOT.mkdir(parents=True, exist_ok=True)
     LEDGER.write_text(json.dumps(book, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -181,6 +203,222 @@ def sync_qty(pos) -> int:
     total = sum(int(lot["qty"]) for lot in pos.get("lots", []))
     pos["qty"] = total
     return total
+
+
+def max_lot_id(pos) -> str | None:
+    """Highest grid letter among lots that still hold shares.
+
+    A completed sell zeroes a lot's qty and drops the max grid letter by one;
+    the next buy then goes to that freed letter (max + 1).
+    """
+    letters = []
+    for lot in pos.get("lots", []):
+        if int(lot.get("qty", 0)) <= 0:
+            continue
+        lid = str(lot["id"])
+        base = lid.split("-")[0]
+        if len(base) == 1 and "A" <= base <= "Z":
+            letters.append(base)
+    if not letters:
+        return None
+    return max(letters)
+
+
+def next_lot_id_after(current) -> str:
+    """Next grid letter after current (A->B, ..., Z->AA)."""
+    if current is None:
+        return "A"
+    if len(current) == 1 and current < "Z":
+        return chr(ord(current) + 1)
+    return f"L{len(current) + 1}"
+
+
+def sell_target_lot(pos):
+    """Highest-letter lot that still holds shares (the sell suggestion level)."""
+    best = None
+    for lot in pos.get("lots", []):
+        if int(lot.get("qty", 0)) <= 0:
+            continue
+        lid = str(lot["id"]).split("-")[0]
+        if len(lid) == 1 and "A" <= lid <= "Z":
+            if best is None or lid > best[0]:
+                best = (lid, lot)
+    return best[1] if best else None
+
+
+def etf_trades(book, code):
+    """Trade list for one ETF, derived from the shared history (buy/sell records)."""
+    rows = []
+    for entry in book.get("history", []):
+        for act in entry.get("actions", []):
+            if act.get("code") == code:
+                rows.append({
+                    "date": entry["date"],
+                    "result": entry.get("result"),
+                    "side": act["side"],
+                    "qty": int(act["qty"]),
+                    "price": float(act["price"]),
+                    "lot": act.get("lot"),
+                    "rebuy": bool(act.get("rebuy")),
+                    "down_grid": bool(act.get("down_grid")),
+                })
+    return rows
+
+
+def etf_summary(book, code, d=None):
+    """Five data points per ETF: code, name, holding qty, sellable qty, max grid letter."""
+    d = d or today()
+    pos = book["positions"][code]
+    return {
+        "code": code,
+        "name": NAMES[code],
+        "holding_qty": int(pos["qty"]),
+        "sellable_qty": available(pos, d),
+        "max_lot_id": max_lot_id(pos),
+        "trades": etf_trades(book, code),
+    }
+
+
+def base_lot(lot_id):
+    """Base grid letter from a lot id: 'D-rebuy-2' -> 'D', 'G-rebuy' -> 'G', 'C' -> 'C'.
+
+    Returns None for non-letter ids (e.g. 'L8') so they are excluded from T-matching.
+    """
+    if lot_id is None:
+        return None
+    base = str(lot_id).split("-")[0]
+    if len(base) == 1 and "A" <= base <= "Z":
+        return base
+    return None
+
+
+def _t_events(book):
+    """Collect buy/sell events grouped by (code, base grid letter), sorted chronologically.
+
+    Returns a fresh copy each call so callers can mutate quantities safely.
+    """
+    groups = {}
+    for entry in book.get("history", []):
+        for act in entry.get("actions", []):
+            base = base_lot(act.get("lot"))
+            if base is None:
+                continue
+            key = (act["code"], base)
+            ev = {
+                "date": entry["date"],
+                "qty": int(act["qty"]),
+                "price": float(act["price"]),
+                "lot": act.get("lot"),
+                "side": act["side"],
+            }
+            groups.setdefault(key, []).append(ev)
+    for key in groups:
+        groups[key].sort(key=lambda x: (x["date"], x["lot"] or ""))
+    return groups
+
+
+def t_records(book):
+    """Completed T-trades: same base grid letter buy→sell pairs, FIFO within each letter.
+
+    A T-trade is one buy and one sell at the same grid level.  Repeated T-trades
+    on the same letter (e.g. G, G-rebuy, G-rebuy-2) all share the base letter 'G'
+    and are matched in chronological order, so they never cross-match.
+
+    Returns a list of dicts, each with buy/sell details, gross, fees and net profit.
+    """
+    groups = _t_events(book)
+    records = []
+    for (code, base), evs in sorted(groups.items()):
+        buys = [e for e in evs if e["side"] == "buy"]
+        sells = [e for e in evs if e["side"] == "sell"]
+        bi = 0
+        for sell in sells:
+            while bi < len(buys) and buys[bi]["qty"] <= 0:
+                bi += 1
+            if bi >= len(buys):
+                break
+            buy = buys[bi]
+            q = min(buy["qty"], sell["qty"])
+            gross = round(q * (sell["price"] - buy["price"]), 2)
+            bf = fee(q * buy["price"])
+            sf = fee(q * sell["price"])
+            records.append({
+                "code": code,
+                "lot": base,
+                "buy_date": buy["date"],
+                "buy_price": buy["price"],
+                "buy_qty": q,
+                "buy_lot": buy["lot"],
+                "sell_date": sell["date"],
+                "sell_price": sell["price"],
+                "sell_qty": q,
+                "sell_lot": sell["lot"],
+                "gross": gross,
+                "fees": round(bf + sf, 2),
+                "net": round(gross - bf - sf, 2),
+            })
+            buy["qty"] -= q
+            sell["qty"] -= q
+            if buy["qty"] <= 0:
+                bi += 1
+    return records
+
+
+def t_total(book):
+    """Total T-trade profit summary."""
+    recs = t_records(book)
+    return {
+        "count": len(recs),
+        "gross": round(sum(r["gross"] for r in recs), 2),
+        "fees": round(sum(r["fees"] for r in recs), 2),
+        "net": round(sum(r["net"] for r in recs), 2),
+    }
+
+
+def t_open(book):
+    """Unmatched buys per (code, base letter) — current inventory at each grid level.
+
+    Uses the same FIFO matching as t_records(), so completed T-trades are
+    deducted before reporting open positions.
+    """
+    groups = _t_events(book)
+    open_pos = {}
+    for (code, base), evs in groups.items():
+        buys = [e for e in evs if e["side"] == "buy"]
+        sells = [e for e in evs if e["side"] == "sell"]
+        bi = 0
+        for sell in sells:
+            while bi < len(buys) and buys[bi]["qty"] <= 0:
+                bi += 1
+            if bi >= len(buys):
+                break
+            q = min(buys[bi]["qty"], sell["qty"])
+            buys[bi]["qty"] -= q
+            sell["qty"] -= q
+            if buys[bi]["qty"] <= 0:
+                bi += 1
+        net = sum(e["qty"] for e in buys if e["qty"] > 0)
+        cost = sum(e["qty"] * e["price"] for e in buys if e["qty"] > 0)
+        if net > 0:
+            open_pos[f"{code}/{base}"] = {
+                "code": code,
+                "lot": base,
+                "qty": net,
+                "avg_cost": round(cost / net, 4) if net else 0,
+            }
+    return open_pos
+
+
+def t_by_code(book, code):
+    """T-trade records and totals for one ETF only."""
+    recs = [r for r in t_records(book) if r["code"] == code]
+    return {
+        "records": recs,
+        "count": len(recs),
+        "gross": round(sum(r["gross"] for r in recs), 2),
+        "fees": round(sum(r["fees"] for r in recs), 2),
+        "net": round(sum(r["net"] for r in recs), 2),
+    }
 
 
 def total_invested(book) -> float:
@@ -263,7 +501,7 @@ def next_sell_lot(pos, d, code=None):
     if not actionable:
         return None
     # Lowest sell price first; ties broken by oldest settled lot.
-    return min(actionable, key=lambda x: (x["sell"], x["bought"]))
+    return min(actionable, key=lambda x: (x["sell"], x.get("bought", "")))
 
 
 def next_lot_id(pos) -> str:
@@ -465,6 +703,27 @@ def plan(book, quotes, d=None, phase="execute", live=True):
                 }
             )
             notes.append(f"{NAMES[code]} 挂卖{top['id']}格{top['qty']} 限价{top['sell']}")
+        # 最大序号格子卖出建议 / 最大序号+1 买入建议（每次开盘及买卖后均给出）
+        cur_max = max_lot_id(pos)
+        if cur_max:
+            cur_lot = sell_target_lot(pos)
+            if cur_lot:
+                if sellable_qty >= int(cur_lot["qty"]):
+                    notes.append(f"{NAMES[code]} 最大{cur_lot['id']}格卖出建议：{int(cur_lot['qty'])}份 限价{cur_lot['sell']}（可售{sellable_qty}份，足够）")
+                else:
+                    notes.append(f"{NAMES[code]} 最大{cur_lot['id']}格卖出建议：{int(cur_lot['qty'])}份 限价{cur_lot['sell']}（可售{sellable_qty}份，不足，暂不建议）")
+                next_id = next_lot_id_after(cur_max)
+                next_px = round(float(cur_lot["price"]) / (1 + GAP), 3)
+                next_qty = lot_size(LOT_BUDGET[code], next_px)
+                notes.append(f"{NAMES[code]} 最大{next_id}格买入建议：约{next_qty}份 限价{next_px}")
+        # 做T汇总：同格反复做T按 base 格子（G / G-rebuy / G-rebuy-2）归并，不重复计数
+                tc = t_by_code(book, code)
+                if tc["count"]:
+                    notes.append(f"{NAMES[code]} 做T累计：{tc['count']}次 毛利{tc['gross']}元 扣费{tc['fees']}元 净利{tc['net']}元")
+                open_t = t_open(book)
+                for k, v in open_t.items():
+                    if v["code"] == code:
+                        notes.append(f"{NAMES[code]} {v['lot']}格未平仓T：{v['qty']}份 均价{v['avg_cost']}")
         # A pending rebuy already occupies the single buy slot for this ETF;
         # do not stage additional down-grid buys on the same ticket.
         if rebuy:
@@ -575,42 +834,24 @@ def apply(book, result: str, d=None):
             proceeds = round(notional - commission, 2)
             book["cash"] = round(book["cash"] + proceeds, 2)
 
-            # 1) Consume from the T+1 pool (oldest settled shares first).
-            #    The target lot identifies which grid price was hit — it is
-            #    NOT necessarily the lot whose shares are consumed.  A lot
-            #    bought today (T+0) cannot itself be sold, but older settled
-            #    shares can fund the sell.  The target lot's qty stays
-            #    untouched; only the source lots from the T+1 pool decrease.
-            remaining = qty
-            source_lots = [
-                x for x in pos["lots"]
-                if x["qty"] > 0 and d.isoformat() >= x.get("available_from", "9999-99-99")
-            ]
-            ordered_sources = sorted(source_lots, key=lambda x: x["bought"])
-            for source in ordered_sources:
-                take = min(remaining, int(source["qty"]))
-                source["qty"] -= take
-                remaining -= take
-                if remaining == 0:
-                    break
-            if remaining:
-                raise ValueError("可卖库存分配失败，未入账")
-
-            # 2) The target lot's qty is consumed too.  A grid sell means
-            #    that level is done; leaving its qty nonzero lets plan()
-            #    re-issue the same sell on the next run.
+            # 1) Consume the sold shares from the named target lot directly.
+            #    The user's rule: a sell reduces holding shares, reduces
+            #    sellable shares, and drops the max grid letter by one when
+            #    the top lot empties.  The named lot IS the source.
             target_lot_id = act.get("lot")
-            for lot in pos["lots"]:
-                if lot["id"] == target_lot_id:
-                    lot["qty"] = max(0, int(lot["qty"]) - qty)
-                    break
+            target = next((x for x in pos["lots"] if x["id"] == target_lot_id), None)
+            if target is None or int(target["qty"]) < qty:
+                raise ValueError("目标格份额不足，未入账")
+            if d.isoformat() < target.get("available_from", "9999-99-99"):
+                raise ValueError("目标格未过T+1，未入账")
+            target["qty"] = int(target["qty"]) - qty
 
-            # 3) cost_cash = net invested: total buy costs minus total sell
+            # 2) cost_cash = net invested: total buy costs minus total sell
             #    proceeds.  This matches the user's cost basis model, where
             #    a sell does not reduce the cost basis of remaining shares.
             pos["cost_cash"] = round(pos["cost_cash"] - proceeds, 2)
 
-            # 4) pos['qty'] must equal sum of lot qtys.
+            # 3) pos['qty'] must equal sum of lot qtys.
             sync_qty(pos)
 
             if not exiting:

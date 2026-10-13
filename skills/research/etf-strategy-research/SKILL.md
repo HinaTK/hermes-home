@@ -75,6 +75,39 @@ Benchmark against buy-and-hold with comparable initial capital and risk allocati
 
 Lead with one preferred candidate or a clear no-fit conclusion, then a short alternative table, dated evidence, bear case, capital/risk illustration, and invalidation conditions. Keep fund suitability distinct from a present buy recommendation. Ask outstanding execution questions in ordinary chat. Never claim guaranteed recovery over a multi-year horizon.
 
+## Grid parameter comparison: box mode vs golden ratio
+
+When a user asks to recompute grid parameters under a different interval convention (e.g. golden ratio instead of swing-high/swing-low box), the comparison must cover **five dimensions**, not just the four numbers shown in the report card:
+
+1. **Bounds** — upper/lower/center/step/grids/span
+2. **Current price position** — inside or outside the interval? If outside, the strategy is **unexecutable** regardless of theoretical ROI. Flag this before any profit discussion.
+3. **Maximum drawdown** — distance from current price to lower bound. A wider interval looks like more opportunity but means deeper paper losses before the first buy grid fills.
+4. **Per-round net profit** — gross spread minus commission (万五免五 = 0.0001 per side, min 1 CNY per leg). With 0.6% spacing on a ~2 CNY ETF, per-round net drops to ~33 CNY on a 6,000 CNY cell — less than half the 1% spacing figure.
+5. **Monthly ROI** — monthly net profit ÷ total capital deployed (all cells filled). This is the number that actually answers "what's the return?". Do NOT present raw monthly profit without dividing by capital, because a 9-grid strategy that needs 53k CNY deployed and earns 749/month (1.4% ROI) is objectively worse than a 5-grid strategy needing 29k and earning 1,285/month (4.4% ROI).
+
+### The 0.6% spacing paradox
+
+Smaller spacing does NOT always increase ROI. With 万五免五 commission:
+- 1% spacing: ~55.8 CNY net per round on 6,000 CNY cell
+- 0.6% spacing: ~32.6 CNY net per round on 6,000 CNY cell
+- More grids (9 vs 5) partially compensates, but total monthly net drops from 1,285 to 749
+- ROI drops from 4.4% to 1.4% because capital deployed grows faster than profit
+
+**Rule of thumb:** 0.6% spacing is only ROI-positive when the ETF price is below ~3 CNY (so the 1 CNY minimum commission is a smaller fraction of the round-trip gross). Above that threshold, 1% spacing dominates.
+
+### Golden ratio window selection
+
+The `--gold_window` parameter is the dominant driver of whether the golden-ratio strategy is executable:
+- **window=30-40**: tight interval, current price often above upper bound → unexecutable
+- **window=60-150**: wider interval, current price may fall inside → check before presenting
+- **window=150+**: very wide, but lower bound drops far below current price → deep drawdown risk
+
+Always run a sweep across `--gold_window` values before concluding a golden-ratio strategy is unsuitable for the current price. The default 150 may not be the right window for the current price regime.
+
+### Reporting format
+
+When presenting grid parameter comparisons, always include a **status column** (✅ 可操作 / ❌ 价格在上界上方 / ❌ 价格在下界下方) so the user can immediately see which strategies are executable. A strategy that requires waiting for a 6%+ pullback is not comparable to one that can start today.
+
 ## Evidence checks
 
 Use grounded-citations for source mapping, but manually inspect each material financial claim. A validator's green status is not proof that the quote supports the number, that table columns were read correctly, or that dates are current. See [financial evidence and grid illustrations](references/financial-evidence-and-grid-illustrations.md) for extraction checks and reusable counterexamples.

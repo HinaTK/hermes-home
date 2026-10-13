@@ -6,8 +6,6 @@ A-share cash auction 09:15–09:25, continuous 09:30. Grid ops must not lock lim
 §
 网格账本与操作单不能把“D格买入当日不可卖”误解为“D格对应卖价不可挂”：卖价可立即挂在A/B的T+1可卖库存上，只要可卖池覆盖数量；只有当日新买的D份额本身不能作为可卖库存。用户目标是反复成交净差价和资金周转，不能机械等待新lot T+1。
 §
-2026-10-08用户授权将6,000元网格成本额度从159992+589720创新药迁移组合挪给159363：159363成本上限调整为40,000元，创新药迁移组合共享上限调整为40,000元；总网格成本上限仍80,000元、账户现金底20,000元、2%间距不变。
-§
 2026-10-08 用户确认 589720 买入 9,400 份 @ 0.859 成交（实际成交价优于限价 0.869）。佣金按万一免五最低 1 元计 1.00 元，银河交割单待核；其他委托未计成交。
 §
 User insists on only having one active buy order and one active sell order per ETF at any time. Other orders should be automatically canceled to avoid conflicts.
@@ -46,22 +44,6 @@ Updated skill library with new class-level skill 'etf-grid-maintenance' that enc
 §
 用户于2026-09-30同意将当前 Hermes Desktop 默认配置的 model.context_length 设为400000 tokens；压缩参数保持不变，暂不直接拉满百万上下文。
 §
-网格代码修复记录（2026-10-09）：
-
-1. **apply() 卖出 bug**：卖出时 `pos["qty"] -= qty` 减了总持仓，但 `act["lot"]` 对应的 lot 的 qty 没跟着减，导致已卖出的格（如 159363 G 格、589720 C 格）在账本里永远留着 qty，plan() 重复生成卖单。修复：在 `pos["qty"] -= qty` 后同步减少 `act["lot"]` 对应 lot 的 qty。
-
-2. **next_sell_lot() available_from 过滤**：错误地过滤掉了 `available_from > today` 的 lot，导致 589720 选了 B 格（0.876）而不是 C 格（0.846）。修复：去掉 `available_from` 过滤，只按卖价排序选最低。T+1 池覆盖即可挂单。
-
-3. **CASH_FLOOR 20,000→0**：用户确认 2 万从"硬底"变为"可动用的买入储备"。买入不再被现金底卡住，只受总投资上限约束。
-
-4. **TOTAL_CAP=80,000 共用额度**：买入约束从"每只 ETF 各自卡 CAP[code]"改为"总投资卡 TOTAL_CAP"。某只 ETF 单只超 4 万时，只要总投资不超 8 万、现金够，仍可继续买入。实现：新增 `total_invested(book)` 函数，plan() 和 apply() 中所有 CAP[code] 判断改为 TOTAL_CAP/total_invested(book)。
-
-5. **grid_migration.py 安全网**：load_policy() 增加 `target_buy_authorized_by_user` 二次确认，防止仅改配置开关就启用 589720 自动买入。
-
-6. **CODES/NAMES/CAP/LOT_BUDGET/CORE_QTY 加入 sh589720**：589720 正式纳入网格系统，CAP=40,000，LOT_BUDGET=8,000，CORE_QTY=0。
-
-7. **一买一卖规则**：每只 ETF 操作建议只出一个买单和一个卖单。卖单选最低价（最接近现价），买单选最高价。迁移退出标的（159992）只有卖单。
-§
 用户对账本准确性的要求极高，不容忍任何基础计算错误。2026-10-09 因为算错 8,069.40 + 8,075.60 + 7,959.40 - 8,120.60 这道简单算术题，被用户两次骂"傻逼"。教训：任何涉及金额、份额、成本的计算必须逐笔列明并反复核对，不能凭印象给数。用户会逐笔对账，发现错误会直接指出并要求重新计算。
 
 用户明确的账本规则（2026-10-09）：
@@ -71,3 +53,21 @@ Updated skill library with new class-level skill 'etf-grid-maintenance' that enc
 4. 卖出时消耗来源是 T+1 池（按买入日期 FIFO），目标格（act["lot"]）的 qty 保持不变——它只是标识哪个网格价位被触发，不是被卖出的那个 lot
 5. 当日买入的 lot（T+0）不能作为可卖库存，但其卖价可以挂在 T+1 池上
 6. cost_cash 必须等于所有 lot 的 (qty × price + 佣金) 之和，卖出时从 T+1 池扣减对应成本
+§
+网格计算规则（用户多次纠正，必须严格遵守）：
+- 买入价 = 上一格买入价 ÷ 1.015（不是卖价反推，不是当前价）
+- 卖出价 = 买入价 × 1.015
+- 份额 = LOT_BUDGET ÷ 买入价，取整百（159363: 6,000元，589720: 8,000元）
+- 接回格命名：G-rebuy、C-rebuy 等，ID 要具体，不说"下一格"
+- 每只ETF一卖一买，159992迁移退出只有卖单
+- T+0当天不可卖，可卖池 = 所有已过T+1且未卖出格
+- 最新成交格卖出优先（卖价最低的可卖格），用旧T+1库存覆盖
+- 账本每格记录：买入价、持有股数、是否已卖出、T+1可卖状态
+§
+2026-10-12：飞书会话模型切换为 gpt-6.1-sol（provider: custom:aicode-api-gz4399-com）。此前为 gpt-6-sol，再之前为 dots-studio/dots-3-note-preview:free。
+§
+2026-10-12 用户再次纠正：卖出哪个格子就接回哪个格子（卖D格接D-rebuy，卖E格接E-rebuy），不是卖E格接F格。接回价 = 卖出价÷1.015，份额 = LOT_BUDGET÷接回价取整百。这个错误今天犯了两次，必须记住。
+§
+10-13: 159612选黄金分割方案B(0.809/0.236,1%,3档2.053~2.109,全仓23,638,月ROI7.4%)。突破2.109切方案A(箱体1%,5档2.066~2.160,全仓39,401,月ROI4.4%)。跌破2.053暂停买入。切换成本~8元。用户偏好黄金分割口径。
+§
+用户明确ETF状态需求：每只ETF的qty、sellable_qty、max_grid(A-Z)都是持久化、脚本可修改的变量，不是展示时临时计算的口径。买入从当前max_grid取下一号并更新，卖出取当前号再退一号；标签保存到交易记录，不人工硬编码。每日00:01从交易记录重算qty并写回sellable_qty=qty；买入增加qty不增加sellable_qty，卖出同时扣减二者，卖出建议读取持久化sellable_qty。用户要求汇报数字来自真实脚本输出，区分用户输入、人工设置与脚本自动生成。
