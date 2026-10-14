@@ -1,0 +1,11 @@
+{
+  "archive": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636",
+  "moved": 141,
+  "preserved": 18,
+  "state_sha256": {
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159363.json": "a8127e5b165aeaea47ec2fa139cf5680266ce687b820923f48705962f2c00837",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159992.json": "f5513958c820a5f5e47e3700ebf016a839589ff71986bbba7e7cf13794189864",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-589720.json": "7bbb1bbebe1bda481eb38e2af247a5cf19e22eaf694207c635fff33d82034eb7",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-intraday-alerts.json": "69b7c340b003674ab4b658abbf88e3d3e3d055397a1780925fc58889d7214f99"
+  }
+}

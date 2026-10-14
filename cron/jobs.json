@@ -3,7 +3,7 @@
     {
       "id": "bba8cc3c5333",
       "name": "网格9:10预告",
-      "prompt": "网格9:10本地静默预检（脚本直出，不推飞书）：休市静默，盘前仅预告勿下单。迁移期159992停止新增买入/接回，银河旧单待核对；589720未核实资金与实时行情前无买单；159363继续原网格。账户10万/2%/原单格及现金底不变，第三ETF仅研究。",
+      "prompt": "09:10本地静默运行grid_weixin_preview.py统一新状态入口，589720/159363预告；不开盘前锁实时委托，不读取旧ledger，不下单。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -25,15 +25,15 @@
       "schedule_display": "weekdays at 9:10am",
       "repeat": {
         "times": null,
-        "completed": 17
+        "completed": 19
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:39:09.001076+08:00",
-      "next_run_at": "2026-10-14T09:10:00+08:00",
-      "last_run_at": "2026-10-13T09:10:09.582018+08:00",
+      "next_run_at": "2026-10-15T09:10:00+08:00",
+      "last_run_at": "2026-10-14T10:14:42.635663+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -51,7 +51,7 @@
     {
       "id": "e01b833b150d",
       "name": "网格9:31操作建议（行情确认后）",
-      "prompt": "网格9:31操作建议（脚本直出，无模型）。仅同一交易日09:30后有效行情才给可执行建议；休市静默、行情过期则勿下单。159992→589720逐步迁移：159992停止新增买入/接回、旧买单先核对银河是否成交/撤单；卖出分批且核对T+1可卖量和在途卖单。589720旧单、资金和当日实时盘口/折溢价未核实前不生成买单；159363维持原网格。10万本金、2%间距、原单格额度与现金底不变；不新开第三ETF。仅建议，无券商自动下单/撤单/成交记账；多笔成交须逐笔回报。",
+      "prompt": "09:31执行grid_weixin_execute.py新统一入口，只读589720与159363已确认持久化状态；同日09:30后行情校验，现金额度与银河委托待核时标注条件建议，不下单、不登记触价成交。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -73,15 +73,15 @@
       "schedule_display": "weekdays at 9:31am",
       "repeat": {
         "times": null,
-        "completed": 17
+        "completed": 20
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T15:28:08.339160+08:00",
-      "next_run_at": "2026-10-14T09:31:00+08:00",
-      "last_run_at": "2026-10-13T09:31:16.255263+08:00",
+      "next_run_at": "2026-10-15T09:31:00+08:00",
+      "last_run_at": "2026-10-14T10:14:07.162164+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -95,7 +95,7 @@
     {
       "id": "ef9a27327990",
       "name": "网格盘中检查",
-      "prompt": "网格盘中每10分钟脚本检查，无新提醒则静默；只提示触价核对，非成交。迁移期过滤159992和589720买入提示，159992只保留退出相关卖单观察；159363原网格不变。按同日同代码/方向/价位去重，日内高低价可能在建议挂单前出现，不能推定成交；不代用户操作银河。不扩大单格、不建第三ETF。",
+      "prompt": "每分钟执行grid_weixin_intraday.py新统一入口，交易时段门控；仅使用589720与159363已确认状态及统一建议，日内高低价/现价触价按日代码方向价位去重。触价只核对不是成交，不下单、不自动记账。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 4379
+        "completed": 5813
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-13T23:01:00+08:00",
-      "last_run_at": "2026-10-13T23:00:33.761185+08:00",
+      "next_run_at": "2026-10-14T23:01:00+08:00",
+      "last_run_at": "2026-10-14T23:00:09.372309+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -139,7 +139,7 @@
     {
       "id": "b3097b45fafa",
       "name": "网格15:20收盘效率与轮换检查",
-      "prompt": "15:20收盘只做研究性检查，不下单、不撤单、不记成交。按脚本 grid_eod_decision.py 运行：对现有ETF使用最近20个已确认交易日的实际已完成买卖往返次数、最近10日是否为0、价格区间是否覆盖2%网格来评估网格效率；区分窄幅横盘、单边上涨、单边下跌。159992→589720迁移继续有效：159992停买停接回、分批退出；589720仍是已确定迁入标的，但不自动启用买入。盘后附带每周同类ETF比较状态（如当日为周度检查日则运行 grid_weekly_rotation.py）：同一最近63个交易日约三个月，比较同类ETF完成往返次数；若同一替代标的连续两周超过当前基准，才给出“进入人工复核”，不自动换仓。输出必须说明代理数据与真实成交的区别、数据缺失和不改变资金/委托。",
+      "prompt": "15:20运行grid_eod_decision.py统一已确认状态入口，汇总589720/159363持仓可卖最大序号成本做T并评估次日；缺日期不编造近20日做T指标，缺行情不称收盘，不读取旧ledger、不撤单、不下单。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -161,15 +161,15 @@
       "schedule_display": "weekdays at 3:20pm",
       "repeat": {
         "times": null,
-        "completed": 11
+        "completed": 12
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-29T13:42:38.404710+08:00",
-      "next_run_at": "2026-10-14T15:20:00+08:00",
-      "last_run_at": "2026-10-13T15:20:41.916070+08:00",
+      "next_run_at": "2026-10-15T15:20:00+08:00",
+      "last_run_at": "2026-10-14T15:20:30.522583+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 3
+        "completed": 4
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-14T23:00:00+08:00",
-      "last_run_at": "2026-10-12T23:00:59.809462+08:00",
+      "next_run_at": "2026-10-15T23:00:00+08:00",
+      "last_run_at": "2026-10-13T23:00:49.442914+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,14 +279,14 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-13T23:00:31.278222+08:00",
-        "by": "MS-22110429259:35880:8f603a6b21f14ac8b07d7ba4a72dcb5d"
+        "at": "2026-10-14T23:00:06.834697+08:00",
+        "by": "MS-22110429259:60220:1d618fcb43ba4394841d1d1f5bcf2d1b"
       }
     },
     {
       "id": "ed9d5c85e0c4",
       "name": "网格00:01持久化可卖份额同步",
-      "prompt": "每天北京时间00:01运行grid_midnight_rollover.py，从用户确认的589720交易列表重算持仓，将sellable_qty设为qty并持久化；不读旧票据，不更改其他ETF、不下单。",
+      "prompt": "北京时间每天00:01运行grid_midnight_rollover.py，对已确认589720和159363同一持久化子账从成交记录重算qty，保存sellable_qty=qty；同日幂等，禁止旧ledger/票据推导，不下单。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -308,24 +308,25 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 0
+        "completed": 2
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-10-14T00:01:00+08:00",
-      "last_run_at": null,
-      "last_status": null,
+      "next_run_at": "2026-10-15T00:01:00+08:00",
+      "last_run_at": "2026-10-14T10:25:57.965733+08:00",
+      "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
       "failure_streak": 0,
       "deliver": "local",
       "origin": null,
       "enabled_toolsets": null,
-      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home"
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-13T23:00:33.763873+08:00"
+  "updated_at": "2026-10-14T23:00:09.374785+08:00"
 }

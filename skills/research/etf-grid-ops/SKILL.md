@@ -4,6 +4,10 @@ description: "Use when sending A-share ETF grid tickets or fills."
 ---
 # A-share ETF grid live ops
 
+## Current confirmed-state migration (2026-10-14)
+For 589720 and 159363, authoritative trades are ONLY `cache/grid-account/confirmed-589720.json` and `confirmed-159363.json`, not legacy ledger.json/tickets. Actual runtime entrypoints must be verified from installed launchers/--help, never assumed deployed from source edits alone. Never call legacy whole-ticket apply or bare 成功. Inputs require explicit fill identity/details; preserved historical dates remain null. Persist qty, sellable_qty and max_grid; daily00:01 writes sellable=qty, same-day rerun idempotent. 1.5% current grid, budgets8000/6000, A–Z stack max pointer; one buy and one sell; no broker execution authorization. Intraday cron is now every minute with trading-session gate, day high/low/spot unified dedup, not minute bars. 159992 remains unreconciled: do not infer its holdings or account cash from broken old ledger. Old parameters, paths and frozen playbook below are HISTORICAL and cannot override these newer user instructions. Follow etf-grid-maintenance stateful/persistence safeguards and report deployed integration vs tests separately.
+
+
 Research (universe, backtest, ranking) belongs in `etf-grid-research`. This skill is the **live ticket** path: what the user can execute today, at what clock, from which quote.
 
 If both are relevant, load this one for anything that looks like an order, limit, lot size, or “今日操作”.

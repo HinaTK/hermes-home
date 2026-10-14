@@ -71,3 +71,5 @@ Updated skill library with new class-level skill 'etf-grid-maintenance' that enc
 10-13: 159612选黄金分割方案B(0.809/0.236,1%,3档2.053~2.109,全仓23,638,月ROI7.4%)。突破2.109切方案A(箱体1%,5档2.066~2.160,全仓39,401,月ROI4.4%)。跌破2.053暂停买入。切换成本~8元。用户偏好黄金分割口径。
 §
 用户明确ETF状态需求：每只ETF的qty、sellable_qty、max_grid(A-Z)都是持久化、脚本可修改的变量，不是展示时临时计算的口径。买入从当前max_grid取下一号并更新，卖出取当前号再退一号；标签保存到交易记录，不人工硬编码。每日00:01从交易记录重算qty并写回sellable_qty=qty；买入增加qty不增加sellable_qty，卖出同时扣减二者，卖出建议读取持久化sellable_qty。用户要求汇报数字来自真实脚本输出，区分用户输入、人工设置与脚本自动生成。
+§
+2026-10-14: etf-grid-screener 产出候选（如 159569）后，主 5 分钟引擎可能因 grid_model.py 第 37 行的股/手单位不匹配而拦截低成交量 ETF。不要改 grid_model.py（会破坏 321 只可比性），改用日 K 线跨线分析估算盈利。关键：筛器箱体边界必须与实际 63 天价格区间交叉验证——159569 筛器上界 1.480 从未触及、下界 1.378 被跌破，实际区间 1.280-1.445。已固化到 etf-grid-maintenance skill 的 references/candidate-evaluation-outside-main-engine.md。

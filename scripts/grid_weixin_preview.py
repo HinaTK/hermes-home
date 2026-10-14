@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-"""Weekday 09:10 WeChat preview. Do not treat as a fillable order."""
+"""09:10 read-only conditional preview."""
 import sys
-from pathlib import Path
+sys.path.insert(0, 'D:/Code/AH_analyse')
+from confirmed_runtime import ops_main, safe_entrypoint
 
-sys.argv = [sys.argv[0], "--phase", "preview"]
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import grid_weixin_ops  # noqa: E402
-
-if __name__ == "__main__":
-    grid_weixin_ops.main()
+if __name__ == '__main__':
+    safe_entrypoint(ops_main, ['--phase', 'preview', *sys.argv[1:]])

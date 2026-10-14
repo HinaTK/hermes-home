@@ -1,0 +1,909 @@
+{
+  "created_at": "2026-10-14T10:36:37.908528",
+  "reversible": true,
+  "moves": [
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\apply_589720.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\apply_589720.py",
+      "sha256": "22794e311f4e30f3417a1053b79f1a037906fa9eba1f54ad7f53a3fd78ad18fe",
+      "bytes": 3328
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\cleanup_unconfirmed.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\cleanup_unconfirmed.py",
+      "sha256": "73805bdd4f876f9b54b110b6b5fb7c407fc56edd724d7f106d50dc34eb8784eb",
+      "bytes": 3241
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\extract_fills.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\extract_fills.py",
+      "sha256": "5fcb283a6b7e6944d83010a16ea0a42afe9a21024a4ba3c1e26c928cfbbac966",
+      "bytes": 2946
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_account.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\grid_account.py",
+      "sha256": "0c221c6b58648d45704a3cadf38434c5b37f8a31c75cfb48aec61d1f4a0347d3",
+      "bytes": 40318
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_migration.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\grid_migration.py",
+      "sha256": "661359faa8529e8d55d8b3774902fc6b36ae80b6311de41af32fef6a22db5ff5",
+      "bytes": 3791
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_runtime_guard.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\grid_runtime_guard.py",
+      "sha256": "4f03d453efdcd55ebaab2eb276a34091b31b221bc82f2e653630815eac4fe880",
+      "bytes": 730
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\rebuild_from_scratch.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\rebuild_from_scratch.py",
+      "sha256": "a1063196b71f974ba0bfb4b1b1cfd33fa77454780e3461741dca47b7e736ac7b",
+      "bytes": 4771
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\rebuild_full.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\rebuild_full.py",
+      "sha256": "534d1831ff97fd3266ec49da06e9802826777a985a25fece773a6d69938e7adb",
+      "bytes": 5321
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\show_589720.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\show_589720.py",
+      "sha256": "a31a078a9e51a0df1b8e682452595dd8a3a2406d60bac3338f6f55ae2f1193d1",
+      "bytes": 1526
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\show_by_etf.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\show_by_etf.py",
+      "sha256": "d873f8cfa9124afaad64bccfc99ed6b3b1323741e8155c120a002c7b73477796",
+      "bytes": 1775
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_dynamic.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_dynamic.py",
+      "sha256": "e610c9987ec0c69add8bea3384b4e1cd81d9db04b7b5974d005646fe9ec90f5f",
+      "bytes": 9470
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_eod_decision.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_eod_decision.py",
+      "sha256": "eb0f975350201b5e065a5b091f66976dabef34f3d34542d3eff7968e6e5ebd14",
+      "bytes": 9459
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_migration.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_migration.py",
+      "sha256": "cefc5cc7483d4243f201afae6655dbf659ecf50c26794a2908b7ef92c3c8006f",
+      "bytes": 7234
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_notifications.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_notifications.py",
+      "sha256": "878d3438fa6ddaf1a3c1bc741531bb454133ae6256c07c4708f8044e517b3576",
+      "bytes": 2595
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_rotation_review.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_rotation_review.py",
+      "sha256": "c9c56776d3f6f4bcd5e4c48209c44d91b8adf7082201b08ea44ec1243adc358a",
+      "bytes": 10673
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_sell_order.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_sell_order.py",
+      "sha256": "c5ef1bb24c27950a5fae40988c7e1db1cd092895752c518bf05402bd362c40de",
+      "bytes": 12583
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_grid_session.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_grid_session.py",
+      "sha256": "778262d1f2ed44f36f9dd8f099d7f4af64710119eee72b658c1b49fa1425f50f",
+      "bytes": 2012
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\test_tdd_589720.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\test_tdd_589720.py",
+      "sha256": "b631e8a1f21b39d660dcfb4a1e7da7a3e3cd53f4cac5a5bec69cb6a87d3a7273",
+      "bytes": 4215
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\verify_new_logic.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\verify_new_logic.py",
+      "sha256": "6335afa3167bf068624ad092c30b1d463a510d88ed248b93de7900116985d40a",
+      "bytes": 2583
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\_book_363_d_rebuy_20261008_once.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\_book_363_d_rebuy_20261008_once.py",
+      "sha256": "e0beffd2183623054e697748891a29f208df01d7637110af4b2194bfe1b3b731",
+      "bytes": 2304
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\_book_363_d_rebuy_sell_20261008_once.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\_book_363_d_rebuy_sell_20261008_once.py",
+      "sha256": "7985e6447b11da5e1ff2efb96d3d311290bbf8bb556ba47285b517d8f64a7951",
+      "bytes": 2443
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\_book_589720_b_20261008_once.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\_book_589720_b_20261008_once.py",
+      "sha256": "7d4b6f9b5d34c01aa03d664ad09d970b74c73efa5a4669c9040462f5d0581d62",
+      "bytes": 2448
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\_reconcile_fees_20261008_once.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\_reconcile_fees_20261008_once.py",
+      "sha256": "6acd7310209b4ed32c6f58055d5ec3943b2c451dec9791c67a5c37520fee9012",
+      "bytes": 4223
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\grid_account.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\grid_account.cpython-312.pyc",
+      "sha256": "da3946a232443346a7233619a1b727175586b80398ee71b76716c72afcc17720",
+      "bytes": 51944
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\grid_migration.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\grid_migration.cpython-312.pyc",
+      "sha256": "8311e5148d23f874c2b2aff77087e64f4c3e7872c04370dbeca5f6648b4074bc",
+      "bytes": 4518
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\grid_runtime_guard.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\grid_runtime_guard.cpython-312.pyc",
+      "sha256": "25a2f522db4d2fde61a510f4b166a7c6b47305c3778949c55fcd3f5994714a9b",
+      "bytes": 1520
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_dynamic.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_dynamic.cpython-312.pyc",
+      "sha256": "18608b9e871070dbe79359974279208e281ccef11cb9a5b6d6b4cb4722bc59bc",
+      "bytes": 14493
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_eod_decision.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_eod_decision.cpython-312.pyc",
+      "sha256": "dd76f017f13bfb79e40990ae766a9b1ed39b1dd524580d5271bc36acc099a121",
+      "bytes": 16781
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_migration.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_migration.cpython-312.pyc",
+      "sha256": "f50c4b099232fd9e9edd810a44c3a8efd1d55f71aa21467376da4262c8c4a50c",
+      "bytes": 12660
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_notifications.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_notifications.cpython-312.pyc",
+      "sha256": "6a8cd38434a1841f5279a3d58d07f94fe23dd09736c92e33bffbc3a53b389709",
+      "bytes": 6020
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_rotation_review.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_rotation_review.cpython-312.pyc",
+      "sha256": "a8d6be033dac11c5ed2dfeaaed3c479b94b728b259cdcee8ef6763daa8e82a4f",
+      "bytes": 19285
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_sell_order.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_sell_order.cpython-312.pyc",
+      "sha256": "d870a180e7f5aa57a27b9df27bb02ecae7f7ef04d91d65c8ed794ea4513cd6e1",
+      "bytes": 19547
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\__pycache__\\test_grid_session.cpython-312.pyc",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\scripts\\__pycache__\\test_grid_session.cpython-312.pyc",
+      "sha256": "cfa5fab00e900819e9fe6292424a2c0abcb98e744d89e9b0587d29a0a7692e7d",
+      "bytes": 3417
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159363.before-append-014-016.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\confirmed-159363.before-append-014-016.json",
+      "sha256": "14b8ff436bc0d3816c05c1b0641e4169410776a00f825e6e98f255f68c670c38",
+      "bytes": 7197
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159363.before-init-20261013203327985102.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\confirmed-159363.before-init-20261013203327985102.json",
+      "sha256": "39f11216bb9f9fb6f1e56162ef72685125736312877fd9ffa2cebff94f2b7309",
+      "bytes": 8281
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159363.json.bak",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\confirmed-159363.json.bak",
+      "sha256": "13b6b5cf8cb0b599de1ffa5e4bb3afaa1b1957b78baed176cca91a00d8759edb",
+      "bytes": 8322
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-589720.before-init-20261013203327985102.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\confirmed-589720.before-init-20261013203327985102.json",
+      "sha256": "a474246590cd35ae3e25e7152d272f0aa128cffc418c36c3e0e576b11b0d671f",
+      "bytes": 4838
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-589720.json.bak",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\confirmed-589720.json.bak",
+      "sha256": "4f98a8518678a22586f1f93e5785988e174ca1d6a4ae552791c8ea70079b72dd",
+      "bytes": 4879
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-589720.previous.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\confirmed-589720.previous.json",
+      "sha256": "39d6d6eee2dba0906181342086fa8fb3694377e72f14f29e4b954ef7705836e8",
+      "bytes": 4818
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\feishu-sell-correction-20260928.txt",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\feishu-sell-correction-20260928.txt",
+      "sha256": "04fe43f2d81aed6f084464691035e99f5343b7bbd6f4f9c9553a3558a841d133",
+      "bytes": 882
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\intraday_trend_state.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\intraday_trend_state.json",
+      "sha256": "96c632777019f5e8b5bcd1466ae22d3e814a07f36b2baf876ef640bbce551bfc",
+      "bytes": 303
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.before-363-e-fill-2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.before-363-e-fill-2026-10-08.json",
+      "sha256": "8aa2a58f0505c05b250c0bf53cd6a1418af701c905210a26f97ab804329bbd8b",
+      "bytes": 10356
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.before-363-f-fill-2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.before-363-f-fill-2026-10-08.json",
+      "sha256": "ce67163fd5c82164216c3eb63f4c3cb3c3a0b923e010e23b2a4c855bb9341d9f",
+      "bytes": 11234
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.before-589720-b-fill-2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.before-589720-b-fill-2026-10-08.json",
+      "sha256": "e55b8cc283145f62c1cde0bf81306a4bdd2d0aed19a13e31da26433bf645a635",
+      "bytes": 12013
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.before-fee-reconcile-20261008.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.before-fee-reconcile-20261008.json",
+      "sha256": "9549e5b10fad4d2a4854b6d19a13ff95ab4f9df31433a5d2b8d7629f7b342cec",
+      "bytes": 12785
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.before-second-363-rebuy-2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.before-second-363-rebuy-2026-10-08.json",
+      "sha256": "c497aab925d13b07610cd7329bb4fd27556f782f95dccd9bf5c4defe9f527ff2",
+      "bytes": 9294
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.json",
+      "sha256": "d5f383f0a1d1ee2758768fb9a6201883d432e4dac002b21ef7b6f5b626b83509",
+      "bytes": 1576
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.json.bak",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.json.bak",
+      "sha256": "d5f383f0a1d1ee2758768fb9a6201883d432e4dac002b21ef7b6f5b626b83509",
+      "bytes": 1576
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\ledger.test-overwrite.2026-09-29.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\ledger.test-overwrite.2026-09-29.json",
+      "sha256": "8a2c51a071839b6bd8f662c9a9f5b9f9222164820a3956832a6d1c043cd3ba8a",
+      "bytes": 1951
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\migration.before-second-363-rebuy-2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\migration.before-second-363-rebuy-2026-10-08.json",
+      "sha256": "ec83cf9e333f3df2ea56920fcc7ceba782f4c7559647edbeb2cf400ef0afca02",
+      "bytes": 1814
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\migration.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\migration.json",
+      "sha256": "3b100e6c3892f20bb1099a504104fcf196fb02ca399debdf332c09dd96bd2081",
+      "bytes": 1444
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\weixin-resend-20260928.txt",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\weixin-resend-20260928.txt",
+      "sha256": "ec24c3dc4d1de51778419d81a2ddc8c570118316f51a5e9c55e00d490ad8105e",
+      "bytes": 995
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-23.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-23.json",
+      "sha256": "5ac59942a181171e2e5aaf992ff8cf3bd14ca28e5848ad4eb72f4f2f13b16211",
+      "bytes": 291
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-24-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-24-1.json",
+      "sha256": "17a129d0bf28650f11695f6edb9ced59394324b31b20a5403b5f9f9d8bb7d6b8",
+      "bytes": 1263
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-24.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-24.json",
+      "sha256": "1f02b4604f5cae2d163360c959db2d8aec4f6d0a74a54fe76ed0f2782c64dd8e",
+      "bytes": 1106
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-25.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-25.json",
+      "sha256": "119c65cd9cddafd82aceddf887d191f044a224df28f6f83cac904ee7897e1deb",
+      "bytes": 611
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-1.json",
+      "sha256": "4e4da048afb8d40d1f2c836e1103238b69dc7c8d38f6c6cb61ffd4ef752bccc5",
+      "bytes": 1288
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-10.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-10.json",
+      "sha256": "bb030bf5e0f6d1c0841fb64a658bfd744ad80c70b537771aa2064dc569c39030",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-2.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-2.json",
+      "sha256": "8ad6b1d2d898c00d41ad49ec7de4df2e83a720fba5e3fe41fa7ef6ca64798067",
+      "bytes": 1440
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-3.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-3.json",
+      "sha256": "a6bfc023c8909fc36ab3dd685ce964c3cddbb580b56db67da459bff8c864a316",
+      "bytes": 1263
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-4.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-4.json",
+      "sha256": "ad66f9e34f1cac398db6af63069879795c64f8ba3d01fb0604b062dbdee354d3",
+      "bytes": 1123
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-5.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-5.json",
+      "sha256": "73ed315409c84ad78c2b98f55fd23098a3b4f8d6295df7f20c2e938cbd415d64",
+      "bytes": 1123
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-6.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-6.json",
+      "sha256": "2b8ba4a9abc0324f4d76b0244da7196e0c7a5ed4cc90d5ce88e55541b4040243",
+      "bytes": 1112
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-7.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-7.json",
+      "sha256": "cb0c2ef0235a79cb49a5e2b166cea8b1b9fb014793963eb4788783bec939aafb",
+      "bytes": 1308
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-8.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-8.json",
+      "sha256": "0f54579c1734b1271a5d54faf31e174953225a0b9b8c1f5c3d949fd0913f2d6c",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28-9.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28-9.json",
+      "sha256": "0f54579c1734b1271a5d54faf31e174953225a0b9b8c1f5c3d949fd0913f2d6c",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-28.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-28.json",
+      "sha256": "ca1b15c4a29aaa945a695820bb355abba304f6a8e8c435aa7242049c86ef93a2",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-29-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-29-1.json",
+      "sha256": "fa12a01e3d49d8a713e5bfef68a0ed23d432db52be5bf213c5ca1631a9c1f849",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-29-2.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-29-2.json",
+      "sha256": "29f1b6488675cd43da2462a6091686b0c015cff878d81e169da7fe29fb88529c",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-29-3.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-29-3.json",
+      "sha256": "03742d2f55187c88e88274aa966cebc623bc83c883c8ebca55b0ba44de37f2f7",
+      "bytes": 1253
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-29-4.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-29-4.json",
+      "sha256": "0706583650ccb99aa2a506c6dd93814bdba4e35d561f69786e4c4e10ff730ed1",
+      "bytes": 1381
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-29.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-29.json",
+      "sha256": "d6ae7baa6da904437a89aa0ebb54b24626da9eef64ded0660ffddac04bb4d8ee",
+      "bytes": 1315
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-30-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-30-1.json",
+      "sha256": "3c33a3a3cb0ab7e3db44e5b34fad460f4f04cd0184e7b17bec843c426f5020ec",
+      "bytes": 1359
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-30-2.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-30-2.json",
+      "sha256": "addb19ae96cda80f5ad76e19041ba1406bb37da319942b6004382d03ddeea9d0",
+      "bytes": 1765
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-09-30.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-09-30.json",
+      "sha256": "de1b9f8e99029610e9531501d0a3c7bcf200bf1e29e6f19563841935ab0600df",
+      "bytes": 1788
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-08.before-363-e-fill.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-08.before-363-e-fill.json",
+      "sha256": "9cd5ac94bd21a1c8045f155ca209badb7f208404c43a037ce4d9e85c2d39dfb3",
+      "bytes": 1378
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-08.before-363-f-fill.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-08.before-363-f-fill.json",
+      "sha256": "5affbf7dbe2bf7ba76acde96ba5b3a43c3fece8c41a3d54f07210b93d69878ff",
+      "bytes": 1245
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-08.before-589720-b-fill.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-08.before-589720-b-fill.json",
+      "sha256": "bff72bb418db40437ff16b688f39855eeb3e35eb9c384184c0c1aa1bde090cbb",
+      "bytes": 1204
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-08.before-second-363-rebuy.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-08.before-second-363-rebuy.json",
+      "sha256": "3358da27a44b4f3a5ced43c7764077edc696dce617be95d2c883dc385ad6f127",
+      "bytes": 1690
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-08.json",
+      "sha256": "37788d2da5fd18ef8310e31d3afe1c3babff4e27153430bb04a2abed7fef69b1",
+      "bytes": 939
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-1.json",
+      "sha256": "6f09e3c57a867cdf4418bc467789e4b8e53a18d7a99aa6534dbe743c9fdc2115",
+      "bytes": 1457
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-10.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-10.json",
+      "sha256": "13f3194177673f31ffae9a84743a729a9ee18825c21caa9e4675d0fd309cebb9",
+      "bytes": 2496
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-11.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-11.json",
+      "sha256": "fdc9ff0af33bf639151d27990b9fe0a099696791793c3da3eb49ae2d12e8a7d3",
+      "bytes": 2401
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-12.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-12.json",
+      "sha256": "fdc9ff0af33bf639151d27990b9fe0a099696791793c3da3eb49ae2d12e8a7d3",
+      "bytes": 2401
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-13.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-13.json",
+      "sha256": "fdc9ff0af33bf639151d27990b9fe0a099696791793c3da3eb49ae2d12e8a7d3",
+      "bytes": 2401
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-14.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-14.json",
+      "sha256": "fdc9ff0af33bf639151d27990b9fe0a099696791793c3da3eb49ae2d12e8a7d3",
+      "bytes": 2401
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-15.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-15.json",
+      "sha256": "5aabe51b68d39e9ad567a42381db8b9cd132ef43be5873a097a9ef57386e7f86",
+      "bytes": 2369
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-16.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-16.json",
+      "sha256": "5aabe51b68d39e9ad567a42381db8b9cd132ef43be5873a097a9ef57386e7f86",
+      "bytes": 2369
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-17.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-17.json",
+      "sha256": "10659b025466468ed3fa42aa5792d61a189499b185d36135648e91125c949340",
+      "bytes": 2522
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-2.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-2.json",
+      "sha256": "fa81a5c0937bb2093923ed63290d5dd2497856e60a63150bc20c9fa8ee8045c4",
+      "bytes": 1457
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-3.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-3.json",
+      "sha256": "d0e78fb826cd85455b59a74a95e7ddb21c1a6e74a645dbfbccc3fad875acda93",
+      "bytes": 1457
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-4.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-4.json",
+      "sha256": "4bb6c46ef40b898b698b5060b13a6663e758fed7da808582b42d693ad1a18117",
+      "bytes": 1457
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-5.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-5.json",
+      "sha256": "f587fae1c64ca8a1b8bf9f11927add23daf572e94ea70ad3f729e47edec69fd7",
+      "bytes": 1457
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-6.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-6.json",
+      "sha256": "8e172046a96c861aec1d5a44bdf6580e52b60f4e67069066fdb5bcd8a5e0d89d",
+      "bytes": 1395
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-7.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-7.json",
+      "sha256": "096893dd174265499383e7250820efab4eed60d5065511d8afdcd1ddc8769251",
+      "bytes": 1395
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-8.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-8.json",
+      "sha256": "152e77c4d268cd7bc2d3c3fae8d1605aa5b22070a1cd539d56d9adeb6613ec3e",
+      "bytes": 329
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09-9.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09-9.json",
+      "sha256": "271d2696f80197a01c2af73109d367a54899821dbca9991be42eab44616e8e41",
+      "bytes": 329
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-09.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-09.json",
+      "sha256": "4f4747c4f0839b12f08c3707d23b8a6cdb9184a62719fc8015ca54575872e868",
+      "bytes": 2733
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-1.json",
+      "sha256": "4bac10ce42be6b17a5c97ae0d8a87fc092442486e32130d16f210606e543cb56",
+      "bytes": 2427
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-10.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-10.json",
+      "sha256": "7ae96e166a68883efa88d32e3f7793d9391168c56e130112dbe172965f3904e0",
+      "bytes": 2494
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-11.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-11.json",
+      "sha256": "ac350cb2fa8d611e3e62a12ae811096ea271376c32461a9d11765ed23c5862c9",
+      "bytes": 2494
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-12.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-12.json",
+      "sha256": "0566f1a1c6291b148942854dfd5d6f68604f041e4369112e023af80185da6003",
+      "bytes": 2494
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-13.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-13.json",
+      "sha256": "b5cc5a9e485e6fe3894db1792df27820f14d0e4c64aa0977f5fce63a0c47c933",
+      "bytes": 2495
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-14.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-14.json",
+      "sha256": "8f59222207908622a0ec0175b083b23f709332dd568a1eeb0a14d11ed324d6a3",
+      "bytes": 2065
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-15.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-15.json",
+      "sha256": "3e6ca187996ef1860054c4437a4c6995f0d8e797302644a0bb82fcb3bd804340",
+      "bytes": 2065
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-16.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-16.json",
+      "sha256": "9edfe8eb7755d2f602cc058dc5525577b9f4b41a5b2747ca9573df433e3097eb",
+      "bytes": 2064
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-17.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-17.json",
+      "sha256": "2e071e8629afa82bfee07b04f4d9689c7c738e395d2ddf4bb3ad2f72e60237fb",
+      "bytes": 2064
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-18.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-18.json",
+      "sha256": "1485aaa315a30eaf30a723414e95a83942fcc123aeb85188fe7cd0d14417356b",
+      "bytes": 2064
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-19.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-19.json",
+      "sha256": "b81faabcfdc412879313559d2a3336f05aa52934de1f522c19c39c848628023d",
+      "bytes": 2064
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-2.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-2.json",
+      "sha256": "4bac10ce42be6b17a5c97ae0d8a87fc092442486e32130d16f210606e543cb56",
+      "bytes": 2427
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-20.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-20.json",
+      "sha256": "2736f57a5b7eccf4e18228310e7956bda7b59a48f5609266a6c80d320cf1824a",
+      "bytes": 2065
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-21.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-21.json",
+      "sha256": "a8d4c92994e2162d1f0916184073c97f5e2aacf80b81a99af27175b86c978a20",
+      "bytes": 1822
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-22.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-22.json",
+      "sha256": "c46440a6f1634c34e16515feabc52f8b9590439b40abb7bbd04a4c1bb95bb67d",
+      "bytes": 1822
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-3.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-3.json",
+      "sha256": "4bac10ce42be6b17a5c97ae0d8a87fc092442486e32130d16f210606e543cb56",
+      "bytes": 2427
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-4.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-4.json",
+      "sha256": "4bac10ce42be6b17a5c97ae0d8a87fc092442486e32130d16f210606e543cb56",
+      "bytes": 2427
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-5.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-5.json",
+      "sha256": "4bac10ce42be6b17a5c97ae0d8a87fc092442486e32130d16f210606e543cb56",
+      "bytes": 2427
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-6.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-6.json",
+      "sha256": "4bac10ce42be6b17a5c97ae0d8a87fc092442486e32130d16f210606e543cb56",
+      "bytes": 2427
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-7.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-7.json",
+      "sha256": "f9b589af3144551f1bee5858c07e4e51e48f733a9e4a582238f1d44843c9a383",
+      "bytes": 2426
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-8.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-8.json",
+      "sha256": "625a8ea1693cd8e633f94f76c4b95325fd083e687114d6071747009af6e62d13",
+      "bytes": 2426
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12-9.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12-9.json",
+      "sha256": "d5afe48bb9980670c095a496db0cb29dcb84123e731487e2e8a3fa28c99ec7ba",
+      "bytes": 2494
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-12.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-12.json",
+      "sha256": "89dcf58311eff625e3fbcf6635f03024d5e5fa542f802240d9d101fef80cb2e0",
+      "bytes": 1810
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-1.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-1.json",
+      "sha256": "92772ec600cf705508c6b5c4f47dc9ae8015cb414f238ef703c303f33671c7c4",
+      "bytes": 1832
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-10.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-10.json",
+      "sha256": "ed197293aad17ce8c88000fa99e7955dd3116444f0df1fe154bd03babf7d7f70",
+      "bytes": 2603
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-2.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-2.json",
+      "sha256": "1e83dacb370569d4633a3a2be083aaf087d11039473f9b012ffcb6f77e3aafb1",
+      "bytes": 2144
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-3.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-3.json",
+      "sha256": "ab4283b885e0614f1910e50b08b93e51f06da71c970fd1a2976e2c4f8c87de08",
+      "bytes": 2957
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-4.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-4.json",
+      "sha256": "ab4283b885e0614f1910e50b08b93e51f06da71c970fd1a2976e2c4f8c87de08",
+      "bytes": 2957
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-5.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-5.json",
+      "sha256": "c1ae4475671da5b268e2676c57fb3a0aca10d3ff7198c377ec18c0052816246d",
+      "bytes": 2957
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-6.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-6.json",
+      "sha256": "f7eca7e7dd3731521df2e1a6e7d005dc682bf1172ac63c4fa9776296d85fa195",
+      "bytes": 2656
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-7.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-7.json",
+      "sha256": "37fbeddfc660ab1666e2b8aeac0bee5e745ee506067ebf62de80180905cbff23",
+      "bytes": 2606
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-8.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-8.json",
+      "sha256": "a8db5004b7387b2eab7d24fb0cffcddc73eb79e4a5201cfada6a36a6f6665ad6",
+      "bytes": 2603
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13-9.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13-9.json",
+      "sha256": "30a235f04298d47245cdb928a7a81eed4055b73ed05c7dd573f1a5c0e8e47858",
+      "bytes": 2612
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\2026-10-13.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\2026-10-13.json",
+      "sha256": "d2cf89a026fc7f321f828db6967d1a32850663f38decce508d1764116754c941",
+      "bytes": 3269
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\tickets\\weixin-20260928.txt",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\tickets\\weixin-20260928.txt",
+      "sha256": "c4fff2fdc9144e2bb697ebddd9c9961cebf31b17e49cf4f005a7e54d3ab3772b",
+      "bytes": 466
+    },
+    {
+      "source": "D:\\Code\\AH_analyse\\test_grid_runtime_guard.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\repository\\test_grid_runtime_guard.py",
+      "sha256": "72332bb20d3c7a078e0b605b8cf1005d2538280889c092798c049da4d90ca082",
+      "bytes": 696
+    },
+    {
+      "source": "D:\\Code\\AH_analyse\\register_fills.py",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\repository\\register_fills.py",
+      "sha256": "391b3223ac01bd70d69ad903ec7955d307ca025aa8970e73da877671a6436cec",
+      "bytes": 852
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\eod\\2026-09-29.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\eod\\2026-09-29.json",
+      "sha256": "b05f6637ce626c804b06b5ff055c82ead183f7f3a641fc05ff095f6d32e55eb6",
+      "bytes": 713
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\eod\\2026-09-30.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\eod\\2026-09-30.json",
+      "sha256": "3423a78ee890e1d5ee5d74e10b76a343c31c79a59f7827476c0daef97cd6d361",
+      "bytes": 714
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\eod\\2026-10-08.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\eod\\2026-10-08.json",
+      "sha256": "468a7f77cd56c300f4f395030ff82a67e058a2bd6e749c11bcdb43de7861a034",
+      "bytes": 1014
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\eod\\2026-10-09.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\eod\\2026-10-09.json",
+      "sha256": "6ecf1014934f09021ab33a9b34ed5066832fd2d1356d017979f85e77681f098c",
+      "bytes": 1678
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\eod\\2026-10-12.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\eod\\2026-10-12.json",
+      "sha256": "c58e78a1718632779a0ac72197e82d56c7730351be7841a05c9b98112c43b4e7",
+      "bytes": 1691
+    },
+    {
+      "source": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\eod\\2026-10-13.json",
+      "destination": "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\archives\\retired-grid\\2026-10-14_103636\\managed-home\\cache\\grid-account\\eod\\2026-10-13.json",
+      "sha256": "40a278d1132897dc1292af9afa70cd40b5467392f0270892ee1f72158dad3413",
+      "bytes": 1543
+    }
+  ],
+  "protected_sha256": {
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159363.json": "a8127e5b165aeaea47ec2fa139cf5680266ce687b820923f48705962f2c00837",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159363.json.lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-159992.json": "f5513958c820a5f5e47e3700ebf016a839589ff71986bbba7e7cf13794189864",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-589720.json": "7bbb1bbebe1bda481eb38e2af247a5cf19e22eaf694207c635fff33d82034eb7",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-589720.json.lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-intraday-alerts.json": "69b7c340b003674ab4b658abbf88e3d3e3d055397a1780925fc58889d7214f99",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\cache\\grid-account\\confirmed-intraday-alerts.json.lock": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weixin_ops.py": "23f03aefe8ddb1a5c744326355c5dad8cb2d8d232d7486bff2bbd2bdeffa8333",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weixin_execute.py": "d7bcf79b821a765d1a748972dbdf9fd63618cbc2a7f5a51693d44db2379ce3f1",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weekly_rotation.py": "fcb2d709e6f162ddf7f400f45ced8b12341d3fcb42896931d5de5f3055bb7a27",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_midnight_rollover.py": "3c13d2bca8f02fda6bf49dacfa319948df22b9a5558f706000877c32ad20903d",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_rotation_review.py": "3ae9ee31944f9c1c7dce2b6adf244908138b1590012da132106cf56cdfff49d0",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_eod_decision.py": "c25daded6c58dae7eace0b252461eaa310b8b7087aba495599f3993b897167c7",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weixin_intraday.py": "7764c12744f53f6dd2ac7e40932e4192c0598a8703bbf4248e58834d51d8b366",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weixin_preview.py": "abf680865b6017f0b8ada13282bbc16fa86153ffa97b1fbf7f1a60fb6cad731d",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_intraday_bars.py": "56c64f4568f3de7cad53681cef4d467d957543be9a3f02bb4b74fbd937c908a4",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\run_rotation.py": "3f6ea8dc8790c1a87936d4253f55453fe26ecf3637183aac00aff4608e1f4e11",
+    "D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weixin_confirm.py": "4644cd778dd0b8653e03e697d543090320a9394ab1fc7f65d6f22f5bc202724b"
+  },
+  "cron": [
+    {
+      "id": "bba8cc3c5333",
+      "script": "grid_weixin_preview.py",
+      "enabled": true
+    },
+    {
+      "id": "e01b833b150d",
+      "script": "grid_weixin_execute.py",
+      "enabled": true
+    },
+    {
+      "id": "ef9a27327990",
+      "script": "grid_weixin_intraday.py",
+      "enabled": true
+    },
+    {
+      "id": "b3097b45fafa",
+      "script": "grid_eod_decision.py",
+      "enabled": true
+    },
+    {
+      "id": "5d8180a8d025",
+      "script": "grid_weekly_rotation.py",
+      "enabled": true
+    },
+    {
+      "id": "e43e01e62fcc",
+      "script": "git_daily_push.py",
+      "enabled": true
+    },
+    {
+      "id": "ed9d5c85e0c4",
+      "script": "grid_midnight_rollover.py",
+      "enabled": true
+    }
+  ]
+}

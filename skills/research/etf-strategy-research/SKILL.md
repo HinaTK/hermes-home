@@ -67,7 +67,9 @@ No doubling or unlimited downward resets. Include suspending purchases, reducing
 
 ### 6. Validate strategy claims before upgrading confidence
 
-A credible grid backtest needs adjusted price/dividend handling without double counting, cash and inventory accounting, lots, commissions/minimum charges, spread/slippage, and executable fill assumptions. Daily bars do not reveal whether a day's high or low occurred first; resolve intrabar ambiguity conservatively or use finer data.
+A credible grid backtest needs adjusted price/dividend handling without double counting, cash and inventory accounting, lots, commissions/minimum charges, spread/slippage, and executable fill assumptions. Daily bars do not reveal whether a day's high or low occurred first; resolve intrabar ambiguity conservatively or use finer data. For this user's repo, first inspect `tools/etf_research/grid_model.py` **and its caller** `tools/etf_research/engine.py` before adapting an existing simulation: the caller may hard-code gap and the model may assume different core lots, initial cash, T+1 settlement and per-lot budgets. An isolated research driver with targeted tests is preferable to changing active trading/ledger code. Distinguish a screener's threshold-day count from matched completed cycles. If the user posits buying every daily low then selling every daily high, acknowledge the hypothetical ex-post upper bound, then explain why a 1% actual grid may not capture it.
+
+For a proposed broker condition order, inspect the user's actual screenshot field by field. A configured price interval and per-trigger amount do **not** establish a total committed-capital ceiling: verify a maximum-inventory control separately. Reconcile starting shares and broker pending orders; semi-auto alerts require human response, and next-bar simulated IOC fills do not reproduce that behavior. Fix when box/anchor parameters were chosen: applying newly selected levels to earlier data is hindsight sensitivity, not prospective validation. Report event-level trades, realized cycles, open inventory P&L, account return, peak deployment, drawdown, blocked/cancelled signals and data window. If only one lot deployed, do not claim the model stress-tested a five-lot inventory or a lower-box break. See `references/grid-backtest-pitfalls.md`.
 
 Benchmark against buy-and-hold with comparable initial capital and risk allocation, not only a fully invested benchmark. Test multiple start dates and market regimes; report total account returns, maximum drawdown, idle cash, turnover, remaining inventory losses, and parameter sensitivity. If not run, explicitly say no backtest has been performed.
 
@@ -82,18 +84,16 @@ When a user asks to recompute grid parameters under a different interval convent
 1. **Bounds** — upper/lower/center/step/grids/span
 2. **Current price position** — inside or outside the interval? If outside, the strategy is **unexecutable** regardless of theoretical ROI. Flag this before any profit discussion.
 3. **Maximum drawdown** — distance from current price to lower bound. A wider interval looks like more opportunity but means deeper paper losses before the first buy grid fills.
-4. **Per-round net profit** — gross spread minus commission (万五免五 = 0.0001 per side, min 1 CNY per leg). With 0.6% spacing on a ~2 CNY ETF, per-round net drops to ~33 CNY on a 6,000 CNY cell — less than half the 1% spacing figure.
-5. **Monthly ROI** — monthly net profit ÷ total capital deployed (all cells filled). This is the number that actually answers "what's the return?". Do NOT present raw monthly profit without dividing by capital, because a 9-grid strategy that needs 53k CNY deployed and earns 749/month (1.4% ROI) is objectively worse than a 5-grid strategy needing 29k and earning 1,285/month (4.4% ROI).
+4. **Per-round net profit** — gross spread minus commission (万一/0.0001 per side, with the user's confirmed 1 CNY per-leg minimum), board-lot rounding and modeled slippage. This is a conditional single completed-cycle spread, not a realized number of cycles.
+5. **Return denominator** — state whether return uses starting account equity, maximum committed capital or time-weighted deployed capital; show them separately when relevant. A static "all cells filled" budget is not necessarily an app-enforced cap and is not a measured return. Do not quote monthly ROI without a chronological, cash-and-inventory-aware simulation or actual matched fills.
 
-### The 0.6% spacing paradox
+### Historical monthly ROI warning
 
-Smaller spacing does NOT always increase ROI. With 万五免五 commission:
-- 1% spacing: ~55.8 CNY net per round on 6,000 CNY cell
-- 0.6% spacing: ~32.6 CNY net per round on 6,000 CNY cell
-- More grids (9 vs 5) partially compensates, but total monthly net drops from 1,285 to 749
-- ROI drops from 4.4% to 1.4% because capital deployed grows faster than profit
+The illustrative monthly ROI and per-month profits above were computed by equating daily high-low range threshold days with completed buy-then-sell trades. That inference is invalid; those percentages are retracted, and must not be reused as forecasts or empirical strategy comparisons. Inspect chronological trade events, broker fill rules, inventory and cash before discussing monthly returns. A daily high-low range is at best an ex-post perfect-timing spread, and may not even cover the chosen 1% grid step. Do not generalize one fund-price threshold into a claim that one spacing dominates another.
 
-**Rule of thumb:** 0.6% spacing is only ROI-positive when the ETF price is below ~3 CNY (so the 1 CNY minimum commission is a smaller fraction of the round-trip gross). Above that threshold, 1% spacing dominates.
+### Comparing 0.6% with 1% spacing
+
+A narrower grid lowers gross spread per completed round and may increase the number of opportunities; neither the number of realized cycles nor return follows from daily range counts. Compare both spacings under identical initial cash/holdings, per-cell budget, cumulative inventory cap, fees (万一/0.0001 per side and the user's 1 CNY minimum where applicable), execution rules and market window. Report realized completed cycles, remaining inventory P&L, equity and max drawdown separately. There is **no universal price threshold** below or above which one gap necessarily dominates.
 
 ### Golden ratio window selection
 
