@@ -25,15 +25,15 @@
       "schedule_display": "weekdays at 9:10am",
       "repeat": {
         "times": null,
-        "completed": 19
+        "completed": 20
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:39:09.001076+08:00",
-      "next_run_at": "2026-10-15T09:10:00+08:00",
-      "last_run_at": "2026-10-14T10:14:42.635663+08:00",
+      "next_run_at": "2026-10-16T09:10:00+08:00",
+      "last_run_at": "2026-10-15T09:10:02.225397+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -73,15 +73,15 @@
       "schedule_display": "weekdays at 9:31am",
       "repeat": {
         "times": null,
-        "completed": 20
+        "completed": 21
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T15:28:08.339160+08:00",
-      "next_run_at": "2026-10-15T09:31:00+08:00",
-      "last_run_at": "2026-10-14T10:14:07.162164+08:00",
+      "next_run_at": "2026-10-16T09:31:00+08:00",
+      "last_run_at": "2026-10-15T09:31:10.638036+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 5813
+        "completed": 7173
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-14T23:01:00+08:00",
-      "last_run_at": "2026-10-14T23:00:09.372309+08:00",
+      "next_run_at": "2026-10-15T23:01:00+08:00",
+      "last_run_at": "2026-10-15T23:00:32.041528+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -161,15 +161,15 @@
       "schedule_display": "weekdays at 3:20pm",
       "repeat": {
         "times": null,
-        "completed": 12
+        "completed": 13
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-29T13:42:38.404710+08:00",
-      "next_run_at": "2026-10-15T15:20:00+08:00",
-      "last_run_at": "2026-10-14T15:20:30.522583+08:00",
+      "next_run_at": "2026-10-16T15:20:00+08:00",
+      "last_run_at": "2026-10-15T15:20:21.650115+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 4
+        "completed": 5
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-15T23:00:00+08:00",
-      "last_run_at": "2026-10-13T23:00:49.442914+08:00",
+      "next_run_at": "2026-10-16T23:00:00+08:00",
+      "last_run_at": "2026-10-14T23:00:52.590416+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,8 +279,8 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-14T23:00:06.834697+08:00",
-        "by": "MS-22110429259:60220:1d618fcb43ba4394841d1d1f5bcf2d1b"
+        "at": "2026-10-15T23:00:30.096814+08:00",
+        "by": "MS-22110429259:33612:48b9f12c14b4487c954b152e2677b38a"
       }
     },
     {
@@ -308,15 +308,15 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 2
+        "completed": 3
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-10-15T00:01:00+08:00",
-      "last_run_at": "2026-10-14T10:25:57.965733+08:00",
+      "next_run_at": "2026-10-16T00:01:00+08:00",
+      "last_run_at": "2026-10-15T00:01:35.641995+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -326,7 +326,99 @@
       "enabled_toolsets": null,
       "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
       "fire_claim": null
+    },
+    {
+      "id": "f728e87e55b7",
+      "name": "Run the Feishu gateway health check script and rep",
+      "prompt": "Run the Feishu gateway health check script and report results ONLY if there is a problem.\n\nScript: D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\feishu_health_check.py\n\nRun it with python, read the output. If all checks pass (exit code 0), reply with exactly: \"OK\" — nothing more.\n\nIf any check fails, report the specific failures concisely and suggest the fix (check FEISHU_GROUP_POLICY=open, FEISHU_REQUIRE_MENTION=false in .env, restart gateway if needed). Do not run any other tools or do grid trading work — this is a health check only.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "feishu_health_check.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "interval",
+        "minutes": 5,
+        "display": "every 5m"
+      },
+      "schedule_display": "every 5m",
+      "repeat": {
+        "times": null,
+        "completed": 117
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-15T11:26:32.781869+08:00",
+      "next_run_at": "2026-10-15T23:04:30.877860+08:00",
+      "last_run_at": "2026-10-15T22:59:30.877860+08:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "feishu:oc_7d2d8ab5d54051067f8e0cd228652133",
+      "origin": null,
+      "enabled_toolsets": [
+        "terminal"
+      ],
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
+      "fire_claim": null
+    },
+    {
+      "id": "2ac2c9f8e0aa",
+      "name": "网关自愈监控",
+      "prompt": "Gateway auto-heal monitor: check if Hermes gateway process is running, restart if not. Alert only on restart or failure.",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "gateway_auto_heal.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/5 * * * *",
+        "display": "*/5 * * * *"
+      },
+      "schedule_display": "*/5 * * * *",
+      "repeat": {
+        "times": null,
+        "completed": 34
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-15T20:14:32.161659+08:00",
+      "next_run_at": "2026-10-15T23:05:00+08:00",
+      "last_run_at": "2026-10-15T23:00:32.752900+08:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "feishu",
+      "origin": null,
+      "enabled_toolsets": [
+        "terminal"
+      ],
+      "workdir": null,
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-14T23:00:09.374785+08:00"
+  "updated_at": "2026-10-15T23:00:32.758533+08:00"
 }

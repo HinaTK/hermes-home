@@ -36,6 +36,22 @@ Report the last confirmed stage. “Feishu inbound and outbound are confirmed, b
 
 Record the effective provider and model from logs, not only the configured default. Check in-place model switches, fallback providers, auxiliary/compression providers, and route compatibility. A model accepted by a custom provider may be rejected by OAuth/Codex. Treat HTTP 400 model-unsupported errors as routing failures, not messaging transport failures.
 
+### Session-scoped model changes: scope and evidence
+
+When the user requests a model change for the **current conversation**, distinguish a live session hot-swap from a default-model configuration update. Do not change global/profile defaults as a substitute. Inspect the installed interface's documented operation and scope before writing; a model-setting endpoint can explicitly apply only to new sessions.
+
+A provider's display label is not a model identifier. Resolve the exact provider/model pair from an authenticated catalog or the actual picker before supplying a command. Never manufacture a slash-command argument by concatenating provider and model names. If the identifier is unverified, direct the user to the picker by the exact display label rather than offering a plausible executable command.
+
+After any successful switch operation, read back the effective **target session** provider/model; reading the configured default is insufficient. A later runtime model-change notification is also evidence. Until then, report the switch as unverified or not completed, not successful. Do not turn unsuccessful control-interface attempts into a reusable workaround, and do not restart the user's app simply to expose a control port.
+
+### Authenticated provider but missing picker model
+
+When a user says they already authenticated but cannot find a model, investigate before telling them to select it again. Do not send them back to the same picker without checking its actual contents. Verify three distinct layers: provider authentication in the active managed home; the authenticated live model catalog; and the picker-returned model list. Authentication does not imply the picker exposes the entire catalog. Curated lists, tier filtering, and separately named free variants can explain a mismatch.
+
+Preserve exact model IDs and suffixes such as `:free`; do not silently substitute the free variant for the requested ordinary variant. A local cache is supporting evidence, not proof of present availability or entitlement. A parser accepting a switch command proves syntax only, not inference access or a completed session change. Report those boundaries explicitly.
+
+See `references/provider-catalog-picker-mismatch.md` for the verified Nous catalog/picker diagnostic technique and evidence limits.
+
 ### 4. Verify memory in four independent layers
 
 Check: (1) `config.yaml` provider, endpoint, account, user; (2) provider process health and version; (3) Hermes activation logs showing registration/activation; (4) a real search/read or safe write-then-read operation.

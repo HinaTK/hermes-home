@@ -89,6 +89,27 @@ For the Hermes messaging gateway:
 - Distinguish gateway process failure, platform websocket/iLink failure, outbound send failure, and upstream model 502/stream interruption.
 - Do not rotate Feishu/Weixin credentials or reset sessions until logs show an authentication/session problem.
 
+## Health-check noise reduction
+
+Cron-driven health checks should be **silent on success**. A check that prints "all checks passed" every few minutes is not monitoring — it's noise. The script should produce output only when a check fails, and the cron job's delivery should be configured to send only on non-zero exit.
+
+**Pattern:**
+```python
+if all_ok:
+    return 0  # silent — cron has nothing to deliver
+print("=== FAILED ... ===")
+for line in failures:
+    print(line)
+return 1
+```
+
+**Threshold tuning for idle services:** A service can be healthy but idle. Log-file mtime staleness thresholds must account for this — a gateway that only writes logs on activity may go 15+ minutes without a new line while perfectly healthy. Default stale thresholds should be 30+ minutes, not 5-10. Always verify the process is actually alive (tasklist/PID file) before declaring a log-staleness failure.
+
+**Distinguish idle from dead:**
+- Process alive + log stale → idle, not failure
+- Process dead + log stale → genuine failure
+- Process alive + log fresh → healthy
+
 ## What not to do
 
 - Do not equate `available`, `running`, or `healthy` with end-to-end readiness.
@@ -96,3 +117,4 @@ For the Hermes messaging gateway:
 - Do not run two independent supervisors for the same process.
 - Do not repair by deleting vector data, resetting credentials, or reinstalling runtimes before preserving evidence.
 - Do not capture a transient setup failure as a permanent tool limitation; record the working recovery path instead.
+- Do not treat a health check that runs successfully as a reason to send a notification. Success is the default, not an event.

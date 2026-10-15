@@ -2,8 +2,6 @@ User prefers Hermes 思考深度 High; UI maps to agent.reasoning_effort and def
 §
 User wants requested code/docs auto-committed and pushed to origin. Not git add -A; skip secrets, data/, logs/, and unrelated dirty files.
 §
-Do not treat AH_analyse plans as cross-session memory. Within a session, follow the last agreed plan; do not replace it with the latest audit gap. After the 2026-09-21 health check, the product next step was the pre-market decision card, not adding PE/change/price-date to pick cards.
-§
 When the user scopes a conversation to one product path, stay on that path until they change it; do not bring back other pipelines unprompted.
 §
 网格记账与汇报要求：用户回复“成功”时，不能默认整张票据所有委托都成交；必须先确认具体代码、买卖方向、成交份额和成交均价，再入账并汇报持仓。
@@ -35,3 +33,5 @@ When the user scopes a conversation to one product path, stay on that path until
 etf_research 引擎已知限制（2026-10-14）：grid_model.py 第37行 `if core_qty+4*q > vol[0]*.01` 存在单位不匹配——vol[0] 是手数（lots），core_qty+4*q 是股数。对首根K线成交量偏低的 ETF（如 159569 首根仅 1,464,800 手），1% 手数换算后不够覆盖初始订单股数，导致 ValueError。589720/159363 首根成交量极大（数千万手），即使单位错了也照样通过。这不是低流动性标的的问题，是模型对非资格池标的的系统性偏差。
 §
 迁移退出模式下的 ETF（当前 sz159992）在 00:01 重算后，可卖份额保持等于持有份额，不要改回 null。用户 2026-10-14 明确拒绝将 sellable_qty 重置为 null，认为可卖的就是可卖的。active=false 只控制是否生成买卖建议，不控制库存可见性。
+§
+User runs ETF grid trading via 银河证券 and uses Hermes desktop + Feishu as primary interface. Expects messaging to work reliably — "后续不要出问题可以吗" is a recurring expectation, not a one-off request. When Feishu group chat stopped responding after a gateway restart, user's first assumption was that their own configuration was wrong ("我之前不是要求不需要at吗"), not that a setting had silently changed. User accepts proactive monitoring (cron-based health checks) as a valid solution and does not want to be asked permission for every 5-minute check. User's tolerance for configuration drift is near zero — they expect FEISHU_REQUIRE_MENTION=false and FEISHU_GROUP_POLICY=open to stay set without manual re-checking.

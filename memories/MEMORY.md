@@ -1,10 +1,4 @@
-SkillHub CN CLI 已装在本机：skillhub 2026.8.5，包装脚本 C:/Users/Administrator/.local/bin/skillhub（Windows 须 cygpath -w 再交给 python）。安装指南缓存 HERMES_HOME/skills/web/skillhub/。装技能必须 --dir HERMES_HOME/skills。仅搜索/安装时不要问优先源；首次装 CLI 才问一次。
-§
-A-share cash auction 09:15–09:25, continuous 09:30. Grid ops must not lock limit prices at 09:10 (usually prev close). Scripts: hermes-home/scripts/grid_weixin_preview.py and grid_weixin_execute.py wrapping grid_weixin_ops.py --phase preview|execute. Execute falls back to preview if Tencent quote time is before 09:30 same day.
-§
 网格关键规则（2026-09-28用户明确）：网格卖出不按买入lot绑定；同一ETF应维护“总可卖库存池”，只要T+1可卖库存足够，就可以用较早A/B格可卖份额为最新下跌格配置对应数量的+2%卖单。优先资金周转：159363 D格5100@1.169成交后，应撤/不保留远端B格4700@1.298，改挂D格5100@1.192；不能同时占用超过总可卖库存。默认采用方案A（最近成交格优先），卖出后按实际卖出数量生成对应接回价。
-§
-网格账本与操作单不能把“D格买入当日不可卖”误解为“D格对应卖价不可挂”：卖价可立即挂在A/B的T+1可卖库存上，只要可卖池覆盖数量；只有当日新买的D份额本身不能作为可卖库存。用户目标是反复成交净差价和资金周转，不能机械等待新lot T+1。
 §
 2026-10-08 用户确认 589720 买入 9,400 份 @ 0.859 成交（实际成交价优于限价 0.869）。佣金按万一免五最低 1 元计 1.00 元，银河交割单待核；其他委托未计成交。
 §
@@ -72,4 +66,10 @@ Updated skill library with new class-level skill 'etf-grid-maintenance' that enc
 §
 用户明确ETF状态需求：每只ETF的qty、sellable_qty、max_grid(A-Z)都是持久化、脚本可修改的变量，不是展示时临时计算的口径。买入从当前max_grid取下一号并更新，卖出取当前号再退一号；标签保存到交易记录，不人工硬编码。每日00:01从交易记录重算qty并写回sellable_qty=qty；买入增加qty不增加sellable_qty，卖出同时扣减二者，卖出建议读取持久化sellable_qty。用户要求汇报数字来自真实脚本输出，区分用户输入、人工设置与脚本自动生成。
 §
-2026-10-14: etf-grid-screener 产出候选（如 159569）后，主 5 分钟引擎可能因 grid_model.py 第 37 行的股/手单位不匹配而拦截低成交量 ETF。不要改 grid_model.py（会破坏 321 只可比性），改用日 K 线跨线分析估算盈利。关键：筛器箱体边界必须与实际 63 天价格区间交叉验证——159569 筛器上界 1.480 从未触及、下界 1.378 被跌破，实际区间 1.280-1.445。已固化到 etf-grid-maintenance skill 的 references/candidate-evaluation-outside-main-engine.md。
+2026-10-14: etf_research 回测引擎参数与用户实际网格参数不匹配——引擎固定 2% 间距、5,000 元/档、10 万独立账户、一次性建满 5 档；用户实际 159363/589720 为 1.5% 间距、6,000/8,000 元/格、逐格建仓。后果：引擎绝对值（往返次数、净差价）不能与用户账本直接对比。案例：引擎模拟 159363 仅 4 次往返，用户实际做 T 5 次（做T净利 535 元）。引擎仍可用于 321 只池内相对排名（所有候选用同一套错误参数，相对顺序不变），但不能用于预测用户实际账户收益或做绝对值判断。
+§
+2026-10-14: engine.py rotation_top10 still filters full_cycles > 589720's cycles, returning only 2 rows instead of 10. The c1f2b96 fix (10-10) only touched weekly.py display logic, NOT engine.py's rotation_top10 definition. Calling run_research directly still returns the broken version. Fix: rotation_top10 = rank[has_all_four_windows & ~holding].sort_values(full_cycles desc).head(10); rotation keeps the >54 filter only for leader detection. Lesson: a fix applied to one consumer does not fix the shared source — always check the producer.
+
+104-day rerank with units-fixed grid_model (2026-04-24→09-22): 589720 54 cycles/6,597.10; 159363 53/6,106.60; 159992 39/4,536.80. TOP1: sh589120 60/7,341.30. 64 of 1,284 windows failed (cause not yet investigated). 8 of TOP10 are 创业板人工智能同指数产品, highly correlated with 159363 — switching is just changing fund manager. Only sh560860 工业有色 (43/4,900.10) passed full qualification and is cross-theme.
+
+User reaction: angry when given a TOP10 table without first stating which model, which window, and that it's not comparable to prior weekly numbers. Always state provenance before numbers.

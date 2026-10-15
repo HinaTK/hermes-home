@@ -39,6 +39,17 @@ When testing a proactive message, use the configured home target and capture the
 ### Feishu
 Prioritize application publication, bot capability, message event subscription, send/receive permissions, and the allowed-user list. Verify both inbound and outbound evidence separately.
 
+### Feishu policy drift (silent config regression)
+
+**Partial silence is the signature symptom**: DM works, group chat doesn't. When this pattern appears, check `.env` directly — do not trust the onboarding diagnosis JSON snapshot, which may be stale:
+
+- `FEISHU_GROUP_POLICY=disabled` → group messages silently dropped
+- `FEISHU_REQUIRE_MENTION=true` → only @-mentions trigger a response
+
+Fix with `sed` on `.env` and restart the gateway. No credential rotation needed.
+
+**Stale PID file on restart**: `gateway-runtime/gateway.pid` lives outside `HERMES_HOME` and can survive profile switches. If a restart fails with `PID file race lost to another gateway instance`, delete the stale file first. See `references/feishu-policy-drift.md`.
+
 ## Restart semantics
 
 Saved platform configuration and credentials should survive an ordinary Hermes restart. The gateway process must be running for inbound processing and scheduled delivery. If the desktop app starts the managed gateway automatically, no manual start is expected after every restart. If status remains stopped after startup settles, use the desktop **保存并启动网关**, then **检测连接**; do not rotate secrets first.

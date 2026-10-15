@@ -106,8 +106,11 @@ The prior ledger/ticket/rebuild code is retired and must not be invoked or used 
 - **Pooled T+1 sell does NOT consume the target lot** – when a sell hits a grid price (e.g. C格) whose lot was bought same-day (T+0), the shares are drawn from the pooled T+1 inventory (oldest settled lots first, FIFO), **not** from the target lot. The target lot's `qty` stays untouched. The old code zeroed the target lot's qty, which desynced `pos["qty"]` from the sum of lot qtys. Always call `sync_qty(pos)` after a sell so `pos["qty"] == sum(lot["qty"])`.
 - **When reconciling with the user, compute cost basis from history, not from lot state** – the user will independently sum `buy costs − sell proceeds` and compare against `cost_cash`. If the numbers differ, the discrepancy is almost always in the sell-side cost reduction path, not in the buy records. Walk through each trade one at a time; the user will correct you down to the yuan.
 
+## Pitfalls (continued)
+- **Cronjob delivery must be human-readable, never raw JSON (FIXED 2026-10-15)** – `eod_main()` originally returned `json.dumps(report)` and the launcher passed it straight through to Feishu, so the 15:20 job delivered a wall of `{"asof":...}` instead of a readable summary. Fix: add `render_eod(report)` that formats decisions/actions as text, add `render=False` parameter to `eod_main()` (default keeps JSON for test compatibility), and update both launcher scripts (`tools/confirmed_grid/launchers/grid_eod_decision.py` and `scripts/grid_eod_decision.py`) to call `safe_entrypoint(eod_main, True)`. **Any cronjob that delivers script output to a human-readable channel must render before delivery — a JSON dump is a presentation failure, not a minor omission.** Verify by running the launcher and reading the actual delivered text, not just checking exit code zero.
+
 ## Reference Files
-- `references/grid_eod_decision_overview.md` – brief explanation of the EOD decision script.
+- `references/grid_eod_decision_overview.md` – brief explanation of the EOD decision script, including the render_eod delivery path.
 - `templates/cleanup_after_close_stub.py` – starter implementation if the function ever needs to be recreated.
 
 ## Example Usage
