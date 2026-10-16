@@ -39,6 +39,16 @@ When testing a proactive message, use the configured home target and capture the
 ### Feishu
 Prioritize application publication, bot capability, message event subscription, send/receive permissions, and the allowed-user list. Verify both inbound and outbound evidence separately.
 
+### Health-check false alarms and notification boundaries
+
+When the user says “修复报错，不要再发飞书”, stop the **specific offending monitor's delivery** first: list jobs, identify the exact job ID from the screenshot, update its delivery to `local`, then read back that job. Keep the monitor running locally; do not disable unrelated trading reminders or send a test message to the channel the user just asked to silence.
+
+For code changes, use the user's preferred Superpowers workflow: load systematic-debugging and test-driven-development, reproduce the exact symptom with a failing test, fix the cause, run regression tests and the actual deployed script. Verify exit code AND stdout/stderr explicitly; a successful piped shell command alone does not establish test success.
+
+**Missing startup logs are not a disconnection signal.** Connection markers can rotate into old files or leave the last 100 lines while the adapter remains active. Recent group-message events are activity evidence, not proof of current transport health or outbound delivery. Missing/stale logs must be labeled **unknown/unverified**, not “disconnected”, and must not trigger blanket policy changes or a gateway restart. Retain independent process/config checks. Do not report unknown as positively healthy in prose, even if an advisory check is non-fatal.
+
+See `references/feishu-monitor-log-rotation.md` for the regression recipe and deployment verification.
+
 ### Feishu policy drift (silent config regression)
 
 **Partial silence is the signature symptom**: DM works, group chat doesn't. When this pattern appears, check `.env` directly — do not trust the onboarding diagnosis JSON snapshot, which may be stale:

@@ -4,6 +4,16 @@ description: "Use when sending A-share ETF grid tickets or fills."
 ---
 # A-share ETF grid live ops
 
+## Morning advice and implementation workflow (2026-10-16 correction)
+
+- Morning Feishu grid advice is scheduled at **09:24 Beijing time**, replacing the former 09:31 job in place; do not create a duplicate 09:31 delivery. The 09:10 preview remains local-only.
+- Distinguish **ledger-derived grid limit suggestions** from **live-market quotes**. Grid suggestions use confirmed trades, current max_grid, budgets and persisted sellable_qty; they need no 09:30+ quote. Do not fetch quotes or downgrade these suggestions merely because the market has not opened. Keep cash/frozen-share/resting-order checks and no-auto-order warnings. Intraday quote freshness and trading-session gates remain unchanged.
+- For code changes, the user prefers Superpowers workflows: load systematic-debugging for defects and test-driven-development for behavior changes; reproduce RED, implement GREEN, then regress and exercise the installed launcher. Passing tests alone do not prove deployment or delivery.
+- Scheduling changes require both layers: update the runtime/installed launcher if it has a clock or quote gate, then update the existing cron and read it back. Report the actual next_run_at if today's requested time has passed; do not imply a missed scheduled send occurred.
+- Details and verification recipe: `references/ledger-based-morning-advice.md`.
+
+The clock and ticket descriptions below referring to 09:31/live-quote gating are historical for the old quote-dependent path, not the current 09:24 ledger-derived path.
+
 ## Current confirmed-state migration (2026-10-14)
 For 589720 and 159363, authoritative trades are ONLY `cache/grid-account/confirmed-589720.json` and `confirmed-159363.json`, not legacy ledger.json/tickets. Actual runtime entrypoints must be verified from installed launchers/--help, never assumed deployed from source edits alone. Never call legacy whole-ticket apply or bare 成功. Inputs require explicit fill identity/details; preserved historical dates remain null. Persist qty, sellable_qty and max_grid; daily00:01 writes sellable=qty, same-day rerun idempotent. 1.5% current grid, budgets8000/6000, A–Z stack max pointer; one buy and one sell; no broker execution authorization. Intraday cron is now every minute with trading-session gate, day high/low/spot unified dedup, not minute bars. 159992 remains unreconciled: do not infer its holdings or account cash from broken old ledger. Old parameters, paths and frozen playbook below are HISTORICAL and cannot override these newer user instructions. Follow etf-grid-maintenance stateful/persistence safeguards and report deployed integration vs tests separately.
 

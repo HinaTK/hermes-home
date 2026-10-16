@@ -68,8 +68,4 @@ Updated skill library with new class-level skill 'etf-grid-maintenance' that enc
 §
 2026-10-14: etf_research 回测引擎参数与用户实际网格参数不匹配——引擎固定 2% 间距、5,000 元/档、10 万独立账户、一次性建满 5 档；用户实际 159363/589720 为 1.5% 间距、6,000/8,000 元/格、逐格建仓。后果：引擎绝对值（往返次数、净差价）不能与用户账本直接对比。案例：引擎模拟 159363 仅 4 次往返，用户实际做 T 5 次（做T净利 535 元）。引擎仍可用于 321 只池内相对排名（所有候选用同一套错误参数，相对顺序不变），但不能用于预测用户实际账户收益或做绝对值判断。
 §
-2026-10-14: engine.py rotation_top10 still filters full_cycles > 589720's cycles, returning only 2 rows instead of 10. The c1f2b96 fix (10-10) only touched weekly.py display logic, NOT engine.py's rotation_top10 definition. Calling run_research directly still returns the broken version. Fix: rotation_top10 = rank[has_all_four_windows & ~holding].sort_values(full_cycles desc).head(10); rotation keeps the >54 filter only for leader detection. Lesson: a fix applied to one consumer does not fix the shared source — always check the producer.
-
-104-day rerank with units-fixed grid_model (2026-04-24→09-22): 589720 54 cycles/6,597.10; 159363 53/6,106.60; 159992 39/4,536.80. TOP1: sh589120 60/7,341.30. 64 of 1,284 windows failed (cause not yet investigated). 8 of TOP10 are 创业板人工智能同指数产品, highly correlated with 159363 — switching is just changing fund manager. Only sh560860 工业有色 (43/4,900.10) passed full qualification and is cross-theme.
-
-User reaction: angry when given a TOP10 table without first stating which model, which window, and that it's not comparable to prior weekly numbers. Always state provenance before numbers.
+已查证曾讨论单边行情，不能再称“没聊过”：原会话 @session:default/20260922_141141_e5b6cb；消息4354为上涨卖空/三天接不回，9/29后补参与底仓和提前上移复核；消息5332为持续下跌只买不卖、暂停新增买入、评估下移区间/换ETF且旧亏损不消失。以上是历史讨论，不证明当前代码仍有效；159992后改迁移退出。用户反感跨会话否认已讨论事项；此类问题过去的检索遗漏不等于从未讨论，当前未诊断到记忆服务故障。

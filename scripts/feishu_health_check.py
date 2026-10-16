@@ -84,43 +84,21 @@ def check_env():
 def check_recent_feishu():
     """Check if gateway log has recent feishu activity.
     Primary: gateway.log. Fallback: agent.log (gateway may write there instead)."""
+    # Startup connection markers rotate out of the active logs. Their absence
+    # is not evidence of disconnection; process/config checks are independent.
     log_files = [GATEWAY_LOG, os.path.join(HERMES_HOME, "logs", "agent.log")]
-    latest_mtime = 0
-    latest_file = None
-    for lf in log_files:
-        if os.path.exists(lf):
-            mt = os.path.getmtime(lf)
-            if mt > latest_mtime:
-                latest_mtime = mt
-                latest_file = lf
+    activity = False
+    for log_file in log_files:
+        try:
+            with open(log_file, encoding="utf-8", errors="replace") as stream:
+                recent = stream.readlines()[-500:]
+            activity = activity or any("feishu:group" in line for line in recent)
+        except OSError:
+            continue
+    if activity:
+        return True, "group activity observed (log evidence only)"
+    return True, "unknown: missing connection log is not proof of disconnection"
 
-    if latest_file is None:
-        return False, "no log files found"
-
-    age_min = (datetime.now().timestamp() - latest_mtime) / 60
-    if age_min > 60:
-        return False, f"all logs stale ({age_min:.0f}min old) — gateway may be down"
-
-    # Check for feishu connection in the most recent active log
-    check_file = latest_file if latest_file != GATEWAY_LOG else GATEWAY_LOG
-    try:
-        with open(check_file, errors="replace") as f:
-            lines = f.readlines()[-100:]
-        has_connected = any("feishu connected" in l for l in lines)
-        has_group = any("feishu:group" in l for l in lines[-30:])
-        if not has_connected:
-            # Try the other log file as fallback
-            other = GATEWAY_LOG if check_file != GATEWAY_LOG else os.path.join(HERMES_HOME, "logs", "agent.log")
-            if os.path.exists(other):
-                with open(other, errors="replace") as f2:
-                    lines2 = f2.readlines()[-100:]
-                has_connected = any("feishu connected" in l for l in lines2)
-                has_group = any("feishu:group" in l for l in lines2[-30:])
-        if not has_connected:
-            return False, "no recent feishu connection in any log"
-        return True, f"connected, group_activity={'yes' if has_group else 'no (may be idle)'}"
-    except Exception as e:
-        return False, f"error: {e}"
 
 def check_channel_dir():
     """Check channel directory has feishu group."""

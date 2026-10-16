@@ -1,4 +1,4 @@
-User prefers Hermes 思考深度 High; UI maps to agent.reasoning_effort and defaults to medium if unset.
+用户偏好Hermes思考深度High。晨间网格建议北京时间09:24推飞书，替代09:31且不重复；按账本、格号和可卖库存算价，不等待开盘行情。健康检查报错仅本地保存、不推飞书，交易提醒保留。
 §
 User wants requested code/docs auto-committed and pushed to origin. Not git add -A; skip secrets, data/, logs/, and unrelated dirty files.
 §
@@ -10,23 +10,11 @@ When the user scopes a conversation to one product path, stay on that path until
 §
 用户2026-10-08明确159992→589720迁移允许一边卖旧ETF、一边买新ETF，不要求先清空旧仓；新旧共用4.6万元创新药成本额度。用户期望589720正常单格约8000元，不接受把“首批8000分两批”的试入方案默认为每格约4000元；不授权自动下单。
 §
-用户要求交易情况“汇总”必须包含每只ETF持仓份额、持仓成本与加权单位成本、现金及成交核对；不可仅概述策略或只报网格价差。行情需标明确切报价时间、区分盘后最后价与真实收盘价；账本与已确认成交不一致须先核对再汇报。
-§
-- 成本核算口径（用户认可）：净投入 = 买入含费合计 − 卖出净回笼。卖出不减少剩余份额成本基础，只减少净资金占用。用户会逐笔验算，不接受按 lot 扣减的持仓成本口径。
-- T+1 池规则（用户明确）：卖出消耗总可卖库存池（按买入日期 FIFO），目标格 qty 保持不变——目标格只标识哪个网格价位被触发。pos["qty"] 必须始终等于所有 lot 的 qty 之和。
-- 网格价差口径（用户明确）：同格卖价减买价，与 T+1 池消耗哪批货无关。池子只是保证有货可卖，经济结果就是那个差价。
-- 轮换检查必须用全市场 321 只合格 ETF 池（grid-broad-20260923/eligibility.csv），不能只用 13 只主题候选。持仓永远参与比较但不参与领先者判定。
-- 腾讯日线接口 URL 必须用 https://ifzq.gtimg.cn（不带 web. 前缀），web.ifzq.gtimg.cn 返回 501。
-§
 **账本重建铁律（2026-10-13 用户极度愤怒后确立）**：本地票据 status 字段不可作为成交依据。78 张票据中仅 7 张 status="成功"，但 history 有 33 条记录、用户声称做了很多次做T。票据之间存在冲突（如同一天两张票据都卖 A 格 9,100 份），说明 pending 票据不都是独立真实成交。**任何账本重建前必须先向用户索要银河证券交割单作为权威来源**，逐笔核对日期/代码/方向/数量/均价后再入库。绝不假设 pending=未成交，也不假设 history 记录=已成交。用户对记录错误极度愤怒，说"我就不该信你"。
-§
-用户明确（2026-10-14）：新成交日期默认使用向助手发送成交信息的北京时间日期；成交ID由脚本沿该ETF序列自动递增，不要求用户提供银河编号。用户要求旧网格账本/脚本移出活跃路径以避免污染，保留新已确认子账。
-§
-用户要求券商网格设置只按其实际APP截图逐字段指导，勿猜金额/份数、自动委托或挂单数。159612倾向同花顺半自动、每次8000元；未确认提交。不可用日内波幅达标天数冒充完整往返推月/年收益；此前52%年化已撤回。
 §
 用户持有三只 ETF，不是两只：sh589720 科创创新药ETF国泰、sz159363 创业板人工智能ETF华宝、sz159992 创新药ETF银华 (as of 2026-10-14)。159992 处于迁移退出模式（停买、停接回、只卖不买），但仍是真实持仓，不能被排除在 00:01 之外或清零。
 §
-代码展示铁律（2026-10-14）：终端输出中排名数字与代码紧邻时（如「2 159569」），用户会误读为「2159569」。展示前必须回读原始数据逐字确认，不能凭视觉印象拼接。用户对数字/代码错误零容忍。
+用户明确任何代码改动都要用Superpowers技能落实（根因调试、失败测试→修复→回归、审查），不需反复提醒，不能只口头声明已使用。排名与ETF代码须分隔，回读原数据，严禁拼错代码。
 §
 盈利计算分工（2026-10-14）：用户明确期望用 etf_research 回测引擎算网格盈利，不接受手动外推。etf-grid-screener 的 methodology.md §8 明确声明 no backtest，正确做法是把用户引向 AH_analyse/tools/etf_research/ 的 simulate() 引擎，而非自己拍脑袋给月利润/年化数字。
 §
@@ -35,3 +23,7 @@ etf_research 引擎已知限制（2026-10-14）：grid_model.py 第37行 `if cor
 迁移退出模式下的 ETF（当前 sz159992）在 00:01 重算后，可卖份额保持等于持有份额，不要改回 null。用户 2026-10-14 明确拒绝将 sellable_qty 重置为 null，认为可卖的就是可卖的。active=false 只控制是否生成买卖建议，不控制库存可见性。
 §
 User runs ETF grid trading via 银河证券 and uses Hermes desktop + Feishu as primary interface. Expects messaging to work reliably — "后续不要出问题可以吗" is a recurring expectation, not a one-off request. When Feishu group chat stopped responding after a gateway restart, user's first assumption was that their own configuration was wrong ("我之前不是要求不需要at吗"), not that a setting had silently changed. User accepts proactive monitoring (cron-based health checks) as a valid solution and does not want to be asked permission for every 5-minute check. User's tolerance for configuration drift is near zero — they expect FEISHU_REQUIRE_MENTION=false and FEISHU_GROUP_POLICY=open to stay set without manual re-checking.
+§
+用户对网格机制理解深入，能区分"接回"与"新一格"概念。2026-10-16 正确指出 0.821 不是 D 格接回价而是 C 下方新格买入价，无需助手过度简化解释。
+§
+用户关注单边行情下网格的处理方式。2026-10-16 主动提及"之前聊过的单边情况"但当时会话未找到该讨论记录，需在后续会话中主动跟进。159363 当时持续下跌（现价 1.029，跌破 I 格 1.039），九格全仓未平仓。

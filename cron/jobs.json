@@ -25,15 +25,15 @@
       "schedule_display": "weekdays at 9:10am",
       "repeat": {
         "times": null,
-        "completed": 20
+        "completed": 21
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:39:09.001076+08:00",
-      "next_run_at": "2026-10-16T09:10:00+08:00",
-      "last_run_at": "2026-10-15T09:10:02.225397+08:00",
+      "next_run_at": "2026-10-19T09:10:00+08:00",
+      "last_run_at": "2026-10-16T09:10:13.159036+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -50,8 +50,8 @@
     },
     {
       "id": "e01b833b150d",
-      "name": "网格9:31操作建议（行情确认后）",
-      "prompt": "09:31执行grid_weixin_execute.py新统一入口，只读589720与159363已确认持久化状态；同日09:30后行情校验，现金额度与银河委托待核时标注条件建议，不下单、不登记触价成交。",
+      "name": "网格09:24盘前条件建议",
+      "prompt": "北京时间每个工作日09:24执行grid_weixin_execute.py，按持久化已确认账本、最大格子及可卖库存计算一买一卖条件建议，不依赖09:30后实时行情，不以盘前报价定价。休市不生成执行建议。保留资金、冻结及在途委托待核提示，不下单，不自动登记成交。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -67,21 +67,21 @@
       "context_from": null,
       "schedule": {
         "kind": "cron",
-        "expr": "31 9 * * 1-5",
-        "display": "weekdays at 9:31am"
+        "expr": "24 9 * * 1-5",
+        "display": "weekdays at 9:24am"
       },
-      "schedule_display": "weekdays at 9:31am",
+      "schedule_display": "weekdays at 9:24am",
       "repeat": {
         "times": null,
-        "completed": 21
+        "completed": 22
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T15:28:08.339160+08:00",
-      "next_run_at": "2026-10-16T09:31:00+08:00",
-      "last_run_at": "2026-10-15T09:31:10.638036+08:00",
+      "next_run_at": "2026-10-19T09:24:00+08:00",
+      "last_run_at": "2026-10-16T09:26:10.866757+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 7173
+        "completed": 8592
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-15T23:01:00+08:00",
-      "last_run_at": "2026-10-15T23:00:32.041528+08:00",
+      "next_run_at": "2026-10-16T23:01:00+08:00",
+      "last_run_at": "2026-10-16T23:00:06.011580+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -161,15 +161,15 @@
       "schedule_display": "weekdays at 3:20pm",
       "repeat": {
         "times": null,
-        "completed": 13
+        "completed": 14
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-29T13:42:38.404710+08:00",
-      "next_run_at": "2026-10-16T15:20:00+08:00",
-      "last_run_at": "2026-10-15T15:20:21.650115+08:00",
+      "next_run_at": "2026-10-19T15:20:00+08:00",
+      "last_run_at": "2026-10-16T15:21:01.911102+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -208,19 +208,19 @@
       "schedule_display": "every friday at 3:25pm",
       "repeat": {
         "times": null,
-        "completed": 1
+        "completed": 3
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-04T08:28:58.191847+08:00",
-      "next_run_at": "2026-10-16T15:25:00+08:00",
-      "last_run_at": "2026-10-09T15:25:12.749928+08:00",
-      "last_status": "ok",
-      "last_error": null,
+      "next_run_at": "2026-10-23T15:25:00+08:00",
+      "last_run_at": "2026-10-16T15:31:17.020636+08:00",
+      "last_status": "error",
+      "last_error": "Script exited with code 1\nstderr:\nTraceback (most recent call last):\n  File \"main.py\", line 15229, in <module>\n  File \"main.py\", line 15221, in main\n  File \"main.py\", line 13380, in _cmd_run_script\n  File \"<frozen runpy>\", line 294, in run_path\n  File \"<frozen runpy>\", line 98, in _run_module_code\n  File \"<frozen runpy>\", line 88, in _run_code\n  File \"D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_weekly_rotation.py\", line 14, in <module>\n    from tools.etf_research.weekly import main\n  File \"D:\\Code\\AH_analyse\\tools\\etf_research\\weekly.py\", line 5, in <module>\n    from . import research, pair_review\n  File \"D:\\Code\\AH_analyse\\tools\\etf_research\\research.py\", line 38, in <module>\n    import pandas as pd\nModuleNotFoundError: No module named 'pandas'\n[PYI-56952:ERROR] Failed to execute script 'main' due to unhandled exception!",
       "last_delivery_error": null,
-      "failure_streak": 0,
+      "failure_streak": 2,
       "deliver": "feishu:oc_7d2d8ab5d54051067f8e0cd228652133",
       "origin": {
         "platform": "feishu",
@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 5
+        "completed": 6
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-16T23:00:00+08:00",
-      "last_run_at": "2026-10-14T23:00:52.590416+08:00",
+      "next_run_at": "2026-10-17T23:00:00+08:00",
+      "last_run_at": "2026-10-15T23:00:43.089963+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,8 +279,8 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-15T23:00:30.096814+08:00",
-        "by": "MS-22110429259:33612:48b9f12c14b4487c954b152e2677b38a"
+        "at": "2026-10-16T23:00:04.269251+08:00",
+        "by": "MS-22110429259:33612:b8a51c4553604c58a331460939471f55"
       }
     },
     {
@@ -308,15 +308,15 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 3
+        "completed": 4
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-10-16T00:01:00+08:00",
-      "last_run_at": "2026-10-15T00:01:35.641995+08:00",
+      "next_run_at": "2026-10-17T00:01:00+08:00",
+      "last_run_at": "2026-10-16T00:02:00.564976+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -352,20 +352,20 @@
       "schedule_display": "every 5m",
       "repeat": {
         "times": null,
-        "completed": 117
+        "completed": 383
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-15T11:26:32.781869+08:00",
-      "next_run_at": "2026-10-15T23:04:30.877860+08:00",
-      "last_run_at": "2026-10-15T22:59:30.877860+08:00",
+      "next_run_at": "2026-10-16T23:02:05.947980+08:00",
+      "last_run_at": "2026-10-16T22:57:05.947980+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
       "failure_streak": 0,
-      "deliver": "feishu:oc_7d2d8ab5d54051067f8e0cd228652133",
+      "deliver": "local",
       "origin": null,
       "enabled_toolsets": [
         "terminal"
@@ -398,15 +398,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 34
+        "completed": 322
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-15T20:14:32.161659+08:00",
-      "next_run_at": "2026-10-15T23:05:00+08:00",
-      "last_run_at": "2026-10-15T23:00:32.752900+08:00",
+      "next_run_at": "2026-10-16T23:05:00+08:00",
+      "last_run_at": "2026-10-16T23:00:07.361454+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -420,5 +420,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-15T23:00:32.758533+08:00"
+  "updated_at": "2026-10-16T23:00:07.364164+08:00"
 }

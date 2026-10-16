@@ -84,6 +84,22 @@ After changing cron configuration, read the job list back and verify schedule, d
 
 Use concise, executable Chinese reminders with the user's established heading and product-name format. Always state “建议/核对”，not “已下单/已成交,” unless the broker confirmation exists. If multiple actions could have filled, require code, side, quantity, and actual execution price before booking. Keep capital-expansion alternatives explicitly undecided when the user has deferred them.
 
+## Cross-session continuity and one-way markets
+
+When the user asks whether a grid risk or rule was discussed before, retrieve history before answering. Search persistent memory and session history using both user wording and mechanism synonyms (e.g. 单边上涨 / 卖空 / 接不回 / 三个收盘; 单边下跌 / 只买不卖 / 库存占资 / 下移基准). If a focused query is empty, broaden it and inspect the strongest original-message window. A failed search supports “暂未检索到”, never “从未聊过”. Do not make the user repeatedly prove earlier discussions.
+
+Answer the continuity question directly and concisely, cite the original session, and keep these distinct: **discussed**, **authorized**, **implemented at that time**, and **verified in the current runtime**. Historical bottom-position floors, gaps, caps, and test counts must not be presented as current policy without checking current authoritative state. Do not blame a model switch or diagnose a memory-service failure without evidence. Saving a memory or skill improves retrieval but does not prove every future session will retrieve it.
+
+For one-way markets, preserve the user's priority: completed net spread and capital turnover, not short-term inventory drawdown alone. Distinguish rising-market re-entry failure from falling-market inventory lockup; rebasing cannot erase old losses and cannot silently authorize more capital. See `references/continuity-and-one-way-markets.md` for verified historical anchors and retrieval examples.
+
+## Cost-review safeguards
+
+A request to check costs is not permission to replay old fill scripts or rebuild a production ledger from tickets. Separate read-only reconciliation from authorized correction; require brokerage statements before rebuilding disputed history, and do not treat pending tickets or local history as independent fill proof.
+
+Use programmatic decimal arithmetic for every amount and unit cost. Explicitly separate sale proceeds (actual sale price × filled quantity − selling fee), inventory carrying-cost removal under the declared accounting method, and cumulative net investment (all purchase outflows − all sale inflows). Net-investment unit cost is not the same as FIFO or moving-average carrying cost. Do not assert a named grid target identifies the physical inventory sold; the T+1 inventory-pool policy governs the source.
+
+Preserve the user's exact fee wording. “最低1元” and “最高1元” are different rules; resolve the discrepancy before changing historical records. Never silently restore an old minimum-5 fee or invent a date-based fee split after the user requested a uniform rule. Reconcile quantities, fees, inventory costs, cash, and realized/unrealized totals before declaring completion; do not dismiss unexplained currency differences as negligible or ask whether incorrect precision is good enough. Detailed pitfalls are in `references/cost-reconciliation-boundaries.md`.
+
 ## Protected skill overlap
 
 This skill complements the user-owned `etf-grid-ops`, `grid-trading-state-management`, and `grid-fill-confirm` skills. Do not edit those protected skills autonomously; use this governance layer for cross-cutting migration, scheduling, authorization, and verification lessons.

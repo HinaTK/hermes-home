@@ -108,6 +108,31 @@ Always run a sweep across `--gold_window` values before concluding a golden-rati
 
 When presenting grid parameter comparisons, always include a **status column** (✅ 可操作 / ❌ 价格在上界上方 / ❌ 价格在下界下方) so the user can immediately see which strategies are executable. A strategy that requires waiting for a 6%+ pullback is not comparable to one that can start today.
 
+## Ranking axis discipline (user correction, 2026-10-16)
+
+When this user asks for a **排名 / 前10** in a grid round-trip context, they mean **完整往返次数（full_cycles）从高到低** — not a composite score. Delivering a weighted-score table and calling it "前10" is a format failure even when the score table is technically correct.
+
+**Rules:**
+
+1. **Default ranking axis = `full_cycles` descending.** Tie-break by `full_cycle_net` descending, then by code. Do not sort by `score` unless the user explicitly asks for a composite view.
+2. **Never present a composite-score table as THE ranking without a label.** If you show `score`, put it in a separately titled block (e.g. 「综合评分榜（非往返次数榜）」) and state the axis explicitly.
+3. **State the axis before the table:** window, sessions, universe size, eligible rows, failed windows, and whether current holdings are included or excluded. A number without this context is not actionable.
+4. **Include current holdings in the ranking unless the user asks for a non-holding-only view.** Excluding holdings silently turns a full-pool ranking into a filtered one.
+5. **Do not let an empty `rotation_top10` go unexplained.** If the report's round-trip top-10 block is blank while `ranking` has data, say so and recompute the round-trip top-10 from `result['ranking']` directly rather than trusting the precomputed block.
+6. **Never reuse a score table's position to imply a round-trip rank.** A composite #1 with 22 cycles is not the round-trip #1; state both numbers.
+
+See `references/ranking-axis-discipline.md` for the 2026-10-16 failure transcript and the exact recomputation command.
+
+## Period summary format (user requirement, 2026-10-16)
+
+When producing a 「二、合计」 / period summary for this user, always include:
+
+- **交易天数** — count of trading days in the period, computed from the stated start date, not from how many distinct trade dates happen to be recorded in the ledger.
+- **本金 / 净投入** — cumulative net cash outflow (sum of buy amounts − sum of sell amounts + all commissions), per ETF and in total.
+- **固定起始日** — the user anchors periods at a specific date (currently 2026-09-23). Confirm the start date with the user rather than deriving it from the earliest recorded trade; earlier trades with `date: null` must stay null, never backfilled.
+- **做T累计净利** — per ETF and in total, with round count.
+- **口径声明** — state that net invested is cumulative net cash flow, not current 占用; that commissions are locally estimated (万一, 1 CNY minimum per leg) and not broker-confirmed; and that account cash / frozen shares / pending orders remain unreconciled.
+
 ## Evidence checks
 
 Use grounded-citations for source mapping, but manually inspect each material financial claim. A validator's green status is not proof that the quote supports the number, that table columns were read correctly, or that dates are current. See [financial evidence and grid illustrations](references/financial-evidence-and-grid-illustrations.md) for extraction checks and reusable counterexamples.
