@@ -13,6 +13,10 @@ OpenViking + Hermes: https://docs.openviking.ai/en/agent-integrations/05-hermes
 
 Machine-specific paths and the verified local OpenViking layout live in `references/openviking-desktop.md`.
 
+### Known issue: `experiences` memory type never extracts
+
+OpenViking v0.4.21–v0.4.23 has a hardcoded filter that drops `stage: agent` schemas (including `experiences` and `trajectories`) during session-commit extraction. The Agent Experience page in Studio will show "还没有 Agent 经验" regardless of `agent_evolution.enabled`. See `references/openviking-experiences-bug.md` for root cause, workaround, and when to care.
+
 ## Hard rules
 
 - Keep the **OpenViking (or other provider) Python env separate** from Hermes. Hermes talks HTTP; do not `pip install openviking` into the Hermes runtime / Desktop `_internal` venv. Do not `--force-reinstall` OpenViking on top of Hermes.

@@ -1,5 +1,3 @@
-网格关键规则（2026-09-28用户明确）：网格卖出不按买入lot绑定；同一ETF应维护“总可卖库存池”，只要T+1可卖库存足够，就可以用较早A/B格可卖份额为最新下跌格配置对应数量的+2%卖单。优先资金周转：159363 D格5100@1.169成交后，应撤/不保留远端B格4700@1.298，改挂D格5100@1.192；不能同时占用超过总可卖库存。默认采用方案A（最近成交格优先），卖出后按实际卖出数量生成对应接回价。
-§
 2026-10-08 用户确认 589720 买入 9,400 份 @ 0.859 成交（实际成交价优于限价 0.869）。佣金按万一免五最低 1 元计 1.00 元，银河交割单待核；其他委托未计成交。
 §
 User insists on only having one active buy order and one active sell order per ETF at any time. Other orders should be automatically canceled to avoid conflicts.
