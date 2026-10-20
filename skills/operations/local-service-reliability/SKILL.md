@@ -64,6 +64,14 @@ On Windows, a Scheduled Task is acceptable for interactive desktop services. Con
 
 Verify the task/service definition by reading it back, confirm the task is enabled, run it once, check its result and logs, inspect process ownership, and run the complete functional probe. A task that exits immediately with a nonzero result is not a successful installation even if the task exists.
 
+## Reboot-bound installation checkpoints
+
+For local runtimes that require Windows optional features, distinguish installer success, feature activation, runtime readiness, and functional verification. A successful MSI exit or feature state read-back is not proof the runtime can start. Never reboot automatically without authorization.
+
+When a restart blocks progress, persist a checkpoint outside the application repository: verified completed steps, exact target paths, installer provenance/checksums, actual blocking probe and its exit status, and explicitly unverified remaining work. Report the partial result plainly; do not label the service installed and usable. On resumption, rediscover installed state before importing environments or rerunning installers; do not delete/unregister existing environments to retry. Keep version-specific observations in references, not permanent compatibility rules.
+
+See `references/windows-runtime-installation-checks.md` for verified installer checks and Windows command/output pitfalls. This reference does not constitute a completed Docker installation recipe.
+
 ## OpenViking-specific checks
 
 For Hermes + local OpenViking:
@@ -109,6 +117,26 @@ return 1
 - Process alive + log stale → idle, not failure
 - Process dead + log stale → genuine failure
 - Process alive + log fresh → healthy
+
+### subprocess encoding on Windows
+
+Health-check scripts that shell out to Windows commands (`tasklist`, `sc`, `wmic`, `netstat`) via `subprocess.run(..., text=True)` **must** use an explicit encoding appropriate to that command, or capture bytes and decode after inspecting the output. Without it, Python falls back to `locale.getpreferredencoding()` — GBK on Chinese-system Windows — while these commands emit UTF-8. The mismatch raises `UnicodeDecodeError` inside `subprocess`'s `_readerthread`, which crashes the script with a non-zero exit code even though the underlying check may have succeeded.
+
+**For commands verified to emit UTF-8, use:**
+```python
+subprocess.run(
+    ["tasklist", "/FI", "PID eq 1234", "/NH"],
+    capture_output=True, text=True,
+    encoding="utf-8", errors="replace",  # ← explicit, never rely on locale
+    timeout=5,
+)
+```
+
+Do not assume every Windows executable emits UTF-8: redirected `wsl.exe` output in the observed installation emitted UTF-16LE, producing NUL-filled mojibake when treated as UTF-8. Capture bytes and explicitly decode UTF-16LE when confirmed; other commands may use UTF-8 or the local code page. A PowerShell UTF-8 console setting does not guarantee the encoding of every native child's redirected output.
+
+Explicit encoding selection applies to every `subprocess.run(..., text=True)` in a health-check or cron script, including `git` invocations and gateway-restart commands. Scan scripts with `grep -n "text=True" *.py | grep -v "encoding="` to find stragglers.
+
+The `errors="replace"` fallback is intentional — it prevents a crash on unexpected bytes, and the replaced characters don't affect PID matching or status parsing. Never silently drop the encoding parameter "because it works on my machine"; the locale differs per system.
 
 ## What not to do
 

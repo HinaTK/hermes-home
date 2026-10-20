@@ -37,7 +37,7 @@ def is_gateway_running():
 
         result = subprocess.run(
             ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5,
         )
         if str(pid) in result.stdout:
             return True, f"pid={pid} alive"
@@ -52,7 +52,7 @@ def restart_gateway():
     result = subprocess.run(
         [HERMES_EXE, "gateway", "start"],
         env=env,
-        capture_output=True, text=True, timeout=30,
+        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=30,
     )
     return result.returncode == 0
 

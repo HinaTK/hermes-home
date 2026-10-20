@@ -55,7 +55,7 @@ This skill encapsulates the routine tasks for operating a 2% grid trading system
 - Make midnight rollover idempotent by storing its update date: a repeated invocation on the same date must not restore inventory already sold intraday. Validate duplicate execution IDs and negative inventory before writing. Test disk readback, same-day repeat after a sale, buy/sell transitions, insufficient-inventory rejection without mutation, and unchanged grid pointer.
 - Use the Superpowers-derived TDD skill for implementation: observe missing-behavior RED, implement, then GREEN. Test production functions using temporary state files, never invented production fills. Preserve other ETFs and unrelated fields.
 - A function is not a deployed schedule. List existing cron jobs, create/update one pure-script daily `1 0 * * *` task, then read back enabled state, exact script, timezone/next run, and target file. Distinguish temporary-file execution tests, actual scheduled-script execution, and first overnight scheduler execution; do not claim one proves the others.
-- A working standalone subledger does not satisfy integration into the existing fill-confirmation/09:31 suggestion path. Report the exact state files and ETF coverage; never imply all ETFs are covered when only the reconciled one is registered. Incremental confirmed fills must use the same state update path that midnight maintenance targets.
+- A working standalone subledger does not satisfy integration into the existing fill-confirmation/09:20 suggestion path. Report the exact state files and ETF coverage; never imply all ETFs are covered when only the reconciled one is registered. Incremental confirmed fills must use the same state update path that midnight maintenance targets.
 - See `references/persisted-inventory-rollover.md` for session evidence and deployment acceptance boundaries.
 
 ## Script-only reports and multi-ETF expansion
@@ -113,6 +113,7 @@ The prior ledger/ticket/rebuild code is retired and must not be invoked or used 
 - **Cronjob delivery must be human-readable, never raw JSON (FIXED 2026-10-15)** – `eod_main()` originally returned `json.dumps(report)` and the launcher passed it straight through to Feishu, so the 15:20 job delivered a wall of `{"asof":...}` instead of a readable summary. Fix: add `render_eod(report)` that formats decisions/actions as text, add `render=False` parameter to `eod_main()` (default keeps JSON for test compatibility), and update both launcher scripts (`tools/confirmed_grid/launchers/grid_eod_decision.py` and `scripts/grid_eod_decision.py`) to call `safe_entrypoint(eod_main, True)`. **Any cronjob that delivers script output to a human-readable channel must render before delivery — a JSON dump is a presentation failure, not a minor omission.** Verify by running the launcher and reading the actual delivered text, not just checking exit code zero.
 
 ## Reference Files
+- `references/summary-format.md` – 网格汇总口径：合计必含字段、**交易日必须扣 A 股法定节假日（中秋/国庆/补班日）**、做T明细按成交ID配对、净投入与做T净利的区分。
 - `references/grid_eod_decision_overview.md` – brief explanation of the EOD decision script, including the render_eod delivery path.
 - `templates/cleanup_after_close_stub.py` – starter implementation if the function ever needs to be recreated.
 

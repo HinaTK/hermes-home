@@ -10,17 +10,11 @@ User wants all trading data verified against actual brokerage statements and con
 §
 User's primary trading metrics are net price difference per round trip and capital turnover efficiency, not just win rate.
 §
-User follows a 2% grid trading strategy with focus on capital efficiency and repeated trading opportunities.
-§
 User commission structure confirmed: 万一免五 (0.01%) with minimum 1元 per trade (max of turnover*0.0001 and 1.0).
-§
-Updated skill library with new class-level skill 'etf-grid-maintenance' that encapsulates ETF grid trading system maintenance: cleaning unconfirmed orders, collecting closing prices, verifying ledger integrity, and preparing next-day suggestions. Includes reference and template support files.
 §
 用户通过银河证券进行 A 股 ETF 交易，佣金为万一免五（0.01%，无最低 5 元）。
 §
 用户要求每确认一笔网格真实成交并入账后，立即给出对应的新剩余操作建议；不能只报持仓/盈亏。建议必须核对当天T+1总可卖库存池和银河旧挂单；存在冲突时明确标注待核，避免重复挂单。
-§
-用户运行 2% 间距 ETF 网格交易程序，专用账户 10 万元、网格成本上限合计 8 万元（159363 单独 4 万；159992+589720 迁移组合共享 4 万，2026-10-08 由 46,000 元下调为 40,000 元）。
 §
 用户明确网格目标：可容忍短期底仓下跌，优先关注反复成交的净差价、资金周转与持续交易能力；不希望以短期浮亏或站上均线作为否决网格的主要依据。
 §
@@ -64,6 +58,20 @@ Updated skill library with new class-level skill 'etf-grid-maintenance' that enc
 §
 用户明确ETF状态需求：每只ETF的qty、sellable_qty、max_grid(A-Z)都是持久化、脚本可修改的变量，不是展示时临时计算的口径。买入从当前max_grid取下一号并更新，卖出取当前号再退一号；标签保存到交易记录，不人工硬编码。每日00:01从交易记录重算qty并写回sellable_qty=qty；买入增加qty不增加sellable_qty，卖出同时扣减二者，卖出建议读取持久化sellable_qty。用户要求汇报数字来自真实脚本输出，区分用户输入、人工设置与脚本自动生成。
 §
-2026-10-14: etf_research 回测引擎参数与用户实际网格参数不匹配——引擎固定 2% 间距、5,000 元/档、10 万独立账户、一次性建满 5 档；用户实际 159363/589720 为 1.5% 间距、6,000/8,000 元/格、逐格建仓。后果：引擎绝对值（往返次数、净差价）不能与用户账本直接对比。案例：引擎模拟 159363 仅 4 次往返，用户实际做 T 5 次（做T净利 535 元）。引擎仍可用于 321 只池内相对排名（所有候选用同一套错误参数，相对顺序不变），但不能用于预测用户实际账户收益或做绝对值判断。
+2026-10-20: etf_research 引擎已参数化——simulate(lot_budget=5000, gap=0.02)，底仓=lot_budget×2；engine.run_research() 透传。默认仍与用户实际（1.5%间距、6000/8000元格、逐格建仓）不一致，绝对值不可与账本直接比，可传 lot_budget=6000/gap=0.015 跑贴近实际的一版。同批修复：体积单位 bug（K线 volume 是手数，qty 是股数，三处需 ×100）、cycle_return_on_40k_pct 分母由硬编码 40000 改为实际 4*c、新增初始不变量断言。补 2 项 TDD 测试，共 11 项通过。
 §
 已查证曾讨论单边行情，不能再称“没聊过”：原会话 @session:default/20260922_141141_e5b6cb；消息4354为上涨卖空/三天接不回，9/29后补参与底仓和提前上移复核；消息5332为持续下跌只买不卖、暂停新增买入、评估下移区间/换ETF且旧亏损不消失。以上是历史讨论，不证明当前代码仍有效；159992后改迁移退出。用户反感跨会话否认已讨论事项；此类问题过去的检索遗漏不等于从未讨论，当前未诊断到记忆服务故障。
+§
+2026-10-20 用户决定买入日经ETF 159866（买入持有，不接入网格账本；理由：分散非中国资产）。用户三条件：赌后续会涨、期限可放 3 年、可接受 25% 回撤。方案：总投 3 万（账本外 8 万保护性现金出），三档 1.59-1.60(30%)/1.50-1.52(30%)/1.40-1.42(40%)，锚点为 250 日斐波那契 50%/61.8%/78.6% 与历史支撑密集区，加权成本约 1.492；止损=成本×0.75（约1.12，低于历史最低≈不设）；1.68/1.92 压力位减仓，36个月未达1.70换标的。当日现价 1.645、溢价 +1.36%、跌破 MA20/MA60，故未立即建仓。
+§
+2026-10-20 用户抓到助手口头声称"按 TDD 流程"但实际先改代码后补测试（是回归测试不是 TDD）。教训：声称用了 superpowers skill 就必须真走 RED→GREEN（先写失败测试再改实现），不能口头套用 skill 名；含代码改动的汇报不得把事后补的测试说成流程驱动。
+§
+A股交易日计数必须扣除法定节假日，不能只扣周末。2026年：中秋节9/25(五)-9/27(日)休市、国庆10/1-10/7休市、10/10(周六)补班不开市。曾把09-23→10-16算成18个交易日，实际只有11天。任何涉及交易日/交易天数的汇总，先查当年交易所休市安排再算。
+§
+每周研究排名用户要的是完整往返次数(full_cycles)排名，不是综合得分(score)。综合得分是加权指标且默认排除当前持仓，绝不能当作往返次数榜交付。交付前必须从result.json按full_cycles降序重排，并说明是否含持仓、是否含港股相关ETF。
+§
+网格汇总的合计部分必须包含：交易区间、自然日、交易日数、成交总笔数、买入/卖出金额合计、佣金合计、净投入合计、持有份额合计、做T总轮数/毛利/双边佣金/净利。曾两次被用户指出漏了交易天数和净投入。交易日数要按A股实际休市算。
+§
+ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2026-10-20)。任务e01b833b150d，schedule weekdays at 9:20am，仍推飞书。改时间时注意避免当天重复推送（手动触发+定时触发会撞车）。
+§
+2026-10-20: 用户要求把 PostgreSQL 装到 D:/Program Files，但网络受限装不了（无 winget/choco；downloads.edb.com、get.postgresql.org DNS 失败；aliyun/huawei 镜像 postgresql/windows/ 目录均404）。已给浏览器手动下载/内网镜像/Docker 三个替代方向待选。

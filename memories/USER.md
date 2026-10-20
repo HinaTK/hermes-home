@@ -1,4 +1,4 @@
-用户偏好Hermes思考深度High。晨间网格建议北京时间09:24推飞书，替代09:31且不重复；按账本、格号和可卖库存算价，不等待开盘行情。健康检查报错仅本地保存、不推飞书，交易提醒保留。
+用户偏好Hermes思考深度High。晨间网格建议已由09:31→09:24→**09:20**（北京时间）推飞书，不重复；按账本、格号和可卖库存算价，不等待开盘行情。健康检查报错仅本地保存、不推飞书，交易提醒保留。当前会话模型 gpt-6.1-sol（provider custom:aicode-api-gz4399-com），曾短暂回退到 openrouter 的 minimax/m3.1-flash:free。2026-10-20 589720 成交两笔：卖F格10,000份@0.809（ID-019，做T+118.00）、买F格10,000份@0.797（ID-020，未平仓）；入账后持有57,700/可卖47,700/最大格F/净投入47,142.10/T净利865.60。用户要求把 PostgreSQL 装到 D:/Program Files，但网络受限（downloads.edb.com、get.postgresql.org DNS 失败；aliyun/huawei 镜像 windows/ 目录均404），已给浏览器下载/内网镜像/Docker 三个替代方向待选。用户对算术准确性要求极高、会逐笔核对：曾纠正交易日数未扣 A 股假期（2026中秋9/25-27、国庆10/1-7休市，09-23→10-16 实际 11 个交易日，不是 18）。
 §
 User wants requested code/docs auto-committed and pushed to origin. Not git add -A; skip secrets, data/, logs/, and unrelated dirty files.
 §

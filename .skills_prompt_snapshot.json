@@ -126,8 +126,8 @@
       7272
     ],
     "etf-grid-maintenance\\SKILL.md": [
-      1792117438709908700,
-      29032
+      1792465380996226900,
+      29251
     ],
     "media\\DESCRIPTION.md": [
       1789958760000000000,
@@ -158,8 +158,8 @@
       9084
     ],
     "operations\\local-service-reliability\\SKILL.md": [
-      1792035788218759400,
-      7350
+      1792491147699823200,
+      10259
     ],
     "operations\\messaging-platform-diagnostics\\SKILL.md": [
       1792110540658808800,
@@ -237,6 +237,10 @@
       1789958760000000000,
       4501
     ],
+    "research\\etf-grid-backtest-engine\\SKILL.md": [
+      1792463618939105400,
+      5230
+    ],
     "research\\etf-grid-efficiency-rotation\\SKILL.md": [
       1792137503665290800,
       24738
@@ -254,8 +258,8 @@
       6233
     ],
     "research\\etf-strategy-research\\SKILL.md": [
-      1792155392349935600,
-      15355
+      1792478315551513500,
+      15729
     ],
     "research\\grid-fill-confirm\\SKILL.md": [
       1791946131115921000,
@@ -1244,6 +1248,20 @@
         "macos",
         "windows"
       ],
+      "conditions": {
+        "fallback_for_toolsets": [],
+        "requires_toolsets": [],
+        "fallback_for_tools": [],
+        "requires_tools": [],
+        "session_platforms": []
+      }
+    },
+    {
+      "skill_name": "etf-grid-backtest-engine",
+      "category": "research",
+      "frontmatter_name": "etf-grid-backtest-engine",
+      "description": "Use when running or trusting the ETF grid backtest engine.",
+      "platforms": [],
       "conditions": {
         "fallback_for_toolsets": [],
         "requires_toolsets": [],

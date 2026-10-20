@@ -41,7 +41,7 @@ def check_pid_file():
             pid = data.get("pid")
             result = subprocess.run(
                 ["tasklist", "/FI", "IMAGENAME eq hermes*", "/NH"],
-                capture_output=True, text=True, timeout=5
+                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5
             )
             if pid and str(pid) in result.stdout:
                 return True, f"pid={pid} alive"
@@ -53,7 +53,7 @@ def check_pid_file():
     try:
         result = subprocess.run(
             ["tasklist", "/FI", "IMAGENAME eq hermes-agent-cn-runtime-win32-x64.exe", "/NH"],
-            capture_output=True, text=True, timeout=5
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5
         )
         lines = [l for l in result.stdout.strip().split("\n") if l.strip()]
         if lines:

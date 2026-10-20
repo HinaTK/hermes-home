@@ -25,7 +25,7 @@ REPOS = [
 def run(cmd, cwd):
     """Run a command, return (returncode, stdout, stderr)."""
     r = subprocess.run(
-        cmd, cwd=cwd, capture_output=True, text=True, shell=True
+        cmd, cwd=cwd, capture_output=True, text=True, encoding="utf-8", errors="replace", shell=True
     )
     return r.returncode, r.stdout.strip(), r.stderr.strip()
 

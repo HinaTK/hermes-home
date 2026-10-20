@@ -127,7 +127,7 @@ See `references/ranking-axis-discipline.md` for the 2026-10-16 failure transcrip
 
 When producing a 「二、合计」 / period summary for this user, always include:
 
-- **交易天数** — count of trading days in the period, computed from the stated start date, not from how many distinct trade dates happen to be recorded in the ledger.
+- **交易天数** — count of trading days in the period, computed from the stated start date, not from how many distinct trade dates happen to be recorded in the ledger. **Must exclude A-share market holidays, not just weekends** (see `references/period-summary-format.md` — the first version wrongly reported 18 trading days for 2026-09-23→10-16; the correct count is 11 after removing 中秋 9/25–9/27, 国庆 10/1–10/7, and 10/10). Verify the year's official holiday notice; it changes every year. State which holidays you excluded.
 - **本金 / 净投入** — cumulative net cash outflow (sum of buy amounts − sum of sell amounts + all commissions), per ETF and in total.
 - **固定起始日** — the user anchors periods at a specific date (currently 2026-09-23). Confirm the start date with the user rather than deriving it from the earliest recorded trade; earlier trades with `date: null` must stay null, never backfilled.
 - **做T累计净利** — per ETF and in total, with round count.

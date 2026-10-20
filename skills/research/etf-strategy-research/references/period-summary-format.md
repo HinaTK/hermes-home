@@ -24,9 +24,29 @@ The user asked for a 「二、合计」 that folds in trading days and capital, 
    - Account cash, frozen shares, and pending orders remain unreconciled.
 4. **Per-ETF breakdown before the total.** The user cross-checks line by line.
 
-## Verified 2026-10-16 numbers (reference only)
+## Trading-day count must exclude A-share holidays (user correction, 2026-10-16)
 
-Period 2026-09-23 → 2026-10-16: 24 calendar days, 18 trading days.
+**Do not count weekdays only.** The first version of this summary reported 18 trading days for 2026-09-23 → 2026-10-16, and the user immediately caught it: 「认真算一下，是18个交易日吗？大A放假你算了没」.
+
+Weekday counting is wrong twice over:
+1. It ignores weekends — but that is the easy half.
+2. **It ignores A-share market holidays.** A "trading day" is a day the exchange is open, not a day that is Monday–Friday.
+
+2026 official holidays in this window (国务院办公厅关于2026年部分节假日安排的通知, verified against SSE 休市安排):
+- **中秋节**: 2026-09-25 (Fri) → 2026-09-27 (Sun) — 休市 3 days
+- **国庆节**: 2026-10-01 (Thu) → 2026-10-07 (Wed) — 休市 7 days
+- 2026-10-10 (Sat) — 周末休市 (调休上班日, but the exchange is closed)
+
+Correct count for 2026-09-23 → 2026-10-16: **24 calendar days, 11 trading days**:
+09-23, 09-24, 09-28, 09-29, 09-30, 10-09, 10-12, 10-13, 10-14, 10-15, 10-16.
+
+**Rule:** compute trading days from the stated start date against an explicit holiday set (verify the year's official notice — it changes every year), not from `len([d for d in range if d.weekday() < 5])`. State the holiday set you excluded. A number with no holiday list behind it is not a trading-day count.
+
+Also: the trading-day count is the **calendar** count for the period. It is NOT a claim that a trade occurred on each of those days. Most historical trades in this ledger have `date: null`; only a few dates are recorded. Say both things.
+
+## Verified 2026-10-16 numbers (reference only, superseded by 2026-10-20 below)
+
+Period 2026-09-23 → 2026-10-16: 24 calendar days, **11** trading days (corrected from the earlier wrong 18).
 
 | ETF | Trades | Buy amt | Sell amt | Commissions | Net invested | Qty | T rounds | T net |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
