@@ -25,15 +25,15 @@
       "schedule_display": "weekdays at 9:10am",
       "repeat": {
         "times": null,
-        "completed": 29
+        "completed": 30
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T14:39:09.001076+08:00",
-      "next_run_at": "2026-10-29T09:10:00+08:00",
-      "last_run_at": "2026-10-28T09:10:21.509555+08:00",
+      "next_run_at": "2026-10-30T09:10:00+08:00",
+      "last_run_at": "2026-10-29T09:10:27.379975+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -73,15 +73,15 @@
       "schedule_display": "weekdays at 9:20am",
       "repeat": {
         "times": null,
-        "completed": 31
+        "completed": 32
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-23T15:28:08.339160+08:00",
-      "next_run_at": "2026-10-29T09:20:00+08:00",
-      "last_run_at": "2026-10-28T09:20:30.104700+08:00",
+      "next_run_at": "2026-10-30T09:20:00+08:00",
+      "last_run_at": "2026-10-29T09:20:32.214695+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 19853
+        "completed": 20842
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-28T23:01:00+08:00",
-      "last_run_at": "2026-10-28T23:00:13.512857+08:00",
+      "next_run_at": "2026-10-29T15:46:00+08:00",
+      "last_run_at": "2026-10-29T15:45:50.016883+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -161,15 +161,15 @@
       "schedule_display": "weekdays at 3:20pm",
       "repeat": {
         "times": null,
-        "completed": 23
+        "completed": 24
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-29T13:42:38.404710+08:00",
-      "next_run_at": "2026-10-29T15:20:00+08:00",
-      "last_run_at": "2026-10-28T15:20:59.102725+08:00",
+      "next_run_at": "2026-10-30T15:20:00+08:00",
+      "last_run_at": "2026-10-29T15:20:27.796727+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -259,7 +259,7 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 18
+        "completed": 19
       },
       "enabled": true,
       "state": "scheduled",
@@ -267,21 +267,18 @@
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
       "next_run_at": "2026-10-29T23:00:00+08:00",
-      "last_run_at": "2026-10-27T23:01:55.550208+08:00",
+      "last_run_at": "2026-10-28T23:01:14.884461+08:00",
       "last_status": "error",
-      "last_error": "Script exited with code 1\nstdout:\n=== AH_analyse ===\nfetch: ok\nstatus: 6 项未提交变更\nadd: ok\ncommit: ok ([auto] daily push 2026-10-27)\npush: ok → origin/main\n最近提交:\nc95bfc7 [auto] daily push 2026-10-27\nea79f5d gate_check: 二级ADx阈值 25→20（用户2026-10-27确认，全池数据支持）\nf20ea6a 研究工具: probe_gate_full_study — 全池ADX门控统计(321只×500日, 6295样本)\n\nfetch: ok\nstatus: 24 项未提交变更\nadd: ok\ncommit: ok ([auto] daily push 2026-10-27)\npush: 被拒绝 (remote: error: GH013: Repository rule violations found for refs/heads/main.        \nremote: \nremote: - GITHUB PUSH PROTECTION        \nremote:   —————————————————————————————————————————        \nremote:     Resolve the following violations before pushing again        \nremote: \nremote:     - Push cannot contain secrets        \nremote: \nremote:             \nremote:      (?) Learn how to resolve a blocked push        \nremote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push        \nremote:             \nremote:             \nremote:       —— OpenRouter API Key ————————————————————————————————        \nremote:        locations:        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: backups/config/config.yaml.good.20261022-115001:18        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: backups/config/config.yaml.good.20261022-115004:16        \nremote:          - commit: 99624675f5e2d45013347486074d1b6fec661ff2        \nremote:            path: backups/config/config.yaml.good.20261026-085904:18        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: config.yaml.bak-20261022T034947Z:18        \nremote:             \nremote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        \nremote:        https://github.com/HinaTK/hermes-home/security/secret-scanning/unblock-secret/3LEl1ZICkCPyOqt8P5R6FEKTUYU        \nremote:             \nremote: \nremote: \nTo https://github.com/HinaTK/hermes-home.git\n ! [remote rejected] main -> main (push declined due to repository rule violations)\nerror: failed to push some refs to 'https://github.com/HinaTK/hermes-home.git')\n[hermes-home] 推送被拒绝，需人工处理。",
+      "last_error": "Script exited with code 1\nstdout:\n=== AH_analyse ===\nfetch: ok\nstatus: 1 项未提交变更\nadd: ok\ncommit: ok ([auto] daily push 2026-10-28)\npush: ok → origin/main\n最近提交:\nb59d883 [auto] daily push 2026-10-28\nfb49ea2 cron解释器钉子：盘前推送门控静默失效根因修复（2026-10-28复发后二次根因）\nc95bfc7 [auto] daily push 2026-10-27\n\nfetch: ok\nstatus: 17 项未提交变更\nadd: ok\ncommit: ok ([auto] daily push 2026-10-28)\npush: 被拒绝 (remote: error: GH013: Repository rule violations found for refs/heads/main.        \nremote: \nremote: - GITHUB PUSH PROTECTION        \nremote:   —————————————————————————————————————————        \nremote:     Resolve the following violations before pushing again        \nremote: \nremote:     - Push cannot contain secrets        \nremote: \nremote:             \nremote:      (?) Learn how to resolve a blocked push        \nremote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push        \nremote:             \nremote:             \nremote:       —— OpenRouter API Key ————————————————————————————————        \nremote:        locations:        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: backups/config/config.yaml.good.20261022-115001:18        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: backups/config/config.yaml.good.20261022-115004:16        \nremote:          - commit: 99624675f5e2d45013347486074d1b6fec661ff2        \nremote:            path: backups/config/config.yaml.good.20261026-085904:18        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: config.yaml.bak-20261022T034947Z:18        \nremote:             \nremote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        \nremote:        https://github.com/HinaTK/hermes-home/security/secret-scanning/unblock-secret/3LKPEWO1pR7CN7kTKEpkJ1GpN2x        \nremote:             \nremote: \nremote: \nTo https://github.com/HinaTK/hermes-home.git\n ! [remote rejected] main -> main (push declined due to repository rule violations)\nerror: failed to push some refs to 'https://github.com/HinaTK/hermes-home.git')\n[hermes-home] 推送被拒绝，需人工处理。",
       "last_delivery_error": null,
-      "failure_streak": 6,
+      "failure_streak": 7,
       "deliver": "local",
       "origin": null,
       "enabled_toolsets": [
         "terminal"
       ],
       "workdir": "D:\\Code\\AH_analyse",
-      "fire_claim": {
-        "at": "2026-10-28T23:00:11.682040+08:00",
-        "by": "MS-22110429259:10900:c02ced5757bb4a3dbe3a44a07d8dcd2e"
-      }
+      "fire_claim": null
     },
     {
       "id": "ed9d5c85e0c4",
@@ -308,15 +305,15 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 16
+        "completed": 17
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-10-29T00:01:00+08:00",
-      "last_run_at": "2026-10-28T00:01:43.372394+08:00",
+      "next_run_at": "2026-10-30T00:01:00+08:00",
+      "last_run_at": "2026-10-29T00:01:07.912310+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -352,15 +349,15 @@
       "schedule_display": "weekdays at 3:35pm",
       "repeat": {
         "times": null,
-        "completed": 4
+        "completed": 5
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-23T10:23:46.003616+08:00",
-      "next_run_at": "2026-10-29T15:35:00+08:00",
-      "last_run_at": "2026-10-28T15:36:20.450918+08:00",
+      "next_run_at": "2026-10-30T15:35:00+08:00",
+      "last_run_at": "2026-10-29T15:37:01.631212+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -396,15 +393,15 @@
       "schedule_display": "10 9,10,14 * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 6
+        "completed": 9
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-26T15:34:21.527295+08:00",
-      "next_run_at": "2026-10-29T09:10:00+08:00",
-      "last_run_at": "2026-10-28T14:10:53.002752+08:00",
+      "next_run_at": "2026-10-30T09:10:00+08:00",
+      "last_run_at": "2026-10-29T14:10:21.145097+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -447,15 +444,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 660
+        "completed": 861
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-26T16:04:54.417527+08:00",
-      "next_run_at": "2026-10-28T23:05:00+08:00",
-      "last_run_at": "2026-10-28T23:00:12.953298+08:00",
+      "next_run_at": "2026-10-29T15:50:00+08:00",
+      "last_run_at": "2026-10-29T15:45:50.770717+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -472,7 +469,109 @@
       "enabled_toolsets": null,
       "workdir": null,
       "fire_claim": null
+    },
+    {
+      "id": "37151573f1f1",
+      "name": "利率点火监控（保险周期）",
+      "prompt": "盘后利率信号监控（保险股周期）。",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "rate_ignition_monitor_wrapper.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "40 15 * * 1-5",
+        "display": "weekdays at 3:40pm"
+      },
+      "schedule_display": "weekdays at 3:40pm",
+      "repeat": {
+        "times": null,
+        "completed": 1
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-29T00:55:16.902231+08:00",
+      "next_run_at": "2026-10-30T15:40:00+08:00",
+      "last_run_at": "2026-10-29T15:40:49.321878+08:00",
+      "last_status": "error",
+      "last_error": "Script exited with code 1\nstdout:\nrate_ignition_monitor 执行失败:\nusage: hermes [-h] [--version] [-z PROMPT] [--usage-file PATH] [-m MODEL]\n\n              [--provider PROVIDER] [--reasoning LEVEL] [-t TOOLSETS]\n\n              [--resume SESSION] [--no-restore-cwd] [--in DIR]\n\n              [--continue [SESSION_NAME]] [--worktree] [--accept-hooks]\n\n              [--skills SKILLS] [--yolo] [--pass-session-id]\n\n              [--ignore-user-config] [--ignore-rules] [--safe-mode] [--tui]\n\n              [--cli] [--dev]\n\n              {chat,model,moa,fallback,worktree",
+      "last_delivery_error": null,
+      "failure_streak": 1,
+      "deliver": "feishu:oc_7d2d8ab5d54051067f8e0cd228652133",
+      "origin": {
+        "platform": "feishu",
+        "chat_id": "oc_c2039c6548572c6cfcee6b85958874c8",
+        "chat_name": "个股分析",
+        "thread_id": null,
+        "user_id": "ou_a7c0d2ae4d25d5e57254a0150abd8471",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
+      "fire_claim": null
+    },
+    {
+      "id": "6aadbf289483",
+      "name": "门控缓存收盘预计算",
+      "prompt": "运行收盘后门控缓存预计算脚本并报告结果",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "grid_regime_cache.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 15 * * 1-5",
+        "display": "30 15 * * 1-5"
+      },
+      "schedule_display": "30 15 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 1
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-29T11:07:53.549585+08:00",
+      "next_run_at": "2026-10-30T15:30:00+08:00",
+      "last_run_at": "2026-10-29T15:30:34.363568+08:00",
+      "last_status": "error",
+      "last_error": "Script not found: D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\cd \"D:\\Code\\AH_analyse\" && python \"D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_regime_cache.py\" 2>&1",
+      "last_delivery_error": null,
+      "failure_streak": 1,
+      "deliver": "origin",
+      "origin": {
+        "platform": "feishu",
+        "chat_id": "oc_7d2d8ab5d54051067f8e0cd228652133",
+        "chat_name": "oc_7d2d8ab5d54051067f8e0cd228652133",
+        "thread_id": null,
+        "user_id": "ou_a7c0d2ae4d25d5e57254a0150abd8471",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-28T23:00:13.515120+08:00"
+  "updated_at": "2026-10-29T15:45:50.772901+08:00"
 }

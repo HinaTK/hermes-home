@@ -54,6 +54,8 @@ Treat “increase each grid amount” and “open a third ETF” as separate pro
 - do not multiply lot sizes merely because more capital is theoretically available;
 - evaluate completed-cycle net spread, turnover, cash utilization, drawdown in currency, and missed opportunities before recommending a change.
 
+**Quota vs purchase discipline (2026-10-27 user pattern):** when the user approves a capital increase (“加仓进2w/3w”), the approval is a **quota (额度), never a buy order** — “给额度不是买入，买入还是按信号来”. Book it as authorization state only; entries still execute grid-level via signal + gate. A quota does NOT override the four-level gate: an ETF under 暂停买入 stays blocked regardless of quota headroom. Before a new-grid ETF's first fill can be booked, it must first be **registered into holdings/ledger** (save_holdings + confirmed subledger) — otherwise the fill-confirmation path has no target to write to. Candidate selection for the new position follows the full analysis chain (同类粗筛 → 三道闸门/六维深评 → 结论排序面向决策：哪只能上/哪只等信号/哪只否决), with the grid-use cross-correction: in a grid context, timing/matching weights rise and moat-fragility/low-ROE penalties fall, versus a DCF/定投 reading of the same score.
+
 ## Whole-theme and cross-theme rotation governance
 
 Same-theme ranking is not enough: an entire theme can become unsuitable because of narrow range, one-way trend, crowding, or a common macro shock. The weekly review must therefore run two layers against the same trailing common window (normally about 63 sessions):

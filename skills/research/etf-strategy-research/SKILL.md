@@ -144,6 +144,7 @@ When the user proposes a trading rule and flags it as intuition without basis (�
 4. **Event-level dual simulation**: from each first-entry-into-state event, simulate rule-on vs rule-off over the same forward window; report win counts, mean vs median delta, tail (P90), and capital-occupation delta. A mean/median split (mean favors the rule, median against) reveals insurance structure — small frequent cost, rare large payoff — and the honest description is "tail insurance", not "return enhancer".
 5. **Fix semantics, not behavior, when only the word is wrong**: if the action survives validation but the label overstates (39% of "banned" events were profitable afterward → 禁入/ban is wrong), rename the label (暂停买入/pause) with the release condition stated, and change zero behavior.
 6. **Disclose data-derived vs engineering-chosen parameters separately**; thresholds calibrated on one regime's sample are readings, not eternal truths. Also disclose coarseness: close-price-path cycle counts are approximate; only gradient direction is reliable.
+7. **Question the question before validating it** (2026-10-28): when the user asks "why do you think X is the most targeted fix", or challenges the framing itself (「我不认为有任何理论是只根据5线就做判断的，你学投资理论到底学了个啥」), re-derive the answer from the theory framework FIRST, then test it — and report when your own earlier reasoning gets falsified mid-validation (the 道氏123 case: single-name 6-sample "condition ② has discriminative power" was destroyed by the pooled 629-event run). Presenting theory names as citations while shipping a stitch-work indicator combo is a competence failure the user will call out. The fix pattern: theory framework → concrete testable rules → pooled validation → honest retraction of what fails.
 
 Watch for **bucketing artifacts**: an early coarse-bucket run manufactured a spurious "highest output" conclusion that fine 0.25–0.5% cuts destroyed. When a conclusion flips with bucket boundaries, the variable is too noisy to gate on.
 
@@ -199,6 +200,29 @@ Before any "which is higher" statement: (1) normalize by window length (ledger s
 ## ADX 梯度×试错仓门控研究（2026-10-27）
 
 用户追问门控规则的数据依据（"ADX三参数怎么用"→"中间态20~25有没有"→"用数据证明"→"现在不能直接跑全池吗"）。研究方法、已否变量（手搓 Wilder 平滑算出 ADX=318 的教训、"X 被放行"类断言必须先沿 gate 代码路径验证）及 321 只全池脚本见 [references/adx-gradient-study-2026-10-27.md](references/adx-gradient-study-2026-10-27.md)。核心纪律：**全池样本落盘并过显著性检验前，不改门控规则**；样本不足时给三盆冷水（薄样本/窗口偏/U 型结论对度量口径敏感），不把趋势预览当结论交付。
+
+## 站稳/巡检信号：候选与裁决（2026-10-28）
+
+现行门控解除条件（收盘站回 5 日线）在全池 629 次事件里 **74% 是假站稳**。用户下令理论先行后定架构：未持仓票三灯资格（结构+量价+时间）管开仓，持仓票 ER+ATR+区间管巡检。裁决结果（勿重提议毙项）：
+
+- **滞后资格原则（最高优先）**：前瞻决策输入必须滞后 ≤1 交易日；ADX（2-3周）/±DI（1-2周）只许事后归因，禁止进决策栏。拿滞后指标给用户做前瞻参考被用户重点批评过。
+- **已毙**：ADX 斜率（无分离、方向反）、量能确认（分布重叠；高阈值误杀 85% 真站稳）、道氏123（②守前低全池无效、③当日破前高不可行）、三条件 AND 巡检（暂停 65% 天数瘫痪网格）。
+- **唯一幸存解除增强**：连续 2 日站回 MA5（假站稳 74%→64%，召回 100%，代价 1 天）。
+- **巡检最优（已验证未部署）**：F = 五线全破 **OR ATR5/ATR20>1.15**，全池 +317k vs 现行 +252k；增量 680 次拦截平均每次避损 95.9 元，现行拦而 F 不拦 = 0 天。589720 回放：9-23/24 ATR 先于五线全破触发 — 波动先于价格破位。
+- **口径铁律**：前窗口低点用 `low.shift(5).rolling(20).min()`（滚动窗口会吞掉创新低）；经济对比用 Σ(放行日 pnl) 对基准 + 配对差表（拦截正 pnl 记 0 会虚抬模型）。
+
+全量数据、已毙候选明细与落地待办见 [references/stability-patrol-validation-2026-10-28.md](references/stability-patrol-validation-2026-10-28.md)；理论轮方法论、滚动窗口泄漏 bug（`low.shift(5).rolling(20).min()`）、震荡窗口代价（29.4% 基准 + 两面交付）与经济口径公平性见 [references/stability-theory-and-econ-fairness-2026-10-28.md](references/stability-theory-and-econ-fairness-2026-10-28.md)。
+
+## 趋势持有 + 回撤加仓波段（2026-10-28）
+
+用户提出「长期持有底仓 + 跌狠了买、涨回来卖」的持有型策略时，它与网格是两个物种：
+网格赚日常波动（高频小额），回撤加仓赚危机回撤（低频大额）。当用户拿「涨了十年」当
+买入理由时必须给两面（长牛事实 + 最大回撤史 + 当前位置 + QDII 溢价纪律），不许顺叙事走。
+参数化回测 → D=8%/R=10% 在 513100 两年半 9买9卖全部 +10~12% 离场、波段收益为纯持有的
+134%，但最深套牢 −15.8% 必须交底。选品沿用同指数「溢价最低+成交最大」。数据源坑：
+东财日K上限 300 根，长回测走腾讯 fqkline（close 在第 3 位）。
+完整案例与回测明细见
+[references/trend-holding-drawdown-averaging-2026-10-28.md](references/trend-holding-drawdown-averaging-2026-10-28.md)。
 
 ## Instrument data endpoints under rate-limiting (2026-10-27)
 
