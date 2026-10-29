@@ -1,0 +1,99 @@
+---
+name: market-phase-monitoring
+description: Use when 判断牛熊市况、输出买入/空仓/持有/半仓操作信号，或维护市况监控脚本。
+version: 1.0.0
+metadata:
+  hermes:
+    tags: [market-phase, adx, kdj, etf-grid, cron, eastmoney]
+---
+
+# 市况监控与操作信号（market_phase_check）
+
+## 用户偏好（首要）
+- **直接给操作信号，且细到成数**，不要学术指标堆砌。输出格式：
+  `标的 | 收X | 动作·成数 | 一句理由`，例如 `试仓买入·1成`。
+- 用户明确纠正过："半仓只是我举个例子，你可以说1成仓位试探之类的"——
+  **禁止用粗粒度"半仓"交付**，必须给成数阶梯（0/1/3/5/7/8成）。
+- 每日盘后都出全表；只有右侧三信号**新触发**的标的标 🔔（同日去重，状态文件
+  `tools/market_phase_state.json`）。
+- 判定全部由脚本算（`python tools/market_phase_check.py` 的 `monitor_main()`），
+  不许凭印象口算市况。
+
+## 操作信号决策树（action_label，勿改口径）
+
+`action_label(m)` 返回 **三元组 (label, fraction, reason)**——调用方解包成 3 个值。
+
+| 动作·成数 | 条件 | 说明 |
+|------|------|------|
+| 🔔买入·7成 | 地量(5日均额<峰值1/3) + ADX降破25(前值>=25>现值) + 周线KDJ金叉K<50 三信号齐 | 右侧确认进场，首次触发标🔔 |
+| 试仓买入·1成 | 单边下跌(ADX>=25,-DI主导) 但 **地量已现** 或 **周线金叉先行**（只亮一个信号）| 轻仓试错，不赌全有或全无 |
+| 空仓观望·0成 | 单边下跌(ADX>=25,-DI主导) 且三信号全不亮 | 别接刀 |
+| 持有·8成 | 单边上涨(ADX>=25,+DI主导) | 持筹不折腾 |
+| 分批埋伏·3成 | 震荡(ADX<25) + 深回撤<=-30% | 埋伏/网格接回窗口 |
+| 网格波段·5成 | 震荡(ADX<25) + 浅回撤 | 网格主场 |
+
+成数=**该方向目标仓位**，非总账户；与网格挂单建议并行不冲突。
+action_label 的入参需含 `dilVolume`/`kdj_golden`（从 signals 字典透传），
+monitor_main 里由 `signals["dilVolume"]` / `signals["kdj_golden"]` 传入。
+
+方法论出处：skill `@user_3243ee23/caopan-baodian`（股票操盘宝典）的
+market-phase-detection / buy-sell-points / half-position-confirm 能力卡——
+九段轮回、地量见底、ADX总开关、右侧确认进场。
+
+## 网格适配（对 caopan-baodian 的反向理解）
+- 书说"震荡市停用指标持币观望"→ 对网格交易者**倒过来**：震荡=网格利润来源，正常跑。
+- 书说"跌破20日线清仓"→ 不适用于网格底仓（网格卖波动率，底仓浮亏是设计内成本）。
+- 单边下跌=只买不卖资金沉淀；单边上涨=卖飞接不回。环境标签与 09:20 盘前挂单建议并行不冲突。
+- 九段轮回套宽基/指数 ETF 原生适配；行业 ETF 是合理延伸但书未验证；QDII/跨境（如159866）完全不在能力域。
+- **单只 ETF 的 ADX 可能与大市指数不同步**：如 2026-10-23 大盘 ADX 36-48 单边空、
+  589720 自身 ADX=17 已转震荡+量能缩至峰值23%。必须分层陈述，别用一个结论覆盖两个层面。
+
+## 深度分析被持仓 ETF 时
+
+若用户要求"详细分析589720"（他账本里有持仓的标的），先读
+[references/held-etf-deep-analysis.md](references/held-etf-deep-analysis.md)：
+读 confirmed_runtime 账本（qty/net_unit_cost/open_grid_positions/t_net）→
+算浮亏与格子分布 → 交叉引用上面的市况标签 → 提示同赛道重叠敞口 →
+环境层结论归本报告，具体挂单价归 09:20 盘前建议。
+
+## 推送排版（2026-10-27 用户反馈"好乱，没有分段没有表格"后定稿）
+- 整份推送两段式：表头口径 → **全标的汇总表**（标的|收盘|涨跌|动作·成数|三信号●○|一句理由）
+  → 【关键读数】分节（每标的 5 行块）。渲染函数 render_report/render_summary_table/_signal_dots。
+- 三信号用 ●/○ 记号串（不再是 ✅/长文本），● 亮 ○ 未亮，读数块里仍保留完整标签+未亮。
+- 铁律不变：表格单元格数字逐格来自 metrics 字段，禁止手拼（表格交付铁律）。
+- 腾讯源行不带涨跌幅：fetch_tencent_kline 现按前收盘推算 pct（旧版硬编码 0 会渲染成误导性 +0.00%）。
+- monitor_main 走 render_report(enriched) 一次性组装；铃铛在组装前加进 reason，严禁再逐标的 append（会双倍输出）。
+
+## 回答"现在怎么判定/能不能买"前先验证现场（2026-10-27 教训）
+
+并行会话可能在你看不到的时段改过门控规则。本会话凭旧记忆答"589720 可以买"，实际前一晚另一会话已把纯 ADX 联动升级为四级门控（五线全破拦截），被用户拿当日推送打脸。固定动作：①`git log --oneline -10 -- confirmed_runtime.py tools/etf_research/gate_check.py`；②重跑推送预演（grid_weixin_execute.py --phase preview）；③只把脚本输出里的判定措辞照抄给用户，不凭印象转述。ADX 三参数（ADX/+DI/-DI）的门控分工、梯度 U 型证据及"宣称放行前先沿 gate 代码路径走"的教训，见 skill `etf-strategy-research` 的 `references/adx-gradient-study-2026-10-27.md`。
+
+## 实现要点
+- 数据源：东财 push2his K线，`klt=101` 日线 / `klt=102` 周线（KDJ 必须直接拉周K，不要自己从日K聚合）。详见 [references/eastmoney-kline-api.md](references/eastmoney-kline-api.md)
+- 测试夹具与指标单元测试的坑（对称K线RSV恒50、减速下跌低位金叉、monkeypatch 按 klt 分流）详见 [references/indicator-test-fixtures.md](references/indicator-test-fixtures.md)
+- cron 部署模式：wrapper 放 hermes-home/scripts/market_phase_monitor.py（sys.path 指向 D:/Code/AH_analyse/tools），no_agent+stdout推飞书，job `64f1bc061136` 工作日15:35。
+- 改逻辑必须走 TDD（先看失败测试）；测试文件 `test_market_phase_render.py`、`test_market_phase_table.py`（表格版 6 项）、`test_market_phase_fallback.py`。
+
+## 盘前确认时序：ADX 无未来函数（2026-10-26 复盘确立）
+- **ADX(14) 需要当日收盘价**——盘中任何时刻只能算到昨日收盘的值。复盘 159363：10-15 收盘 ADX=24.4（震荡），10-16 盘前仍只能看到 24.4；"单边下跌"在 10-16 **收盘后**才首次可判定（26.8）。任何"盘前就能确认当天转单边"的说法都是引入未来函数；联动生效的极限 = **确认后的下一个开盘**。
+- 用户会追问时序细节（"10-16确认是指盘前还是盘后？"）——回答前先用截至时点的数据实际算一遍，不要凭直觉。
+
+## 腾讯备用源（fetch_tencent_kline，2026-10-26 验证）
+- URL：`https://web.ifzq.gtimg.cn/appstock/app/fqkline/get?param=code,period,start,end,count,fq`
+- **count 在第 5 位**（参数位次错会导致返回异常 list 结构——踩过的坑）。period：day=日K，week=周K。腾讯代码不带市场前缀（`sh589720`→`sh589720`直接用）。
+- 主备逻辑：东财优先（口径不变）→ 任何失败自动切腾讯 → 双挂才报"获取失败"。东财限流时曾 6 标的全挂，腾讯兜底后全渲染成功。
+
+## 网格×市况联动 RegimeGate（2026-10-26 落地 88d3ab9；同日升级为统一四级门控 8101603→c0b051e）
+- `confirmed_runtime.plan(regime_gate=...)` 内部已升级为**统一四级 gate_check**（tools/etf_research/gate_check.py），不再是纯 ADX/-DI 判定：**暂停买入(五线全破，收盘<ma5/10/20/30/60) > 暂停买(ADX≥25且-DI>+DI且收盘<60日线) > 试错仓(破1-4条带退出价) > 正常**，从严者胜，任一级拦截即不生成买入建议；卖出建议始终保留；⛔行显式标注原因，**禁止静默消失**。文案例「禁入」已改「暂停买入」，解除=收盘站回5日线自动恢复（行为零改动，c0b051e）。
+- 单一实现/单一数据源：gate_check 直接复用 entry_timing.judge_entry（below_count 是字段，不从 reason 文本解析）；_fetch_regime_klines 一批日K同时供 ADX 与均线。任何一处改破线口径，榜单/EOD/盘前三出口同步生效。
+- 行情拉不到 → **fail-open**（无 bars 的旧 regime 退回纯 ADX 判定；gate=None 回退无联动旧行为），绝不因数据故障中断盘前流程；紧急逃生口 `--no-regime-gate`。用户明确担心过"9:20拉不到数据导致流程中断"——实测三场景（全挂/部分挂/判断出错）均不中断。
+- 每次运行**现算**（拉300根日K→丢当日未收K→ADX与均线），无缓存无预存；"用昨日收盘数据"≠"昨日算好存出来"。
+- 标的清单动态读 holdings.json（4指数固定+全部真实持仓含迁移退出），禁止硬编码——2026-10-26 硬编码漏159992被用户抓（"我明明有多个持仓为什么只提这一个"）。
+- 门控规则的验证结论与被否变量（ADX分层无梯度、偏离深度非单调）见 skill `etf-strategy-research` 的 `references/entry-gate-validation-2026-10-26.md`——它是截尾保险而非收益增强器，不要重新提议被否的细分变量。
+- **-DI>+DI 方向检查是规则本体，不是可选项**（2026-10-27 回测暴露后修复，65e065e）：
+  暂停买只拦单边**下跌**动能；强动能+DI主导的反弹不是"单边下跌"，不得拦。
+  合并统一门控时曾把方向检查丢掉，靠"充分反弹后应解除"的测试抓回。改这一级时
+  必须保留方向条件。
+- 门控已接入回测引擎：`run_research(regime_gate=True)`（65e065e），回测口径与 09:20
+  生产判定同一套代码。接线坑（喂窗口数据 fail-open、continue 跳净值记录、夹具
+  ATR=0 等）见 skill `etf-grid-backtest-engine` 的 `references/regime-gate-integration.md`。

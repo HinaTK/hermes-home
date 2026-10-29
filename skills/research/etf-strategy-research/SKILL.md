@@ -108,6 +108,51 @@ Always run a sweep across `--gold_window` values before concluding a golden-rati
 
 When presenting grid parameter comparisons, always include a **status column** (✅ 可操作 / ❌ 价格在上界上方 / ❌ 价格在下界下方) so the user can immediately see which strategies are executable. A strategy that requires waiting for a 6%+ pullback is not comparable to one that can start today.
 
+## Cross-border (QDII) entry analysis (2026-10-24)
+
+### Premium freshness pitfall
+
+Never compute a QDII ETF's premium from a stale NAV. Cross-border NAVs publish after the A-share close and lag the overseas session; when the underlying moved sharply, a day-old NAV can flip the premium's sign (159866 on 2026-10-22: stale prior-day NAV implied −0.05% "premium normalized"; the fresh same-day NAV showed +2.35% after Tokyo fell ~2.4%). Always print the NAV date next to the premium, and re-derive the premium immediately before acting on any premium-based trigger.
+
+### Structural premium: never gate entry on premium normalization
+
+Before using premium as an entry gate, compute its distribution over ≥100 aligned NAV days (mean, median, current percentile, % days >2%, % discount days). For structurally premium products — QDII with exhausted quota (159866: 79% of days above +2%, median +2.36%, discount on ~1% of days) — "wait for premium ≤ 0" is an infinite wait. Use premium only for:
+1. **Same-index vehicle selection** — lowest premium + highest liquidity among ALL funds tracking the same index (159866 vs 513520/513000/513880), including a full comparison table before choosing;
+2. **Extreme-risk alert** — >5% premium: do not buy.
+Entry timing itself rests on price/structure signals, not premium normalization.
+
+### Regime and entry-timing toolkit
+
+When asked "is now a good time to buy" or "bull or bear, any signs":
+- Run the **four-signal regime check**: ① MA50 vs MA200 + price vs MA200 (bull framework intact?); ② higher-high/higher-low pivot structure (divergent = converging triangle, direction pending); ③ drawdown band from 250-day high (0~−10% high zone / −10~−20% correction / −20~−35% bear / deeper = deep bear; −20% is the classic dividing line); ④ 20-day realized vol vs its own median (spike = bear-start signature). Present as a signal table; when signals split, say so — that IS the answer, don't force a verdict.
+- For left-vs-right entry questions, run a **forward-return event study** on the fund's own history: left = close below MA20 by ≥3% while falling; right = MA20 reclaim day. Report mean/median/worst return, win rate, and path max-drawdown at 20 and 60 sessions — and disclose the sample's regime bias (a bull-market sample inflates left-side win rates; the left side's true uncovered risk is a trend that never comes back).
+- Give concrete invalidation levels (e.g. MA200 ≈ price −2% → cut early rather than ride to a −25% stop).
+
+See `references/qdii-premium-and-entry-timing.md` for the 2026-10-24 159866 case numbers and reproduction script.
+
+### Fresh skill-driven re-analysis
+
+When the user says "不要管我的方案，重新用 skill 判断" (ignore the prior plan, re-judge from the skill), run the skill's framework from scratch on current data WITHOUT anchoring to the previously agreed plan, present findings, and only then reconcile the two. A prior plan is a hypothesis to test, not a constraint on the analysis.
+
+## User-intuition rules: validate before adopting (2026-10-26)
+
+When the user proposes a trading rule and flags it as intuition without basis (「我的方案只是没有依据的直觉」), or when two of the user's rules conflict, do not merge or implement blindly — validate with data, then decide. Workflow that earned user trust here:
+
+1. **Formalize the claim** into a testable form: state definition, forward window, outcome metric (grid cycles, max drawdown depth, terminal return).
+2. **Pooled validation**: per-ETF × per-day samples from the research cache; bucket by rule state and measure forward outcomes. A rule earns adoption only with a monotone, sizable gradient across buckets.
+3. **Test refinement variables before adding them**: every proposed sub-cut (ADX stratification, deviation-depth bands, hysteresis thresholds) must itself show a separable gradient on pooled data. Record rejected cuts as rejected — do not re-propose them.
+4. **Event-level dual simulation**: from each first-entry-into-state event, simulate rule-on vs rule-off over the same forward window; report win counts, mean vs median delta, tail (P90), and capital-occupation delta. A mean/median split (mean favors the rule, median against) reveals insurance structure — small frequent cost, rare large payoff — and the honest description is "tail insurance", not "return enhancer".
+5. **Fix semantics, not behavior, when only the word is wrong**: if the action survives validation but the label overstates (39% of "banned" events were profitable afterward → 禁入/ban is wrong), rename the label (暂停买入/pause) with the release condition stated, and change zero behavior.
+6. **Disclose data-derived vs engineering-chosen parameters separately**; thresholds calibrated on one regime's sample are readings, not eternal truths. Also disclose coarseness: close-price-path cycle counts are approximate; only gradient direction is reliable.
+
+Watch for **bucketing artifacts**: an early coarse-bucket run manufactured a spurious "highest output" conclusion that fine 0.25–0.5% cuts destroyed. When a conclusion flips with bucket boundaries, the variable is too noisy to gate on.
+
+See `references/entry-gate-validation-2026-10-26.md` for the full case: unified four-level gate (五线全破暂停买入 > ADX≥25动能暂停 > 试错仓 > 正常), the rejected-variable evidence, the 573-event comparison, and commits 8101603/c0b051e.
+
+### Label-drift TDD pitfall (2026-10-26)
+
+User-facing labels with semantic weight (「禁入」 vs 「暂停买入」) drift silently when no test asserts the human-readable string — internal-code assertions (`verdict == 'no_entry'`) pass through any wording. When renaming or introducing a user-visible term, add a label-text assertion test first (RED on the old wording), then change LABELS (GREEN). Same for rendered-table headers: adding a column requires syncing header-assertion strings in tests within the same commit — a 9-column renderer shipped against an 8-column assertion and failed three commits later.
+
 ## Ranking axis discipline (user correction, 2026-10-16)
 
 When this user asks for a **排名 / 前10** in a grid round-trip context, they mean **完整往返次数（full_cycles）从高到低** — not a composite score. Delivering a weighted-score table and calling it "前10" is a format failure even when the score table is technically correct.
@@ -136,6 +181,28 @@ When producing a 「二、合计」 / period summary for this user, always inclu
 ## Evidence checks
 
 Use grounded-citations for source mapping, but manually inspect each material financial claim. A validator's green status is not proof that the quote supports the number, that table columns were read correctly, or that dates are current. See [financial evidence and grid illustrations](references/financial-evidence-and-grid-illustrations.md) for extraction checks and reusable counterexamples.
+
+## Data-table delivery rule (2026-10-24, hard rule)
+
+**Every data table delivered to this user must be script-rendered and pasted verbatim; a column absent from the script output must never be hand-filled.** Born from a fabricated 近20日往返 column in a TOP10 whose numbers matched no field in the run's data (user: 「一切数据都有依据，落实脚本吗」). Renderers: `entry_rank --render`, `grid_summary.py`, `render_eod()`. Every delivered number is audited across turns. See `references/data-table-delivery-rule.md` for the full rule, the audit method that catches fabrications, and the error history.
+
+## Efficiency-metric comparability (2026-10-26)
+
+When comparing the user's confirmed-fill performance against the research engine's simulated metrics, never compare raw percentages — the two systems use different numerators AND denominators:
+
+- **Per-round yield (单轮收益率)**: ledger = net ÷ that lot's buy amount (≈ gap − fee drag, a grid-geometry constant, NOT a performance metric); engine has no such field, and deriving one via `cycle_net ÷ cycles ÷ avg_cost` divides by the whole capital base (~4x dilution vs the per-lot denominator).
+- **Capital turnover (资金周转效率)**: ledger = cumulative T net ÷ CURRENT net invested (point-in-time, conservative for late-scaling grids); engine `cycle_net_per_avg_cost_pct` = window cumulative ÷ TIME-AVERAGE occupation over every 5m bar, over 63 sessions.
+- **Only directly comparable metric**: net spread per round in yuan.
+
+Before any "which is higher" statement: (1) normalize by window length (ledger starts 2026-09-23, engine window is 63 sessions — divide both by trading days), (2) normalize the denominator type. After normalization the ledger actually ran ABOVE the engine for 589720/159363 (1.5% gap + 8,000/6,000 lots generate more rounds per oscillation than the engine's 2%/5,000 defaults). See `references/efficiency-metric-definitions.md` in the etf-grid-efficiency-rotation skill for full formulas.
+
+## ADX 梯度×试错仓门控研究（2026-10-27）
+
+用户追问门控规则的数据依据（"ADX三参数怎么用"→"中间态20~25有没有"→"用数据证明"→"现在不能直接跑全池吗"）。研究方法、已否变量（手搓 Wilder 平滑算出 ADX=318 的教训、"X 被放行"类断言必须先沿 gate 代码路径验证）及 321 只全池脚本见 [references/adx-gradient-study-2026-10-27.md](references/adx-gradient-study-2026-10-27.md)。核心纪律：**全池样本落盘并过显著性检验前，不改门控规则**；样本不足时给三盆冷水（薄样本/窗口偏/U 型结论对度量口径敏感），不把趋势预览当结论交付。
+
+## Instrument data endpoints under rate-limiting (2026-10-27)
+
+同类粗筛/深评取数（费率/规模/成立日/净值/成交额）在 akshare+push2 被限流时的降级链：fundf10.eastmoney.com 概况页、FundArchivesDatas gmbd 规模接口、pingzhongdata 净值序列、腾讯 qt/fqkline。跟踪误差必须用净值口径；增强型 ETF 的偏离是主动增强不是跟踪失败；指数基准缺位时标数据缺失，禁用近亲指数硬替。见 [references/instrument-data-endpoints.md](references/instrument-data-endpoints.md)。
 
 ## Verification checklist
 

@@ -9,9 +9,20 @@ auth.json
 *.pfx
 credentials.json
 secrets.json
+shared/nous_auth.json
 
 # ── Config with embedded secrets ─────────────────────────────────────────
 config.yaml
+config.yaml.bak*
+backups/config/
+backups/
+
+# ── Runtime installs (thousands of files, contains pinned code) ──────────
+installs/
+
+# ── Runtime misc ─────────────────────────────────────────────────────────
+*.pid
+.skills_prompt_snapshot.json
 
 # ── Python ───────────────────────────────────────────────────────────────
 __pycache__/

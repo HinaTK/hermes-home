@@ -1,16 +1,8 @@
-2026-10-08 用户确认 589720 买入 9,400 份 @ 0.859 成交（实际成交价优于限价 0.869）。佣金按万一免五最低 1 元计 1.00 元，银河交割单待核；其他委托未计成交。
-§
-User insists on only having one active buy order and one active sell order per ETF at any time. Other orders should be automatically canceled to avoid conflicts.
+表格交付铁律（2026-10-23 编造 recent20 列，同类第4次）：交付任何数据表必须由脚本渲染产出原样粘贴（entry_rank --render / grid_summary / render_eod），禁止聊天层手打数字；终端输出没有的列不得凭印象填。已固化 render_markdown（f8e06b7）；weekly 周报+飞书摘要均带 entry_rank 双规则榜单（888a347，94测试过，真实输出与CSV逐字节一致），cron 5d8180a8d025 无需改配置自动生效。断言用共享常量 ENTRY_BLOCK_TITLE，禁止手写字符串比对表头。
 §
 User expects immediate updated operation suggestions after each confirmed trade execution.
 §
-User is highly sensitive to data accuracy, particularly market data field parsing and cost basis calculations, and will repeatedly correct mistakes until resolved.
-§
 User wants all trading data verified against actual brokerage statements and considers local ledger as provisional until confirmed.
-§
-User's primary trading metrics are net price difference per round trip and capital turnover efficiency, not just win rate.
-§
-User commission structure confirmed: 万一免五 (0.01%) with minimum 1元 per trade (max of turnover*0.0001 and 1.0).
 §
 用户通过银河证券进行 A 股 ETF 交易，佣金为万一免五（0.01%，无最低 5 元）。
 §
@@ -28,44 +20,50 @@ User commission structure confirmed: 万一免五 (0.01%) with minimum 1元 per 
 §
 用户要求交易情况‘汇总’必须包含每只ETF持仓份额、持仓成本与加权单位成本、现金及成交核对；不可仅概述策略或只报网格价差。
 §
-用户于2026-09-30同意将当前 Hermes Desktop 默认配置的 model.context_length 设为400000 tokens；压缩参数保持不变，暂不直接拉满百万上下文。
-§
-用户对账本准确性的要求极高，不容忍任何基础计算错误。2026-10-09 因为算错 8,069.40 + 8,075.60 + 7,959.40 - 8,120.60 这道简单算术题，被用户两次骂"傻逼"。教训：任何涉及金额、份额、成本的计算必须逐笔列明并反复核对，不能凭印象给数。用户会逐笔对账，发现错误会直接指出并要求重新计算。
-
-用户明确的账本规则（2026-10-09）：
-1. 每个格子（lot）独立记录数量、单价、买入日、T+1可用日
-2. pos["qty"] 必须等于所有 lot 的 qty 之和，卖出后用 sync_qty() 同步
-3. 可卖库存 = 所有 available_from <= 今日的 lot 的 qty 之和（T+1池）
-4. 卖出时消耗来源是 T+1 池（按买入日期 FIFO），目标格（act["lot"]）的 qty 保持不变——它只是标识哪个网格价位被触发，不是被卖出的那个 lot
-5. 当日买入的 lot（T+0）不能作为可卖库存，但其卖价可以挂在 T+1 池上
-6. cost_cash 必须等于所有 lot 的 (qty × price + 佣金) 之和，卖出时从 T+1 池扣减对应成本
+账本铁律（2026-10-09算错题被骂后确立）：任何金额/份额/成本计算逐笔列明反复核对，禁凭印象。账本规则：每lot记数量/单价/买入日/T+1可用日；pos[qty]=Σlot且sync_qty同步；可卖库存=available_from≤今日的lot合计（T+1池）；卖出消耗T+1池按FIFO，目标格标识不变；T+0当日不可卖但可挂T+1卖价；cost_cash=Σ(qty×price+佣金)，卖出从T+1池扣成本。
 §
 接回格命名：G-rebuy、C-rebuy 等，ID 要具体，不说"下一格"。每只ETF一卖一买，159992迁移退出只有卖单。T+0当天不可卖，可卖池 = 所有已过T+1且未卖出格。最新成交格卖出优先（卖价最低的可卖格），用旧T+1库存覆盖。账本每格记录：买入价、持有股数、是否已卖出、T+1可卖状态。接回价必须由脚本按卖出价÷1.015算，不得另编一个价冒充脚本输出；实际成交价偏离网格点时要明说差异且不改策略代码。
 §
-2026-10-12：飞书会话模型切换为 gpt-6.1-sol（provider: custom:aicode-api-gz4399-com）。此前为 gpt-6-sol，再之前为 dots-studio/dots-3-note-preview:free。
-§
 2026-10-12 用户再次纠正：卖出哪个格子就接回哪个格子（卖D格接D-rebuy，卖E格接E-rebuy），不是卖E格接F格。接回价 = 卖出价÷1.015，份额 = LOT_BUDGET÷接回价取整百。这个错误今天犯了两次，必须记住。
-§
-10-13: 159612 选定方案A（箱体1%、5档2.066~2.160），跌破2.053暂停买入。
 §
 用户明确ETF状态需求：每只ETF的qty、sellable_qty、max_grid(A-Z)都是持久化、脚本可修改的变量，不是展示时临时计算的口径。买入从当前max_grid取下一号并更新，卖出取当前号再退一号；标签保存到交易记录，不人工硬编码。每日00:01从交易记录重算qty并写回sellable_qty=qty；买入增加qty不增加sellable_qty，卖出同时扣减二者，卖出建议读取持久化sellable_qty。用户要求汇报数字来自真实脚本输出，区分用户输入、人工设置与脚本自动生成。
 §
 2026-10-20: etf_research 引擎已参数化——simulate(lot_budget=5000, gap=0.02)，底仓=lot_budget×2；engine.run_research() 透传。默认仍与用户实际（1.5%间距、6000/8000元格、逐格建仓）不一致，绝对值不可与账本直接比，可传 lot_budget=6000/gap=0.015 跑贴近实际的一版。同批修复：体积单位 bug（K线 volume 是手数，qty 是股数，三处需 ×100）、cycle_return_on_40k_pct 分母由硬编码 40000 改为实际 4*c、新增初始不变量断言。补 2 项 TDD 测试，共 11 项通过。
 §
-已查证曾讨论单边行情，不能再称“没聊过”：原会话 @session:default/20260922_141141_e5b6cb；消息4354为上涨卖空/三天接不回，9/29后补参与底仓和提前上移复核；消息5332为持续下跌只买不卖、暂停新增买入、评估下移区间/换ETF且旧亏损不消失。以上是历史讨论，不证明当前代码仍有效；159992后改迁移退出。用户反感跨会话否认已讨论事项；此类问题过去的检索遗漏不等于从未讨论，当前未诊断到记忆服务故障。
+曾讨论单边行情（@session:default/20260922_141141_e5b6cb 消息4354/5332）：上涨不追涨、下跌只买不卖时评估暂停/换ETF，旧亏损不消失。检索不到≠没聊过。
 §
-2026-10-20 用户决定买入日经ETF 159866（买入持有，不接入网格账本；理由：分散非中国资产）。用户三条件：赌后续会涨、期限可放 3 年、可接受 25% 回撤。方案：总投 3 万（账本外 8 万保护性现金出），三档 1.59-1.60(30%)/1.50-1.52(30%)/1.40-1.42(40%)，锚点为 250 日斐波那契 50%/61.8%/78.6% 与历史支撑密集区，加权成本约 1.492；止损=成本×0.75（约1.12，低于历史最低≈不设）；1.68/1.92 压力位减仓，36个月未达1.70换标的。当日现价 1.645、溢价 +1.36%、跌破 MA20/MA60，故未立即建仓。
-§
-2026-10-20 用户抓到助手口头声称"按 TDD 流程"但实际先改代码后补测试（是回归测试不是 TDD）。教训：声称用了 superpowers skill 就必须真走 RED→GREEN（先写失败测试再改实现），不能口头套用 skill 名；含代码改动的汇报不得把事后补的测试说成流程驱动。
+159866 日经ETF：用户2026-10-20曾定三档建仓方案但未执行，2026-10-27用户明确说"没有159866"——无持仓。后续不得引用为用户持仓。
 §
 A股交易日计数必须扣除法定节假日，不能只扣周末。2026年：中秋节9/25(五)-9/27(日)休市、国庆10/1-10/7休市、10/10(周六)补班不开市。曾把09-23→10-16算成18个交易日，实际只有11天。任何涉及交易日/交易天数的汇总，先查当年交易所休市安排再算。
-§
-每周研究排名用户要的是完整往返次数(full_cycles)排名，不是综合得分(score)。综合得分是加权指标且默认排除当前持仓，绝不能当作往返次数榜交付。交付前必须从result.json按full_cycles降序重排，并说明是否含持仓、是否含港股相关ETF。
 §
 网格汇总的合计部分必须包含：交易区间、自然日、交易日数、成交总笔数、买入/卖出金额合计、佣金合计、净投入合计、持有份额合计、做T总轮数/毛利/双边佣金/净利。曾两次被用户指出漏了交易天数和净投入。交易日数要按A股实际休市算。
 §
 ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2026-10-20)。任务e01b833b150d，schedule weekdays at 9:20am，仍推飞书。改时间时注意避免当天重复推送（手动触发+定时触发会撞车）。
 §
-2026-10-20: 用户要求把 PostgreSQL 装到 D:/Program Files，但网络受限装不了（无 winget/choco；downloads.edb.com、get.postgresql.org DNS 失败；aliyun/huawei 镜像 postgresql/windows/ 目录均404）。已给浏览器手动下载/内网镜像/Docker 三个替代方向待选。
+排名交付纪律：用户要“前N”=完整往返次数榜，必须过建仓资格（entry_rank.py 调 entry_timing.judge_entry）；持仓不排除——并入同一张榜正常排名、标“持仓”标签。禁止拿综合 score 榜冒充；同次数按 full_cycle_net 降序再按 code 升序；标注模型/窗口/覆盖；同一日多轮取最新目录。
 §
-排名交付纪律（2026-10-20 用户两次怒斥后强化）：用户说“前10”时，必须按他指定的指标排序（如完整往返次数 full_cycles），禁止拿综合评分榜（score）冒充。综合榜里同一代码的 full_cycles 往往远低于持仓（如综合第1的传媒ETF 22次 vs 589720 37次），两个榜不是一回事。要往返次数就直接从 result.json 按 full_cycles 降序重排，次数相同按 full_cycle_net 降序、再按 code 升序。同时显式标注：模型、参数、日期窗口、失败覆盖、是否排除持仓。
+模型问题以 agent.log conversation turn 行为准；默认 group/smart-split（本地Magpie路由，单笔不可归因成员）。
+§
+【高优先级原则（用户于2026-10-22明确要求提升）】一个任务如果用户可能多次提问且可通过脚本代码落地，必须首选代码脚本方案，禁止临时口算或一次性脚本。判断顺序：接到任务→找现成模块→没有则评估是否重复性→是则TDD落代码+测试→以后一律跑模块。已实例：grid_summary.py汇总（e702249）、account_total_pnl总盈亏（c1645bb）。与“代码改动走Superpowers TDD”构成闭环；同类错误第三次视为流程问题。
+§
+项目级 skills 在 D:/Code/AH_analyse/skills/。159866溢价系结构性（100净值日 79%>2%，中位+2.36%）：只用于同指数选品与>5%预警。左侧vs右侧（500日）：左60日+16.6%/胜率93%占优但有牛市区间偏差，尾部风险靠 25% 止损覆盖。
+§
+市况监控（cron 64f1bc061136 工作日15:35推飞书）：标的=4指数+动态读holdings.json全部真实持仓；🔔仅三信号新触发同日去重；成数阶梯：三信号齐→买7成；单边下跌+地量或周线金叉先行→试仓1成；单边下跌→观望0成；单边上涨→持有8成；震荡深回撤→埋伏3成；震荡浅回撤→网格5成。2026-10-27表格化（9db0ff5）：两段式=汇总表（标的|收盘|涨跌|动作成数|三信号●○|理由）+【关键读数】5行块；数字逐格来自metrics禁手拼；腾讯源pct按前收盘推算；monitor_main一次性render_report(enriched)禁逐标的append。测试：render/table/fallback。东财限流自动切腾讯fqkline备用源（param第5位=count）。
+§
+盘中触价规则（10-26）：建议只在成交确认后生成起有效，首见记极值基准，仅现价触价或越过基准的新极值才提醒；消失即清窗，重生窗口重开。实现于 monitor()（5724005）。
+§
+用户会跨轮次比对历次交付，每个数字默认会被审计；单字“落地”=立即TDD执行并提交推送，不再确认。
+§
+盘后建议转述照 plan() 原样给，禁止附加“明日某格解锁后方可卖”类推论（10-26再犯）：卖出建议校验=可卖池总量≥目标格数量，脚本给出即今日可执行；未生成时才说明池子不足。
+§
+用户中签中鼎转03(sz127119，1手)：监控scripts/bond_zhongding03_monitor.py+cron 6320900a58dd(交易日9:10/10:10/14:10推飞书)，上市=当日戳且last≠100，提醒一次。预期价127~130，卖完停任务。
+§
+四级门控 gate_check（→ea79f5d）：①五线全破拦 > ②强动能跌势拦（10-27阈值25→20：ADX≥20且-DI>+DI且收盘<60日线；依据321只全池n=3684：20-25爬坡区最差-1.17%/胜率38%；≥25维持拦不放开——反是超跌反弹温床+1.03%但下尾14.2%跌超5%，宁严勿松）> ③试错仓（破1-4线附退出价）> ④正常。从严者胜；fail-open；+DI主导不拦。工具tools/probe_gate_full_study.py，数据reports/_probe_gate_full.csv可复查。盘中未接gate。
+§
+群“个股分析”=个股分析。主力 skill：个股排雷(stockscreening)+valuation-analysis+caopan-baodian；stock-analysis 的 scripts 是 .so 平台锁死（Py3.13/Linux 编译），本机 Windows/Py3.12 不可跑，其 SKILL.md 方法论可参考但脚本勿试。个股取数一律走 stock-data-toolkit skill（westock CLI C:/Users/Administrator/.local/bin/westock.exe + 腾讯实时价仲裁；股息率 TTM 口径；限流空表退避重试禁静默丢票）。neodata 已卸载（付费壳）；公告/新闻用 web_search 兜底。
+§
+个股分析统一框架（2026-10-27定调）：用户只关心分红到手+股价上涨两轴。ROE 等中间指标只作定价工具（盈利收益率=ROE÷PB），禁止单独吹 ROE——用户用美菷2021案例实证：108元买入五年含息回报≈0，ROE 高但买贵了照样白拿。结论：分红是拿得住的理由，买入理由=便宜（盈利收益率够高）+趋势止跌。
+§
+大任务交付要求（10-27原话"不要中断，不要偷工减料"）：多步大任务先建todo清单，连续执行到完整交付，不中途中断确认。
+§
+推送排版铁律（2026-10-27 市况推送被评"好乱，没有分段没有表格"后确立）：多标的盘后推送一律两段式——先汇总表（markdown 表头+分隔行飞书才渲染表格）再分节细节块；开关类状态用●/○记号串压缩；单标的读数块≤5行；数字逐格来自脚本输出。踩过的坑：链式三元+拼接优先级错误；备用源 pct 硬编码 0 渲染成+0.00%；render改了但调用方 monitor_main 漏改致双倍输出——改渲染函数必须同步改所有调用方并真实跑一遍验收。

@@ -1,7 +1,7 @@
 ---
 name: etf-grid-backtest-engine
 description: "Use when running or trusting the ETF grid backtest engine."
-version: 1.0.0
+version: 1.1.0
 category: research
 ---
 
@@ -72,6 +72,28 @@ ratio: derive it from the run, do not assume the nominal.
   high/low path assumptions, no partial fills, no premium change modelling, no dividend
   reinvestment.
 
+## 4b. Window semantics — the four windows are four INDEPENDENT simulations (2026-10-26)
+
+- `engine.py` builds `{'full','early','late','recent20'}` as separate frame slices and calls
+  `simulate()` once per slice. Each simulation anchors its grid at **its own first bar's open**
+  (`initial_p = opens[0]`) with its own 100k account. They are parallel universes of
+  "start the grid at that date" — NOT one simulation with sub-interval counts.
+- Window counts are therefore **not additive and not nested**: `early + late != full`
+  (159366: 1 + 6 = 7 vs full = 4) and `recent20 > full` ("倒挂") is a legitimate signal
+  (all activity concentrated recently; a grid anchored at the lower recent price fits the
+  recent range better), NOT a bug. When the user reasons "subset ≤ superset, so inversion
+  is impossible" — the math is right, but the subset premise is wrong; say so explicitly.
+- Usage split: `full_cycles` is the product-selection anchor (≥10 admission gate; stable
+  across rolling windows). `recent20_cycles` is the temperature check (≥2 gate; catches
+  both "dead now" and "only-alive-now"). Rolling windows swap ~5 sessions per week, so
+  absolute counts are never comparable across research rounds — compare within one round.
+- `entry_rank.window_matrix_label` (commit 4ccf3ba) renders the pairing per row:
+  ✅双高 (full≥10 & r20≥2, candidate) / ⏳等信号 (high/low — often one-sided regime
+  suppressing the grid; watchlist) / ⚠️脉冲 (low/high — probe-lot only, 159366-type) /
+  ❌死水 (drop). Thresholds REUSE the admission gates exactly (MIN_FULL_CYCLES=10,
+  MIN_RECENT20_CYCLES=2); never introduce a second standard. Boundary values are
+  inclusive (r20=2 counts as high) — encode boundaries in tests, not in prose.
+
 ## 5. Known structural simplifications (state, do not silently "fix")
 
 - Initial build fills 5 slots at the first bar; the user builds gradually per grid.
@@ -100,3 +122,41 @@ ratio: derive it from the run, do not assume the nominal.
   separate book, not a grid slot in the existing ledger.
 - T+0 eligibility is a rule category, not a product name; generic QDII names are not
   T+0 by default.
+
+## 8. Regime gate — the gate is part of the backtest (2026-10-27, commit 65e065e)
+
+User rule: **backtest process must comply with the production gate** (「回测过程也要符合规则的哦」).
+Never hand-roll a simplified gate for research; wire the production one in.
+
+- `run_research(regime_gate=True)` computes `gate_check.blocked_buy_days(frame)` per ETF
+  and passes `gate_days` into `simulate()`. Blocked days cancel **new-lot buys only**;
+  initial build, sells, settlement, equity recording all untouched.
+- **No lookahead**: day D's verdict is computed from daily bars through D-1 close
+  (production: the 09:20 pre-market only knows yesterday's close). Blocked buys slide to
+  the next unblocked day — global trade counts may NOT drop. Assert "zero new-lot buys ON
+  blocked days", never "trades must fall".
+- **Feed UNTRIMMED history**: `blocked_buy_days` needs ≥65 daily bars (entry_timing
+  MIN_ROWS). The engine must pass full history, then keep only in-window dates. Feeding
+  the 63-day window → 63<65 → fail-open → gate silently no-ops; signature: gated run
+  byte-identical to ungated (all diffs 0.000). Zero-diff IS a failure signature, check it.
+- **Never `continue` past the loop tail**: in `simulate`, the blocked-buy branch must skip
+  only the purchase action. A `continue` also skips `equities.append` + invariant checks →
+  equity curve loses blocked-day bars (1488 vs 1248), `final` reads a stale value,
+  `identity_error` explodes (observed 200.8). The engine's identity check is what catches it.
+- **ADX pause needs direction**: `ADX>=25 AND -DI>+DI AND close<ma60` (user's original
+  10-26 rule). Without `-DI>+DI`, strong-momentum RALLIES get blocked; recovery legs stay
+  blocked for weeks. This check was lost once in the merge and restored 2026-10-27.
+- **Zero-impact per name is legitimate**: blocked days often coincide with bounces where
+  no buy signal fires (589720: 22 blocked days, zero blocked buys → gated==ungated for it).
+  Verify the gate works by counting affected names (198/283), not by requiring every ETF to differ.
+- **Fixture pitfalls** (gate tests): daily bars need intraday range or ATR=0 → ZeroDivisionError
+  in entry_timing; oscillation must exceed gap (±0.8% vs 2% gap → zero new-lot buys);
+  recovery legs need ~15 bars for Wilder DMI to flip (8 is not enough — still blocked is
+  CORRECT then); staircase crashes (-2%/day > gap) fire buy signals daily so the gate has
+  something to block. Tests must add `tools/` to sys.path or `wilder_adx` fail-opens and
+  single-run vs full-suite behavior diverges.
+- Full-pool validation (283 paired, 63-day, gap 1.5%, lot 6000, offline same bars):
+  account_pnl +183 mean, drawdown +0.45pp, end_cost −5128, min_cash +1293;
+  affected-name distribution P10 −421 / P50 −73 / P90 +1862 — tail insurance, not return
+  enhancement. Debugging transcript and re-run commands:
+  [references/regime-gate-integration.md](references/regime-gate-integration.md)

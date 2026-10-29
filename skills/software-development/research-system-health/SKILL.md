@@ -44,6 +44,8 @@ See `references/isolated-unittest.md` for the socket-patch snippet and mock-repo
 - Patch `socket.socket.connect` to allow `127.0.0.1` / `::1` / `localhost` only. A total connect block breaks FastAPI `TestClient` (Windows `socketpair`).
 - Default `python -m unittest discover` can hit real AKShare/Eastmoney and hang on retries — do not call that “all tests passed” if you had to kill it.
 - Keep regression tests next to the bug: `test_*_regression.py` for outage fallback, coverage denominators, backtest timing, ranker baseline, mock-offline ETF skip, legacy demo labels.
+- One-off `*_test.py` patch scripts left in the repo root (e.g. `_fix_test.py`, `CodeAH_analyse.tmp_*_test.py`) match pytest's collection glob and abort the whole run at import (`INTERNALERROR ... SystemExit: ...`). Rename to `*.done.py` to move them out of collection — do not delete; they are audit history. (2026-10-26: five such files broke `python -m pytest -q`.)
+- Triage full-suite failures before calling them regressions: (a) failures in subsystems that do not import your changed modules are pre-existing — verify with a `grep -rl <module> <subsystem>/` import check; (b) tests that fail in the full suite but pass when re-run in isolation are inter-test interference (subprocess/timing under the long run), not regressions; (c) report the classified result (e.g. “684/697 passed, 6 pre-existing + 3 interference, 0 from this change”) — never claim all-green from a partial or polluted run, and never chase interference as if it were your regression.
 
 ## Output contract for the user
 
@@ -81,3 +83,7 @@ Card copy must match the **execution** surface:
 - Do not render scaled `confidence` as a win rate. UI and webhook can drift independently — audit both.
 
 Regression file in this repo: `tests/test_feishu_delivery_guard.py`. Session notes: `references/feishu-delivery-guards.md`.
+
+## ETF research weekly chain (AH_analyse/tools/etf_research)
+
+The Friday research cron delivers the `summarize()` digest, NOT the full weekly-report.txt — a fix that only lands in the full report is invisible in the user's push. Integrity rules (single canonical renderer per table, visible ⚠️ failures instead of silent gaps, shared marker constants for test assertions, junction-based real-data validation without re-running research), the assertion-literal misdiagnosis postmortem, and the chain map: `references/etf-research-weekly-integrity.md`.
