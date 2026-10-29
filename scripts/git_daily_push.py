@@ -10,6 +10,7 @@
   6. 输出简洁结果摘要
 """
 
+import re
 import subprocess
 import sys
 import os
@@ -20,6 +21,41 @@ REPOS = [
     (r"D:\Code\AH_analyse", "main"),
     (r"D:\Hermes Agent CN Desktop\data\hermes-home", "main"),
 ]
+
+# ── 秘密守卫（2026-10-29 事故防线）───────────────────────────────────────
+# 根因：git add -A 把含 OpenRouter key 的 backups/config/*.good 卷进提交，
+# 连续 7 晚被 GitHub Push Protection 拒收。守卫在 commit 前扫描暂存区，
+# 命中即撤销暂存并中止该仓库——宁可每晚显式失败，不可悄悄提交秘密。
+SECRET_PATTERNS = [
+    ("OpenRouter API Key", re.compile(r"sk-or-v1-[A-Za-z0-9_-]{20,}")),
+    ("Anthropic API Key", re.compile(r"sk-ant-[A-Za-z0-9_-]{20,}")),
+    ("GitHub PAT", re.compile(r"ghp_[A-Za-z0-9]{30,}")),
+    ("AWS Access Key", re.compile(r"AKIA[0-9A-Z]{16}")),
+    ("Google API Key", re.compile(r"AIza[0-9A-Za-z_-]{30,}")),
+    ("Slack Token", re.compile(r"xox[baprs]-[A-Za-z0-9-]{10,}")),
+    ("Refresh Token", re.compile(r"\brefresh_token[\"']?\s*[:=]\s*[\"']?[A-Za-z0-9._-]{20,}")),
+]
+_PLACEHOLDER_RE = re.compile(r"REDACTED|\$\{|<[^>]*>|^x+$", re.IGNORECASE)
+
+
+def find_secrets(text):
+    """在文本中查找秘密模式，返回 [(类型, 前缀预览)]，绝不返回完整秘密。"""
+    hits = []
+    for name, rx in SECRET_PATTERNS:
+        for m in rx.finditer(text):
+            tok = m.group(0)
+            if _PLACEHOLDER_RE.search(tok):
+                continue
+            hits.append((name, tok[:8] + "…"))
+    return hits
+
+
+def staged_secret_hits(repo_path):
+    """扫描暂存区（git diff --cached）新增内容中的秘密。fail-safe：扫描失败按命中处理。"""
+    rc, out, err = run("git diff --cached", repo_path)
+    if rc != 0:
+        return [("守卫内部错误", (err or "git diff --cached 失败")[:80])]
+    return find_secrets(out)
 
 
 def run(cmd, cwd):
@@ -62,6 +98,18 @@ def process_repo(repo_path, branch):
             print(f"[{repo_name}] add 失败: {err}")
             return False
         lines.append("add: ok")
+
+        # 3.5 秘密守卫：add 之后、commit 之前扫描暂存区
+        hits = staged_secret_hits(repo_path)
+        if hits:
+            run("git reset -q", repo_path)  # 撤销暂存，秘密永不进提交
+            print("\n".join(lines))
+            print(f"[{repo_name}] ⚠️ 秘密守卫拦截 {len(hits)} 处疑似秘密，已撤销暂存：")
+            for kind, preview in hits[:5]:
+                print(f"  - {kind}：{preview}…")
+            print("    处理：识别文件→脱敏或补 .gitignore→重新提交。秘密未进提交。")
+            return False
+        lines.append("guard: clean（暂存区无秘密）")
 
         msg = f"[auto] daily push {today}"
         rc, out, err = run(f'git commit -m "{msg}"', repo_path)
