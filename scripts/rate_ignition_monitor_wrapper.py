@@ -13,13 +13,25 @@ import subprocess
 import sys
 from pathlib import Path
 
+# 解释器钉子（蓝本 deploy_scripts/grid_weixin_execute.py，2026-10-29 第4变体事故：
+# cron 会话的 sys.executable 不是纯 python，而是 hermes CLI 二进制——
+# 用它起子进程时脚本路径被当成 CLI 参数，argparse 直接拒绝。
+# 因此：本 wrapper 接力到系统 312；子进程一律显式 SYSTEM_PY，绝不信任 sys.executable。）
+SYSTEM_PY = r'C:\Users\Administrator\AppData\Local\Programs\Python\Python312\python.exe'
+_IS_312 = sys.version_info[:2] == (3, 12) and 'Programs' in sys.executable
+
+if __name__ == '__main__' and not _IS_312:
+    import os
+    sys.stdout.flush(); sys.stderr.flush()
+    sys.exit(subprocess.call([SYSTEM_PY, os.path.abspath(__file__)] + sys.argv[1:]))
+
 MONITOR = r"D:/Code/AH_analyse/tools/rate_ignition_monitor.py"
 QUIET_STATE = Path("D:/Code/AH_analyse/tools/rate_ignition_quiet_state.json")
 TRIGGER_STATES = ("🔥", "🚨", "✅")
 
 
 def run_monitor():
-    r = subprocess.run([sys.executable, MONITOR, "--json"],
+    r = subprocess.run([SYSTEM_PY, MONITOR, "--json"],
                        capture_output=True, timeout=180)
     if r.returncode != 0:
         print(f"rate_ignition_monitor 执行失败:\n{r.stderr.decode('utf-8', errors='replace')[:500]}")
@@ -51,7 +63,7 @@ def main():
     )
 
     if should_push:
-        r = subprocess.run([sys.executable, MONITOR], capture_output=True, timeout=180)
+        r = subprocess.run([SYSTEM_PY, MONITOR], capture_output=True, timeout=180)
         print(r.stdout.decode("utf-8", errors="replace"))
         if cleared:
             print(f"\nℹ️ 已解除: {', '.join(cleared)}（状态回落，仅告知一次）")
