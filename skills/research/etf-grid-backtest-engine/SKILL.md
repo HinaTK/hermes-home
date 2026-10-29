@@ -160,3 +160,52 @@ Never hand-roll a simplified gate for research; wire the production one in.
   affected-name distribution P10 −421 / P50 −73 / P90 +1862 — tail insurance, not return
   enhancement. Debugging transcript and re-run commands:
   [references/regime-gate-integration.md](references/regime-gate-integration.md)
+
+## 9. Patrol-F parallel module & regime20 labels (2026-10-28, commit 06496f3/87e02b1/8b36d5e)
+
+User directive: **F-plan lands as an INDEPENDENT script — never modify the production
+gate code to add it** (「不修改原来代码，F方案独立写一个脚本出来落地」). Parallel
+operation, removable as a whole.
+
+- `tools/patrol_f.py`: blocks new-lot buys when 五线全破 OR ATR5/ATR20>1.15; sells never
+  blocked; fail-open on insufficient data. Self-contained (no imports of gate_check /
+  entry_timing / confirmed_runtime logic); output shape compatible with RegimeGate
+  (blocks_buy/reason) so a future merge is a small change. Threshold 1.15 is pinned by
+  test (`test_patrol_f.py`).
+- Selection rationale (economics口径, 7634 fill opportunities): F +317.1k vs five-line
+  +251.9k; the 680 extra blocks are ALL loss-avoidance (mean −95.9 each); zero days where
+  five-line blocks and F does not → pure augmentation. Rejected candidates (data, not
+  taste): ADX slope (no separation), volume confirm (no separation; >1.5 threshold kills
+  85% of true recoveries), full Dow-123 (step-3 unreachable in a downtrend), three-
+  condition AND (blocks 68% of good days). Survivor: consecutive-2-day close reclaim.
+- **Lag principle (user-scorched)**: decision inputs must have ≤1 trading day lag.
+  ADX/±DI lag 2–3 weeks → attribution/复盘 ONLY, never in the pre-market decision chain.
+- **cron-environment validation is mandatory** for anything the 09:20 push depends on:
+  run the REAL production entry script in a clean-env subprocess (sys.path = repo root
+  only). Symptom of the failure mode we hit: gate silently fail-opens and the push still
+  contains buy advice. Regression test `test_cron_env_gate.py`.
+- **Daily simulation to answer "can I trade TODAY"**: verdict per day D from daily bars
+  through D−1 (patrol_f), then intraday triggers from 5-minute bars (buy = prev_close/1.015
+  touch, sell = prev_close*1.015 touch). Report blocked-days-where-price-hit-buy-level
+  (those are the avoided fills — check their subsequent P&L, e.g. 09-24@0.932 → −14.4%
+  still underwater) and allowed-day hit counts. A state-machine (one lot held at a time)
+  understates multi-slot reality — disclose it.
+- **Pass-rate is a market-phase function, not a constant**: 122-day mean 75% but the
+  last 20 days can be 25% during a one-sided slide. Always report the recent-20 figure
+  alongside any long-window mean; blocks arrive in STREAKS (4/6/14 consecutive days),
+  concentrated in the damage windows, zero in calm months — present the streak table,
+  not just the rate.
+- **Sliding-window illusion**: the ranking's recent20_cycles collapses when the fat
+  oscillation segment slides out of the window (589720: 12 cycles top-of-pool on 10-21 →
+  4 cycles rank 58 on 10-26). recent20_cycles and gate pass-rate are two thermometers of
+  the same tape — they move together; a divergence is a data error, not insight.
+- `entry_rank.regime20_label` (榜单列, directional labels are MANDATORY — user: 「写个
+  单边干什么」): 单边上涨 ER≥0.45 & net≥0 / 单边下跌 ER≥0.45 & net<0 / 阴跌 ER<0.35 &
+  net≤−5% / 震荡 rest. Underlying numbers (net20_pct/er20) go into rows — never hand-
+  write labels. Low ER ≠ 震荡: a late-stage grind can post ER 0.16 while falling 7%/5d
+  (589720 10-27) — ER needs net displacement and ATR direction to be meaningful.
+  Header strings live in shared constants (HEADER/HEADER_SEP) shared by render AND tests.
+  阴跌 is the sneakiest bucket for grids: it passes the "≥2 recent20 cycles" admission
+  gate while every rebuy anchors lower — the regime20 column exists to expose exactly this.
+- Data source note: EastMoney daily K caps at lmt=300 bars; for longer history use Tencent
+  fqkline (513100 returns 641 days).

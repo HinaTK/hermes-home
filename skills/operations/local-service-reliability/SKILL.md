@@ -138,6 +138,33 @@ Explicit encoding selection applies to every `subprocess.run(..., text=True)` in
 
 The `errors="replace"` fallback is intentional — it prevents a crash on unexpected bytes, and the replaced characters don't affect PID matching or status parsing. Never silently drop the encoding parameter "because it works on my machine"; the locale differs per system.
 
+## Cron-session interpreter identity (Desktop)
+
+When the Hermes scheduler runs a cron script, that script's `sys.executable` is **the Hermes CLI/application binary, not a plain Python interpreter**. Any script that spawns a child with `[sys.executable, other_script.py, ...]` fails in the cron session with argparse usage text (`usage: hermes [-h] ...`) — the script path is consumed as a CLI argument. The same script often passes when run manually from a shell, because the manual interpreter is real Python. This mismatch is the signature: **error output containing `usage: hermes` means a cron script trusted `sys.executable`.**
+
+Durable rules for every script registered as a cron `script=`:
+
+1. Pin an absolute system interpreter (`SYSTEM_PY = r'C:\...\Python312\python.exe'`) at the top; never spawn children with `sys.executable`.
+2. Re-exec guard so the script self-relays if launched under the wrong runtime:
+   ```python
+   _IS_OK = sys.version_info[:2] == (3, 12) and 'Programs' in sys.executable
+   if __name__ == '__main__' and not _IS_OK:
+       sys.exit(subprocess.call([SYSTEM_PY, os.path.abspath(__file__)] + sys.argv[1:]))
+   ```
+3. The cron `script` field takes a file name/path only — never a shell command (it gets joined into a path → `Script not found`).
+
+See `references/cron-script-deployment-incidents.md` for the incident log and deployment acceptance protocol.
+
+## Stale cron-failure notifications: diagnose the timeline first
+
+When a user forwards a cron failure notification, the failure may **predate a fix already committed**. Before re-debugging:
+
+1. `cronjob list` — compare `last_run_at` / `last_status` against the timestamp on the error notification the user saw.
+2. `git log` the script — check whether a fix landed after the failing run.
+3. Reproduce once (manual run of the script with the pinned interpreter), then fire one **real cron run** (`cronjob action=run`) and read its actual output.
+
+Manual-run + local-run both passing is NOT acceptance; the only production-grade acceptance is a real cron-scheduler execution observed to exit 0 (or to be intentionally silent). Report to the user only after that closes the loop.
+
 ## What not to do
 
 - Do not equate `available`, `running`, or `healthy` with end-to-end readiness.

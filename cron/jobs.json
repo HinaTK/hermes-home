@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 20842
+        "completed": 21271
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-29T15:46:00+08:00",
-      "last_run_at": "2026-10-29T15:45:50.016883+08:00",
+      "next_run_at": "2026-10-29T23:01:00+08:00",
+      "last_run_at": "2026-10-29T23:00:50.183616+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -266,7 +266,7 @@
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-29T23:00:00+08:00",
+      "next_run_at": "2026-10-30T23:00:00+08:00",
       "last_run_at": "2026-10-28T23:01:14.884461+08:00",
       "last_status": "error",
       "last_error": "Script exited with code 1\nstdout:\n=== AH_analyse ===\nfetch: ok\nstatus: 1 项未提交变更\nadd: ok\ncommit: ok ([auto] daily push 2026-10-28)\npush: ok → origin/main\n最近提交:\nb59d883 [auto] daily push 2026-10-28\nfb49ea2 cron解释器钉子：盘前推送门控静默失效根因修复（2026-10-28复发后二次根因）\nc95bfc7 [auto] daily push 2026-10-27\n\nfetch: ok\nstatus: 17 项未提交变更\nadd: ok\ncommit: ok ([auto] daily push 2026-10-28)\npush: 被拒绝 (remote: error: GH013: Repository rule violations found for refs/heads/main.        \nremote: \nremote: - GITHUB PUSH PROTECTION        \nremote:   —————————————————————————————————————————        \nremote:     Resolve the following violations before pushing again        \nremote: \nremote:     - Push cannot contain secrets        \nremote: \nremote:             \nremote:      (?) Learn how to resolve a blocked push        \nremote:      https://docs.github.com/code-security/secret-scanning/working-with-secret-scanning-and-push-protection/working-with-push-protection-from-the-command-line#resolving-a-blocked-push        \nremote:             \nremote:             \nremote:       —— OpenRouter API Key ————————————————————————————————        \nremote:        locations:        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: backups/config/config.yaml.good.20261022-115001:18        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: backups/config/config.yaml.good.20261022-115004:16        \nremote:          - commit: 99624675f5e2d45013347486074d1b6fec661ff2        \nremote:            path: backups/config/config.yaml.good.20261026-085904:18        \nremote:          - commit: ff6ff820123f01b3761f4ff21fe604003d3d90a2        \nremote:            path: config.yaml.bak-20261022T034947Z:18        \nremote:             \nremote:        (?) To push, remove secret from commit(s) or follow this URL to allow the secret.        \nremote:        https://github.com/HinaTK/hermes-home/security/secret-scanning/unblock-secret/3LKPEWO1pR7CN7kTKEpkJ1GpN2x        \nremote:             \nremote: \nremote: \nTo https://github.com/HinaTK/hermes-home.git\n ! [remote rejected] main -> main (push declined due to repository rule violations)\nerror: failed to push some refs to 'https://github.com/HinaTK/hermes-home.git')\n[hermes-home] 推送被拒绝，需人工处理。",
@@ -278,7 +278,10 @@
         "terminal"
       ],
       "workdir": "D:\\Code\\AH_analyse",
-      "fire_claim": null
+      "fire_claim": {
+        "at": "2026-10-29T23:00:47.126276+08:00",
+        "by": "MS-22110429259:10900:b818b64a7e7a4c03bfbcdfedcf1d77f7"
+      }
     },
     {
       "id": "ed9d5c85e0c4",
@@ -444,15 +447,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 861
+        "completed": 948
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-26T16:04:54.417527+08:00",
-      "next_run_at": "2026-10-29T15:50:00+08:00",
-      "last_run_at": "2026-10-29T15:45:50.770717+08:00",
+      "next_run_at": "2026-10-29T23:05:00+08:00",
+      "last_run_at": "2026-10-29T23:00:51.098024+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -495,7 +498,7 @@
       "schedule_display": "weekdays at 3:40pm",
       "repeat": {
         "times": null,
-        "completed": 1
+        "completed": 4
       },
       "enabled": true,
       "state": "scheduled",
@@ -503,11 +506,11 @@
       "paused_reason": null,
       "created_at": "2026-10-29T00:55:16.902231+08:00",
       "next_run_at": "2026-10-30T15:40:00+08:00",
-      "last_run_at": "2026-10-29T15:40:49.321878+08:00",
-      "last_status": "error",
-      "last_error": "Script exited with code 1\nstdout:\nrate_ignition_monitor 执行失败:\nusage: hermes [-h] [--version] [-z PROMPT] [--usage-file PATH] [-m MODEL]\n\n              [--provider PROVIDER] [--reasoning LEVEL] [-t TOOLSETS]\n\n              [--resume SESSION] [--no-restore-cwd] [--in DIR]\n\n              [--continue [SESSION_NAME]] [--worktree] [--accept-hooks]\n\n              [--skills SKILLS] [--yolo] [--pass-session-id]\n\n              [--ignore-user-config] [--ignore-rules] [--safe-mode] [--tui]\n\n              [--cli] [--dev]\n\n              {chat,model,moa,fallback,worktree",
+      "last_run_at": "2026-10-29T16:21:16.514466+08:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
-      "failure_streak": 1,
+      "failure_streak": 0,
       "deliver": "feishu:oc_7d2d8ab5d54051067f8e0cd228652133",
       "origin": {
         "platform": "feishu",
@@ -546,7 +549,7 @@
       "schedule_display": "30 15 * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 1
+        "completed": 2
       },
       "enabled": true,
       "state": "scheduled",
@@ -554,12 +557,12 @@
       "paused_reason": null,
       "created_at": "2026-10-29T11:07:53.549585+08:00",
       "next_run_at": "2026-10-30T15:30:00+08:00",
-      "last_run_at": "2026-10-29T15:30:34.363568+08:00",
-      "last_status": "error",
-      "last_error": "Script not found: D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\cd \"D:\\Code\\AH_analyse\" && python \"D:\\Hermes Agent CN Desktop\\data\\hermes-home\\scripts\\grid_regime_cache.py\" 2>&1",
+      "last_run_at": "2026-10-29T15:47:36.341200+08:00",
+      "last_status": "ok",
+      "last_error": null,
       "last_delivery_error": null,
-      "failure_streak": 1,
-      "deliver": "origin",
+      "failure_streak": 0,
+      "deliver": "local",
       "origin": {
         "platform": "feishu",
         "chat_id": "oc_7d2d8ab5d54051067f8e0cd228652133",
@@ -571,7 +574,102 @@
       "enabled_toolsets": null,
       "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
       "fire_claim": null
+    },
+    {
+      "id": "9b7100f3c8b1",
+      "name": "海外敞口触发监控（纳指+日经）",
+      "prompt": "运行海外敞口触发监控脚本",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "overseas_trigger_monitor.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "40 15 * * 1-5",
+        "display": "40 15 * * 1-5"
+      },
+      "schedule_display": "40 15 * * 1-5",
+      "repeat": {
+        "times": null,
+        "completed": 1
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-29T16:45:51.715318+08:00",
+      "next_run_at": "2026-10-30T15:40:00+08:00",
+      "last_run_at": "2026-10-29T16:47:16.953385+08:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "origin",
+      "origin": {
+        "platform": "feishu",
+        "chat_id": "oc_7d2d8ab5d54051067f8e0cd228652133",
+        "chat_name": "oc_7d2d8ab5d54051067f8e0cd228652133",
+        "thread_id": null,
+        "user_id": "ou_a7c0d2ae4d25d5e57254a0150abd8471",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": null,
+      "fire_claim": null
+    },
+    {
+      "id": "1861dff8e422",
+      "name": "OpenViking守卫（健康检查+自动重启）",
+      "prompt": "每5分钟检查 OpenViking（127.0.0.1:1933/health）：健康则完全静默；不健康时自动以独立分离进程重启 openviking-server，重启成功或失败都输出告警文本（cron 会投递到飞书）。不依赖 Windows 计划任务。",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "openviking_auto_heal.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "*/5 * * * *",
+        "display": "*/5 * * * *"
+      },
+      "schedule_display": "*/5 * * * *",
+      "repeat": {
+        "times": null,
+        "completed": 27
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-29T20:50:06.893985+08:00",
+      "next_run_at": "2026-10-29T23:05:00+08:00",
+      "last_run_at": "2026-10-29T23:00:50.017164+08:00",
+      "last_status": "ok",
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "feishu",
+      "origin": null,
+      "enabled_toolsets": null,
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
+      "fire_claim": null
     }
   ],
-  "updated_at": "2026-10-29T15:45:50.772901+08:00"
+  "updated_at": "2026-10-29T23:00:51.100106+08:00"
 }
