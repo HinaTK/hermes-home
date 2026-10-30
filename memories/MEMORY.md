@@ -1,4 +1,4 @@
-表格交付铁律（2026-10-23 编造 recent20 列，同类第4次）：交付任何数据表必须由脚本渲染产出原样粘贴（entry_rank --render / grid_summary / render_eod），禁止聊天层手打数字；终端输出没有的列不得凭印象填。已固化 render_markdown（f8e06b7）；weekly 周报+飞书摘要均带 entry_rank 双规则榜单（888a347，94测试过，真实输出与CSV逐字节一致），cron 5d8180a8d025 无需改配置自动生效。断言用共享常量 ENTRY_BLOCK_TITLE，禁止手写字符串比对表头。
+表格交付铁律（2026-10-23编造recent20列，同类第4次）：数据表必须由脚本渲染原样粘贴（entry_rank --render / grid_summary / render_eod / weekly报告），禁止聊天层手打数字、终端没有的列不得凭印象填；断言用共享常量ENTRY_BLOCK_TITLE。weekly cron推送=完整周报且必须全表格化（bf9c55e）：双轨周检/三持仓/往返前10/综合排名全部Markdown表格，禁“指标名=值”机器长行（测试锁死：无'中期往返='行+非表格行≤120字符）；summarize精简版仅程序内用。
 §
 User expects immediate updated operation suggestions after each confirmed trade execution.
 §
@@ -28,9 +28,7 @@ User wants all trading data verified against actual brokerage statements and con
 §
 曾讨论单边行情（@session:default/20260922_141141_e5b6cb 消息4354/5332）：上涨不追涨、下跌只买不卖时评估暂停/换ETF，旧亏损不消失。检索不到≠没聊过。
 §
-159866 日经ETF：用户2026-10-20曾定三档建仓方案但未执行，2026-10-27用户明确说"没有159866"——无持仓。后续不得引用为用户持仓。
-§
-A股交易日计数必须扣除法定节假日，不能只扣周末。2026年：中秋节9/25(五)-9/27(日)休市、国庆10/1-10/7休市、10/10(周六)补班不开市。曾把09-23→10-16算成18个交易日，实际只有11天。任何涉及交易日/交易天数的汇总，先查当年交易所休市安排再算。
+159866日经无持仓；监控9b7100f3c8b1已改盘中每10分钟（*/10 9-15工作日），触价=min(现价,日低)≤1.600，回升当日只推一次；快照非当日/<09:30不判定。A股交易日扣节假日（2026中秋9/25-27、国庆10/1-7、10/10休）。
 §
 网格汇总合计必含：交易区间、自然日、交易日数、成交笔数、买卖金额、佣金、净投入、持有份额、T轮数/毛利/双边佣金/净利；交易日数按A股休市算。
 §
@@ -40,7 +38,7 @@ ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2
 §
 【高优先级原则（用户于2026-10-22明确要求提升）】一个任务如果用户可能多次提问且可通过脚本代码落地，必须首选代码脚本方案，禁止临时口算或一次性脚本。判断顺序：接到任务→找现成模块→没有则评估是否重复性→是则TDD落代码+测试→以后一律跑模块。已实例：grid_summary.py汇总（e702249）、account_total_pnl总盈亏（c1645bb）。与“代码改动走Superpowers TDD”构成闭环；同类错误第三次视为流程问题。
 §
-项目级 skills 在 D:/Code/AH_analyse/skills/。159866溢价系结构性（100净值日 79%>2%，中位+2.36%）：只用于同指数选品与>5%预警。左侧vs右侧（500日）：左60日+16.6%/胜率93%占优但有牛市区间偏差，尾部风险靠 25% 止损覆盖。
+项目级 skills 在 D:/Code/AH_analyse/skills/。159866溢价系结构性（100净值日 79%>2%），只用于同指数选品与>5%预警。
 §
 两段式=汇总表（标的|收盘|涨跌|动作成数|三信号●○|理由），2026-10-29 起【关键读数】分节已砍（ae2bb72，用户嫌太长），推送到表格为止；
 §
@@ -50,7 +48,7 @@ ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2
 §
 盘后建议转述照 plan() 原样给，禁止附加“明日某格解锁后方可卖”类推论（10-26再犯）：卖出建议校验=可卖池总量≥目标格数量，脚本给出即今日可执行；未生成时才说明池子不足。
 §
-四级门控 gate_check（ea79f5d）：①五线全破拦＞②强动能拦（ADX≥20且-DI＞+DI且收盘<60日线）＞③试错仓（附退出价）＞④正常；从严者胜、fail-open、+DI主导不拦。全池依据（n=3684）与工具 tools/probe_gate_full_study.py 见 etf-grid-maintenance skill。盘中未接gate。
+四级门控 gate_check（ea79f5d）：①五线全破拦＞②强动能拦（ADX≥20且-DI＞+DI且收盘<60日线）＞③试错仓（附退出价）＞④正常；从严者胜、fail-open、+DI主导不拦。全池依据（n=3684）与工具 tools/probe_gate_full_study.py 见 etf-grid-maintenance skill。盘中未接gate。10-30第三击已修（51e5825）：门控缓存键集≠holdings键集时_CachedGate一律fail-closed拦截+build_gate补拉新注册标的并入缓存（512980五线全破曾因缓存未覆盖被静默放行）。
 §
 群“个股分析”=个股分析。主力 skill：个股排雷(stockscreening)+valuation-analysis+caopan-baodian；stock-analysis 的 scripts 是 .so 平台锁死（Py3.13/Linux 编译），本机 Windows/Py3.12 不可跑，其 SKILL.md 方法论可参考但脚本勿试。个股取数一律走 stock-data-toolkit skill（westock CLI C:/Users/Administrator/.local/bin/westock.exe + 腾讯实时价仲裁；股息率 TTM 口径；限流空表退避重试禁静默丢票）。neodata 已卸载（付费壳）；公告/新闻用 web_search 兜底。
 §
@@ -67,3 +65,5 @@ cron script字段铁律（10-29第4/5次部署事故）：①script=脚本文件
 hermes-home仓库（公开!）已净化（10-29 d4b959a）：软重置剔除backups/、config.yaml.bak*、installs/、shared/nous_auth.json（含活refresh_token，曾躺在公开远端）；.gitignore加固；git_daily_push.py加提交前秘密守卫（TDD 6测试）。OpenRouter key从未到达远端。待办：用户需在Nous Portal轮换refresh_token。备份分支backup/pre-scrub-20261029仅存本地。
 §
 OpenViking守卫已双保险（2026-10-29部署）：①Hermes cron 1861dff8e422（*/5分钟，no_agent，脚本 openviking_auto_heal.py 于 hermes-home/scripts/，健康静默/挂了DETACHED重启+告警飞书，真实故障演练通过：杀进程→14秒内自愈）；②Windows计划任务 OpenViking_Supervisor（曾静默丢注册致10-20~10-29宕机9天，已重建）。排障要点：tasklist/curl查1933端口；agent.log报'openviking-server not found'=服务器死；schtasks /query 查任务是否还在。
+§
+全局暂停买入已落地（88643e5，10-30）：holdings.json per-ETF buy_paused=true → plan() 拦买入出⛔，卖出保留；589720/159363/512980 已暂停，恢复=改 false/删字段。同提交修 quota 断点（holdings quota 从未同步进 state，现 plan 兜底读 holdings）。
