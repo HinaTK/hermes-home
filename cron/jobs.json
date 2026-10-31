@@ -117,15 +117,15 @@
       "schedule_display": "* * * * 1-5",
       "repeat": {
         "times": null,
-        "completed": 22676
+        "completed": 22734
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-09-24T11:20:55.654827+08:00",
-      "next_run_at": "2026-10-30T23:01:00+08:00",
-      "last_run_at": "2026-10-30T23:00:55.403289+08:00",
+      "next_run_at": "2026-11-02T00:00:00+08:00",
+      "last_run_at": "2026-10-30T23:59:06.116847+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 20
+        "completed": 21
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-10-31T23:00:00+08:00",
-      "last_run_at": "2026-10-29T23:01:00.878829+08:00",
+      "next_run_at": "2026-11-01T23:00:00+08:00",
+      "last_run_at": "2026-10-30T23:01:12.479741+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,8 +279,8 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-30T23:00:52.444434+08:00",
-        "by": "MS-22110429259:27452:7279bc2689974cc79286fbc66038aefa"
+        "at": "2026-10-31T23:00:06.049271+08:00",
+        "by": "MS-22110429259:18796:0b78415ebc3248298eb3eac87ce0c18c"
       }
     },
     {
@@ -308,15 +308,15 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 18
+        "completed": 19
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-10-31T00:01:00+08:00",
-      "last_run_at": "2026-10-30T00:01:47.897782+08:00",
+      "next_run_at": "2026-11-01T00:01:00+08:00",
+      "last_run_at": "2026-10-31T00:01:10.710594+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -372,57 +372,6 @@
       "fire_claim": null
     },
     {
-      "id": "6320900a58dd",
-      "name": "中鼎转03上市卖出提醒",
-      "prompt": "每交易日盘中运行债券上市监控脚本，输出非空时提醒用户卖出中签的中鼎转03。",
-      "skills": [],
-      "skill": null,
-      "model": null,
-      "provider": null,
-      "provider_snapshot": null,
-      "model_snapshot": null,
-      "base_url": null,
-      "script": "bond_zhongding03_monitor.py",
-      "no_agent": true,
-      "monitor_script": null,
-      "monitor_url": null,
-      "monitor_state": null,
-      "context_from": null,
-      "schedule": {
-        "kind": "cron",
-        "expr": "10 9,10,14 * * 1-5",
-        "display": "10 9,10,14 * * 1-5"
-      },
-      "schedule_display": "10 9,10,14 * * 1-5",
-      "repeat": {
-        "times": null,
-        "completed": 12
-      },
-      "enabled": true,
-      "state": "scheduled",
-      "paused_at": null,
-      "paused_reason": null,
-      "created_at": "2026-10-26T15:34:21.527295+08:00",
-      "next_run_at": "2026-11-02T09:10:00+08:00",
-      "last_run_at": "2026-10-30T14:10:31.445888+08:00",
-      "last_status": "ok",
-      "last_error": null,
-      "last_delivery_error": null,
-      "failure_streak": 0,
-      "deliver": "feishu",
-      "origin": {
-        "platform": "feishu",
-        "chat_id": "oc_7d2d8ab5d54051067f8e0cd228652133",
-        "chat_name": "oc_7d2d8ab5d54051067f8e0cd228652133",
-        "thread_id": null,
-        "user_id": "ou_a7c0d2ae4d25d5e57254a0150abd8471",
-        "scope_id": null
-      },
-      "enabled_toolsets": null,
-      "workdir": null,
-      "fire_claim": null
-    },
-    {
       "id": "072047b92c2d",
       "name": "网关守护（合并版：进程自愈+飞书配置防漂移）",
       "prompt": "每5分钟守护Hermes网关：进程死了自动重启并告警；飞书配置漂移（群策略禁用/需@/频道目录缺失）当日去重提醒；一切正常时完全静默。",
@@ -447,15 +396,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 1236
+        "completed": 1525
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-26T16:04:54.417527+08:00",
-      "next_run_at": "2026-10-30T23:05:00+08:00",
-      "last_run_at": "2026-10-30T23:00:57.315639+08:00",
+      "next_run_at": "2026-10-31T23:05:00+08:00",
+      "last_run_at": "2026-10-31T23:00:09.112430+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -629,7 +578,7 @@
     {
       "id": "1861dff8e422",
       "name": "OpenViking守卫（健康检查+自动重启）",
-      "prompt": "每5分钟检查 OpenViking（127.0.0.1:1933/health）：健康则完全静默；不健康时自动以独立分离进程重启 openviking-server，重启成功或失败都输出告警文本（cron 会投递到飞书）。不依赖 Windows 计划任务。",
+      "prompt": "每5分钟检查 OpenViking（127.0.0.1:1933/health）：健康则完全静默；不健康时自动以独立分离进程重启 openviking-server。\n\n通知策略（2026-10-31 用户明确要求「成功不用告诉我，只有失败才汇报」）：\n- 健康 → 静默\n- 挂了但自愈成功 → 静默（不推送）\n- 自愈失败 / 重启后仍连不上 → 输出中文告警正文\n- 一小时内反复重启≥3次 → 抖动告警（每小时最多一次）\n\n脚本一律 exit 0：cron 对 exit!=0 会套 \"Cron failed: Script exited with code 1 stdout:\" 外壳并截断正文，用户读不了。告警正文本身即信号。",
       "skills": [],
       "skill": null,
       "model": null,
@@ -651,15 +600,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 312
+        "completed": 602
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-29T20:50:06.893985+08:00",
-      "next_run_at": "2026-10-30T23:05:00+08:00",
-      "last_run_at": "2026-10-30T23:00:56.933704+08:00",
+      "next_run_at": "2026-10-31T23:05:00+08:00",
+      "last_run_at": "2026-10-31T23:00:08.302727+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -669,7 +618,57 @@
       "enabled_toolsets": null,
       "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home",
       "fire_claim": null
+    },
+    {
+      "id": "0740a34e4711",
+      "name": "观察哨（历史类比四哨）",
+      "prompt": "盘后观察哨：量能地量/两融出清/AI财报季/924级政策。",
+      "skills": [],
+      "skill": null,
+      "model": null,
+      "provider": null,
+      "provider_snapshot": null,
+      "model_snapshot": null,
+      "base_url": null,
+      "script": "watchtower_wrapper.py",
+      "no_agent": true,
+      "monitor_script": null,
+      "monitor_url": null,
+      "monitor_state": null,
+      "context_from": null,
+      "schedule": {
+        "kind": "cron",
+        "expr": "50 15 * * 1-5",
+        "display": "weekdays at 3:50pm"
+      },
+      "schedule_display": "weekdays at 3:50pm",
+      "repeat": {
+        "times": null,
+        "completed": 0
+      },
+      "enabled": true,
+      "state": "scheduled",
+      "paused_at": null,
+      "paused_reason": null,
+      "created_at": "2026-10-30T23:24:34.358573+08:00",
+      "next_run_at": "2026-11-02T15:50:00+08:00",
+      "last_run_at": null,
+      "last_status": null,
+      "last_error": null,
+      "last_delivery_error": null,
+      "failure_streak": 0,
+      "deliver": "feishu:oc_7d2d8ab5d54051067f8e0cd228652133",
+      "origin": {
+        "platform": "feishu",
+        "chat_id": "oc_c2039c6548572c6cfcee6b85958874c8",
+        "chat_name": "个股分析",
+        "thread_id": null,
+        "user_id": "ou_a7c0d2ae4d25d5e57254a0150abd8471",
+        "scope_id": null
+      },
+      "enabled_toolsets": null,
+      "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home"
     }
   ],
-  "updated_at": "2026-10-30T23:00:57.318664+08:00"
+  "updated_at": "2026-10-31T23:00:09.114615+08:00"
 }

@@ -161,11 +161,17 @@ Never hand-roll a simplified gate for research; wire the production one in.
   enhancement. Debugging transcript and re-run commands:
   [references/regime-gate-integration.md](references/regime-gate-integration.md)
 
-## 9. Patrol-F parallel module & regime20 labels (2026-10-28, commit 06496f3/87e02b1/8b36d5e)
+## 9. Patrol-F: parallel probe → production default (2026-10-28→30, commits 06496f3/87e02b1/8b36d5e/52575d2)
 
-User directive: **F-plan lands as an INDEPENDENT script — never modify the production
-gate code to add it** (「不修改原来代码，F方案独立写一个脚本出来落地」). Parallel
-operation, removable as a whole.
+Two-phase landing, each phase by explicit user directive:
+- Phase 1 (10-28, 「不修改原来代码，F方案独立写一个脚本出来落地」): F lands as an
+  INDEPENDENT script — parallel operation, removable as a whole, zero imports of
+  gate_check / entry_timing / confirmed_runtime.
+- Phase 2 (10-30, 「把执行策略切换成方案F吧，原来的方案切成备份」): RegimeGate grew
+  `mode='f'|'legacy'` (env override `GATE_MODE`); **F is the production default**, the
+  four-level gate is the backup. Phase 1's output-shape compatibility
+  (blocks_buy/reason) is exactly what made the switch a small change — land every
+  parallel probe with that discipline.
 
 - `tools/patrol_f.py`: blocks new-lot buys when 五线全破 OR ATR5/ATR20>1.15; sells never
   blocked; fail-open on insufficient data. Self-contained (no imports of gate_check /
@@ -209,3 +215,17 @@ operation, removable as a whole.
   gate while every rebuy anchors lower — the regime20 column exists to expose exactly this.
 - Data source note: EastMoney daily K caps at lmt=300 bars; for longer history use Tencent
   fqkline (513100 returns 641 days).
+- **First forward-looking save (512980, 2026-10-29/30)**: 10-29 close broke all five MAs
+  (ATR ratio only 1.11 — five-line fired first) → F ⛔ that night while legacy
+  judge_entry said probe_only (half-lot probe). 10-30 printed −4.76% (close 0.740, low
+  0.739); the legacy half-lot at 0.766 would have filled and sat at −136元 (−3.39%).
+  When F and legacy disagree you are in a transition zone — report BOTH verdicts and
+  label the divergence; never average them into a compromise ticket. (The market
+  settled this one for F.)
+- **Mode-switch TDD pattern (52575d2)**: a new test file drives RED (RegimeGate without
+  `mode`) → GREEN and asserts BOTH modes, so legacy behavior stays covered after old
+  copy-assertions are retargeted (3 legacy tests updated in place). Full suite 184/184,
+  then the mandatory cron-isomorphic subprocess run (four holdings all ⛔ F·五线全破).
+- **`buy_paused` outranks the gate**: holdings.json per-ETF buy_paused=true (589720/
+  159363/512980 at switch time) suppresses buys regardless of mode. After any gate
+  change, identify WHICH layer is blocking before judging the switch broken or inert.

@@ -1,8 +1,4 @@
-表格交付铁律（2026-10-23编造recent20列，同类第4次）：数据表必须由脚本渲染原样粘贴（entry_rank --render / grid_summary / render_eod / weekly报告），禁止聊天层手打数字、终端没有的列不得凭印象填；断言用共享常量ENTRY_BLOCK_TITLE。weekly cron推送=完整周报且必须全表格化（bf9c55e）：双轨周检/三持仓/往返前10/综合排名全部Markdown表格，禁“指标名=值”机器长行（测试锁死：无'中期往返='行+非表格行≤120字符）；summarize精简版仅程序内用。
-§
-User expects immediate updated operation suggestions after each confirmed trade execution.
-§
-User wants all trading data verified against actual brokerage statements and considers local ledger as provisional until confirmed.
+summarize精简版仅程序内用。10-30再加：推送分点、结论先行（复核触发/领先者/降级先说，口径压一行），禁以缩略代替结构重构；详见skill references/weekly-push-format.md。
 §
 用户通过银河证券进行 A 股 ETF 交易，佣金为万一免五（0.01%，无最低 5 元）。
 §
@@ -14,8 +10,6 @@ User wants all trading data verified against actual brokerage statements and con
 §
 用户要求网格轮换检查不能局限同类ETF：若整个题材网格效率下降，应每周跨题材筛选候选，比较最近约3个月同窗完成往返次数；同一候选连续两周领先只触发人工复核，不自动换仓。
 §
-用户的主要交易指标是每轮净价差和资金周转效率，而非仅胜率。
-§
 用户对数据准确性极度敏感，特别是市场数据字段解析和成本基础计算，会反复纠正错误直到解决。
 §
 用户要求交易情况‘汇总’必须包含每只ETF持仓份额、持仓成本与加权单位成本、现金及成交核对；不可仅概述策略或只报网格价差。
@@ -26,9 +20,9 @@ User wants all trading data verified against actual brokerage statements and con
 §
 用户明确ETF状态需求：每只ETF的qty、sellable_qty、max_grid(A-Z)都是持久化、脚本可修改的变量，不是展示时临时计算的口径。买入从当前max_grid取下一号并更新，卖出取当前号再退一号；标签保存到交易记录，不人工硬编码。每日00:01从交易记录重算qty并写回sellable_qty=qty；买入增加qty不增加sellable_qty，卖出同时扣减二者，卖出建议读取持久化sellable_qty。用户要求汇报数字来自真实脚本输出，区分用户输入、人工设置与脚本自动生成。
 §
-曾讨论单边行情（@session:default/20260922_141141_e5b6cb 消息4354/5332）：上涨不追涨、下跌只买不卖时评估暂停/换ETF，旧亏损不消失。检索不到≠没聊过。
+单边行情讨论见@session:default/20260922_141141_e5b6cb（4354/5332）：上涨不追、下跌只买不卖时评估暂停/换ETF，旧亏损不消失。
 §
-159866日经无持仓；监控9b7100f3c8b1已改盘中每10分钟（*/10 9-15工作日），触价=min(现价,日低)≤1.600，回升当日只推一次；快照非当日/<09:30不判定。A股交易日扣节假日（2026中秋9/25-27、国庆10/1-7、10/10休）。
+日期感知铁律（2026-10-31用户"今天是他妈周六了"纠错）：汇报"今天星期几/几号/是否交易日"前必须先查系统时钟（date 命令），禁止凭上下文记忆报日期；上下文压缩后日期感知易漂移（曾把10-30周五当10-31周六）。与交易日扣节假日规则同源：日历类断言=工具查证，不是回忆。
 §
 网格汇总合计必含：交易区间、自然日、交易日数、成交笔数、买卖金额、佣金、净投入、持有份额、T轮数/毛利/双边佣金/净利；交易日数按A股休市算。
 §
@@ -48,7 +42,7 @@ ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2
 §
 盘后建议转述照 plan() 原样给，禁止附加“明日某格解锁后方可卖”类推论（10-26再犯）：卖出建议校验=可卖池总量≥目标格数量，脚本给出即今日可执行；未生成时才说明池子不足。
 §
-四级门控 gate_check（ea79f5d）：①五线全破拦＞②强动能拦（ADX≥20且-DI＞+DI且收盘<60日线）＞③试错仓（附退出价）＞④正常；从严者胜、fail-open、+DI主导不拦。全池依据（n=3684）与工具 tools/probe_gate_full_study.py 见 etf-grid-maintenance skill。盘中未接gate。10-30第三击已修（51e5825）：门控缓存键集≠holdings键集时_CachedGate一律fail-closed拦截+build_gate补拉新注册标的并入缓存（512980五线全破曾因缓存未覆盖被静默放行）。
+生产门控=方案F（2026-10-30切换，52575d2）：RegimeGate(mode='f'|'legacy')默认F、GATE_MODE环境变量可切回legacy四级（完整保留为备份）；F=五线全破OR ATR5/ATR20>1.15，卖出永不拦、缺数据fail-open；缓存键集≠holdings键集时_CachedGate一律fail-closed拦+补拉（51e5825）；holdings的buy_paused优先于门控。实盘首胜512980：10-29晚五线拦→10-30 -4.76%（旧方案probe_only半格会浮亏136元）。全池n=3684依据见etf-grid-maintenance skill。
 §
 群“个股分析”=个股分析。主力 skill：个股排雷(stockscreening)+valuation-analysis+caopan-baodian；stock-analysis 的 scripts 是 .so 平台锁死（Py3.13/Linux 编译），本机 Windows/Py3.12 不可跑，其 SKILL.md 方法论可参考但脚本勿试。个股取数一律走 stock-data-toolkit skill（westock CLI C:/Users/Administrator/.local/bin/westock.exe + 腾讯实时价仲裁；股息率 TTM 口径；限流空表退避重试禁静默丢票）。neodata 已卸载（付费壳）；公告/新闻用 web_search 兜底。
 §
@@ -56,7 +50,7 @@ ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2
 §
 大任务交付要求（10-27原话"不要中断，不要偷工减料"）：多步大任务先建todo清单，连续执行到完整交付，不中途中断确认。
 §
-推送排版铁律（2026-10-29 收紧）：多标的盘后推送先汇总表（表头+分隔行飞书才渲染）；开关状态用●/○串；数字逐格来自脚本。市况推送已砍【关键读数】分节（ae2bb72）：render_report=表头口径+汇总表，到表格为止；render_instrument 仅人工查询。坑：链式三元优先级、备用源pct硬编码0、改渲染须同步改所有调用方并真跑验收。
+推送排版双铁律（2026-10-30再犯收紧）：①结构=多标的盘后推送先汇总表（表头+分隔行飞书才渲染）；开关状态用●/○串；数字逐格来自脚本；市况已砍【关键读数】分节，到表格为止。②可读性（用户原话"你发的东西没有一点可读性"）：给用户的消息先说结论再给数字，工程细节（commit号、字段名、cron id、系统术语）留在代码里不搬到用户面前；工程日志格式禁止直接发给用户；交付前自问"用户看得懂吗"。坑：链式三元优先级、备用源pct硬编码0、改渲染须同步改所有调用方并真跑验收。
 §
 纳指趋势持有方案存档 reports/nasdaq-etf-trend-holding-plan.md（4c7add2）：底仓40%+回撤≥8%加仓（cap8）+反弹≥10%卖加仓；513300；回测9买9卖全+10~12%离场；当前未到买点，触发价2.208。
 §
@@ -64,6 +58,12 @@ cron script字段铁律（10-29第4/5次部署事故）：①script=脚本文件
 §
 hermes-home仓库（公开!）已净化（10-29 d4b959a）：软重置剔除backups/、config.yaml.bak*、installs/、shared/nous_auth.json（含活refresh_token，曾躺在公开远端）；.gitignore加固；git_daily_push.py加提交前秘密守卫（TDD 6测试）。OpenRouter key从未到达远端。待办：用户需在Nous Portal轮换refresh_token。备份分支backup/pre-scrub-20261029仅存本地。
 §
-OpenViking守卫已双保险（2026-10-29部署）：①Hermes cron 1861dff8e422（*/5分钟，no_agent，脚本 openviking_auto_heal.py 于 hermes-home/scripts/，健康静默/挂了DETACHED重启+告警飞书，真实故障演练通过：杀进程→14秒内自愈）；②Windows计划任务 OpenViking_Supervisor（曾静默丢注册致10-20~10-29宕机9天，已重建）。排障要点：tasklist/curl查1933端口；agent.log报'openviking-server not found'=服务器死；schtasks /query 查任务是否还在。
+OpenViking守卫双保险（10-29）：①Hermes cron 1861dff8e422（*/5min，no_agent，openviking_auto_heal.py，健康静默/挂了重启；10-31起策略=成功也静默、只有失败才推+抖动≥3次/小时告警，脚本恒exit0以免被cron套failed外壳）；②Windows任务 OpenViking_Supervisor。排障：tasklist/curl查1933；agent.log报'not found'=服务器死；schtasks /query查任务是否在。
 §
 全局暂停买入已落地（88643e5，10-30）：holdings.json per-ETF buy_paused=true → plan() 拦买入出⛔，卖出保留；589720/159363/512980 已暂停，恢复=改 false/删字段。同提交修 quota 断点（holdings quota 从未同步进 state，现 plan 兜底读 holdings）。
+§
+高股息/个股筛选一律走 divi_* 脚本链→divi_decision_engine.py 四维交叉（10-27固化85fa811）：买入=股息≥4.5%+盈利收益率≥7%+PE分位<50%+价格分位<60%+非空头；红旗回避；余等回调/等消化给锚价。禁口算。
+§
+Hermes 全局思考强度=agent.reasoning_effort（2026-10-31 已设 max）；ultra 为内部档会被 clamp 到 max，故"最高"=max；CLI 报"未识别键"是误报可忽略；改后需 /new 才生效。详见 skill hermes-operational-diagnostics。
+§
+npm 改 D 盘（2026-10-31）：prefix=D:\npm\global、cache=D:\npm\cache（~/.npmrc），已入 User PATH。因 C 盘曾 0 可用 ENOSPC；Hermes node 的 prefix 在 data\versions\<ver>\ 会随升级丢失。
