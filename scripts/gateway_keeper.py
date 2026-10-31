@@ -19,7 +19,12 @@ HERMES_HOME = os.environ.get(
     "HERMES_HOME",
     r"D:\Hermes Agent CN Desktop\data\hermes-home",
 )
-GATEWAY_PID_FILE = r"D:\Hermes Agent CN Desktop\data\gateway-runtime\gateway.pid"
+# PID 文件位置覆盖新旧两处（2026-10-31 事故：网关重启后 PID 写到 hermes-home/ 下，
+# 旧 gateway-runtime/ 残留死 PID 导致连续 70 次误报；新位置优先）
+GATEWAY_PID_FILES = [
+    os.path.join(HERMES_HOME, "gateway.pid"),
+    r"D:\Hermes Agent CN Desktop\data\gateway-runtime\gateway.pid",
+]
 HERMES_EXE = r"D:\Hermes Agent CN Desktop\data\versions\0.21.0-cn.18\hermes-agent-cn-runtime-win32-x64.exe"
 ENV_FILE = os.path.join(HERMES_HOME, ".env")
 CHANNEL_DIR = os.path.join(HERMES_HOME, "channel_directory.json")
@@ -50,25 +55,44 @@ def save_state(state):
         json.dump(state, f, ensure_ascii=False, indent=1)
 
 
-def is_gateway_running():
-    """进程存活：PID file + tasklist 验证，缺PID文件时按进程名兜底。"""
-    if os.path.exists(GATEWAY_PID_FILE):
-        try:
-            with open(GATEWAY_PID_FILE) as f:
-                pid = json.load(f).get("pid")
-            result = subprocess.run(
-                ["tasklist", "/FI", f"PID eq {pid}", "/NH"],
-                capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5,
-            )
-            if pid and str(pid) in result.stdout:
-                return True, f"pid={pid} alive"
-            return False, f"pid={pid} not in process list"
-        except (OSError, ValueError, subprocess.SubprocessError):
-            pass
+def _tasklist(args):
+    """tasklist 封装：显式 UTF-8 编码（GBK locale 陷阱），供测试替换。"""
+    return subprocess.run(
+        ["tasklist"] + list(args),
+        capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5,
+    )
+
+
+def _pid_alive(pid):
+    """tasklist 按 PID 查存活；返回 (alive, reason)。"""
     try:
-        result = subprocess.run(
-            ["tasklist", "/FI", "IMAGENAME eq hermes-agent-cn-runtime-win32-x64.exe", "/NH"],
-            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=5,
+        result = _tasklist(["/FI", f"PID eq {pid}", "/NH"])
+        if pid and str(pid) in result.stdout:
+            return True, f"pid={pid} alive"
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return False, f"pid={pid} not in process list"
+
+
+def is_gateway_running():
+    """进程存活：新旧两个 PID 文件逐个验活，任一活=网关活；
+    全死/文件缺失/解析失败 → 按进程名兜底（2026-10-31 修复：
+    旧逻辑在 PID 文件存在但 PID 死时直接判死，兜底永远走不到）。"""
+    for pid_file in GATEWAY_PID_FILES:
+        if not os.path.exists(pid_file):
+            continue
+        try:
+            with open(pid_file, encoding="utf-8", errors="replace") as f:
+                pid = json.load(f).get("pid")
+        except (OSError, ValueError):
+            continue  # 文件损坏 → 试下一个位置，最后有进程名兜底
+        alive, reason = _pid_alive(pid)
+        if alive:
+            return True, reason
+    # 所有 PID 文件都不可用（缺失/死/损坏）→ 按进程名兜底
+    try:
+        result = _tasklist(
+            ["/FI", "IMAGENAME eq hermes-agent-cn-runtime-win32-x64.exe", "/NH"]
         )
         lines = [l for l in result.stdout.strip().split("\n") if l.strip()]
         if lines and "hermes" in lines[0].lower():
