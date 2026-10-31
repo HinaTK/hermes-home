@@ -60,13 +60,17 @@ def start_server():
     env["OPENVIKING_CONFIG_FILE"] = CONFIG_FILE
     env["OPENVIKING_CLI_CONFIG_FILE"] = CLI_CONFIG_FILE
     try:
+        # 2026-10-31: 服务器输出不再吞进 DEVNULL——崩溃原因下次有据可查
+        server_log = OV_HOME / "logs" / "server-autoheal.log"
+        server_log.parent.mkdir(parents=True, exist_ok=True)
+        log_fh = open(server_log, "ab")
         subprocess.Popen(
             [SERVER_EXE, "--host", HOST, "--port", str(PORT)],
             cwd=OV_HOME,
             env=env,
             creationflags=DETACHED_FLAGS,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
+            stdout=log_fh,
+            stderr=log_fh,
             stdin=subprocess.DEVNULL,
             close_fds=True,
         )
@@ -96,7 +100,7 @@ def main():
                 f"[{now_str()}] ✓ OpenViking restarted successfully "
                 f"({launch_detail}, {detail2})"
             )
-            return 1  # non-zero keeps the restart alert visible for cron delivery
+            return 0  # 2026-10-31: 重启成功=成功。exit 1 会让 cron 标"script failed"误导用户（stdout 照常推送重启事件）
 
     healthy3, detail3 = is_healthy()
     if healthy3:
