@@ -79,7 +79,8 @@ See `references/feishu-monitor-log-rotation.md` for the regression recipe and de
 
 Fix with `sed` on `.env` and restart the gateway. No credential rotation needed.
 
-**Stale PID file on restart**: `gateway-runtime/gateway.pid` lives outside `HERMES_HOME` and can survive profile switches. If a restart fails with `PID file race lost to another gateway instance`, delete the stale file first. See `references/feishu-policy-drift.md`.
+- **Stale PID file on restart**: `gateway-runtime/gateway.pid` lives outside `HERMES_HOME` and can survive profile switches. If a restart fails with `PID file race lost to another gateway instance`, delete the stale file first. See `references/feishu-policy-drift.md`.
+- **PID file dual locations (2026-10-31 incident, 70 consecutive false alarms)**: a gateway restart can write the PID to `HERMES_HOME/gateway.pid` while the old `data/gateway-runtime/gateway.pid` lingers with a dead PID. Any watchdog must (1) check BOTH pid files, new location first; (2) when a pid file exists but its PID is dead, still fall back to IMAGENAME lookup — a "file present but PID dead ⇒ declare dead" branch silently skips the fallback and alarms every tick. Also: `tasklist` filters (`/FI`, `/NH`) do not survive this host's git-bash CLI conversion — verify process liveness from Python `subprocess` or `wmic`, never from bash-mangled `tasklist //FI`. Fixed instance: `scripts/gateway_keeper.py` + `scripts/test_gateway_keeper.py`.
 
 ## Restart semantics
 
