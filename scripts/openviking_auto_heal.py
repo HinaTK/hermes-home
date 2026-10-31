@@ -59,10 +59,14 @@ def start_server():
     env = os.environ.copy()
     env["OPENVIKING_CONFIG_FILE"] = CONFIG_FILE
     env["OPENVIKING_CLI_CONFIG_FILE"] = CLI_CONFIG_FILE
+    log_fh = None
     try:
         # 2026-10-31: 服务器输出不再吞进 DEVNULL——崩溃原因下次有据可查
-        server_log = OV_HOME / "logs" / "server-autoheal.log"
-        server_log.parent.mkdir(parents=True, exist_ok=True)
+        # 2026-10-31 事故2: 此处曾写 OV_HOME / "logs" / ... 而 OV_HOME 是 str，
+        # 抛 TypeError 使重启在落盘阶段就崩 → 守卫自己变成故障点。一律 os.path.join。
+        log_dir = os.path.join(OV_HOME, "logs")
+        os.makedirs(log_dir, exist_ok=True)
+        server_log = os.path.join(log_dir, "server-autoheal.log")
         log_fh = open(server_log, "ab")
         subprocess.Popen(
             [SERVER_EXE, "--host", HOST, "--port", str(PORT)],
@@ -76,6 +80,10 @@ def start_server():
         )
     except Exception as exc:  # noqa: BLE001
         return False, f"launch failed: {type(exc).__name__}: {exc}"
+    finally:
+        # 子进程已继承句柄；父进程必须关掉，否则每次重启漏一个句柄（测试里表现为临时目录删不掉）
+        if log_fh is not None:
+            log_fh.close()
     return True, "launched"
 
 
@@ -105,7 +113,7 @@ def main():
     healthy3, detail3 = is_healthy()
     if healthy3:
         print(f"[{now_str()}] ✓ OpenViking restarted (late) — {detail3}")
-        return 1
+        return 0  # 2026-10-31: 同上——晚到恢复也是自愈成功，返回 1 会被 cron 标 failed
     print(
         f"[{now_str()}] ✗ OpenViking still unhealthy {START_TIMEOUT_S}s "
         f"after restart — manual check needed ({detail3})"
