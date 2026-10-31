@@ -138,8 +138,28 @@ Explicit encoding selection applies to every `subprocess.run(..., text=True)` in
 
 The `errors="replace"` fallback is intentional — it prevents a crash on unexpected bytes, and the replaced characters don't affect PID matching or status parsing. Never silently drop the encoding parameter "because it works on my machine"; the locale differs per system.
 
-## Cron-session interpreter identity (Desktop)
+### Self-heal scripts must be tested, not assumed (2026-10-31 incident)
 
+A "fix" to a health-check script can become the outage. On 2026-10-31 a commit added crash-log capture to `openviking_auto_heal.py` as `OV_HOME / "logs" / "server-autoheal.log"` — but `OV_HOME` is a **str**, so `start_server()` raised `TypeError: unsupported operand type(s) for /: 'str' and 'str'` on every attempt. The guard had already been verified healthy that same day, so the regression shipped and turned the guard itself into the failure point: the server could no longer be restarted at all.
+
+Rules for every auto-heal script:
+
+1. **Any edit to the restart path requires a test that actually exercises `start_server()`**, not just the healthy branch. Mocking `is_healthy()` to return healthy passes even when launching is completely broken.
+2. `pathlib` operators only on `Path` objects. Config constants are usually `str` (`os.path.join` style) — mixing `Path` and `str` is a silent landmine that only fires on the failure path, i.e. exactly when you need the guard.
+3. **Close the log handle in `finally`.** `subprocess.Popen(stdout=log_fh)` duplicates the handle into the child; the parent must still close its copy or every restart leaks one handle. On Windows this surfaces as `PermissionError [WinError 32]` when a test tries to clean up its temp dir — a useful canary, not a test artifact.
+4. **Every success branch returns 0.** A "late recovery" branch (healthy after the readiness window expired) is still a successful self-heal; returning 1 makes cron render a working recovery as `Status: script failed` and trains the user to ignore real alerts.
+5. Verify the recovery path by **killing the service for real** and firing one real cron run — not by reasoning about the code.
+
+### Detached children and Job objects
+
+`DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW` is sufficient to let a service outlive the cron process: verified by launching a server, exiting the parent, and confirming `/health` still responds. Do **not** add `CREATE_BREAKAWAY_FROM_JOB` blindly — it fails with `PermissionError [WinError 5]` when the parent's Job object does not grant breakaway. Confirm the Job's `LimitFlags` first (`QueryInformationJobObject(NULL, ...)`); if `KILL_ON_JOB_CLOSE` is absent, plain DETACHED is correct and breakaway is unnecessary.
+
+When a supervised service dies repeatedly, separate the causes before adding supervision:
+
+- **Self-inflicted kill**: a diagnostic script doing `taskkill` by image name (`python.exe`) will kill itself and any sibling Python service. Always kill by explicit PID, and never by image name when the service shares an interpreter name.
+- **Genuine native crash**: check Windows Event Log `Application` / provider `Application Error` (ID 1000) for the faulting module. On 2026-10-31 the real crash was `llama_cpp/lib/ggml-cpu.dll`, exception `0xc0000005` (access violation) during local embedding — a native-library fault that no Python-level retry can prevent, only supervise.
+
+## Cron-session interpreter identity (Desktop)
 When the Hermes scheduler runs a cron script, that script's `sys.executable` is **the Hermes CLI/application binary, not a plain Python interpreter**. Any script that spawns a child with `[sys.executable, other_script.py, ...]` fails in the cron session with argparse usage text (`usage: hermes [-h] ...`) — the script path is consumed as a CLI argument. The same script often passes when run manually from a shell, because the manual interpreter is real Python. This mismatch is the signature: **error output containing `usage: hermes` means a cron script trusted `sys.executable`.**
 
 Durable rules for every script registered as a cron `script=`:
