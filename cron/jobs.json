@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 21
+        "completed": 22
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-11-01T23:00:00+08:00",
-      "last_run_at": "2026-10-30T23:01:12.479741+08:00",
+      "next_run_at": "2026-11-02T23:00:00+08:00",
+      "last_run_at": "2026-10-31T23:00:19.939936+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,8 +279,8 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-10-31T23:00:06.049271+08:00",
-        "by": "MS-22110429259:18796:0b78415ebc3248298eb3eac87ce0c18c"
+        "at": "2026-11-01T23:00:11.643313+08:00",
+        "by": "MS-22110429259:18796:5cef5d01999f4e8480caf947cc1d3df4"
       }
     },
     {
@@ -308,15 +308,15 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 19
+        "completed": 20
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-11-01T00:01:00+08:00",
-      "last_run_at": "2026-10-31T00:01:10.710594+08:00",
+      "next_run_at": "2026-11-02T00:01:00+08:00",
+      "last_run_at": "2026-11-01T00:01:20.062376+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -396,15 +396,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 1525
+        "completed": 1813
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-26T16:04:54.417527+08:00",
-      "next_run_at": "2026-10-31T23:05:00+08:00",
-      "last_run_at": "2026-10-31T23:00:09.112430+08:00",
+      "next_run_at": "2026-11-01T23:05:00+08:00",
+      "last_run_at": "2026-11-01T23:00:23.254659+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -600,15 +600,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 602
+        "completed": 890
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-29T20:50:06.893985+08:00",
-      "next_run_at": "2026-10-31T23:05:00+08:00",
-      "last_run_at": "2026-10-31T23:00:08.302727+08:00",
+      "next_run_at": "2026-11-01T23:05:00+08:00",
+      "last_run_at": "2026-11-01T23:00:20.252893+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -670,5 +670,5 @@
       "workdir": "D:\\Hermes Agent CN Desktop\\data\\hermes-home"
     }
   ],
-  "updated_at": "2026-10-31T23:00:09.114615+08:00"
+  "updated_at": "2026-11-01T23:00:23.257035+08:00"
 }
