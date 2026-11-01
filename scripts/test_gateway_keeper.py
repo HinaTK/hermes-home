@@ -19,6 +19,7 @@
 import importlib.util
 import io
 import json
+import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
@@ -181,6 +182,64 @@ class TestMainSilentWhenAlive(unittest.TestCase):
             rc = self.gk.main()
         self.assertEqual(rc, 0)
         self.assertEqual(buf.getvalue().strip(), '')
+
+
+class TestGbkPipeCrash(unittest.TestCase):
+    """2026-11-01 23:39 事故：schtask/bat 以 GBK 管道重定向 stdout，
+    keeper 打印 ✓/✗/⚠️ 等非 GBK 字符时 UnicodeEncodeError 崩溃——
+    恰好崩在"告警已生成、即将返回"的路径上，告警正文丢失。"""
+
+    def _run_main_with_gbk_stdout(self):
+        """以 GBK 编码的 stdout 执行 main()，返回 (returncode, 输出bytes)。"""
+        import io as _io
+        raw = _io.BytesIO()
+        gbk_stdout = _io.TextIOWrapper(raw, encoding='gbk', errors='strict')
+        self.gk._gbk_raw = raw
+        orig = sys.stdout
+        sys.stdout = gbk_stdout
+        try:
+            rc = self.gk.main()
+        finally:
+            sys.stdout = orig
+            gbk_stdout.flush()
+        return rc, raw.getvalue()
+
+    def setUp(self):
+        self.gk = _load()
+
+    def test_restart_success_path_survives_gbk_pipe(self):
+        """网关死→重启成功路径（含✓）在 GBK 管道下不得崩溃。"""
+        self.gk.is_gateway_running = lambda *a, **k: (False, 'no gateway process found')
+        calls = {'n': 0}
+        def fake_running():
+            calls['n'] += 1
+            return (False, 'dead') if calls['n'] == 1 else (True, 'pid=1 alive')
+        self.gk.is_gateway_running = fake_running
+        self.gk.restart_gateway = lambda: True
+        rc, out = self._run_main_with_gbk_stdout()
+        self.assertEqual(rc, 1)
+        # ✓ 字符必须以 UTF-8 落盘（或至少不崩），正文不得为空
+        self.assertIn('重启成功'.encode('utf-8'), out)
+
+    def test_config_fault_path_survives_gbk_pipe(self):
+        """配置漂移路径（含⚠️/❌）在 GBK 管道下不得崩溃且去重状态必须落盘。"""
+        import tempfile
+        from pathlib import Path as P
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        base = P(tmp.name)
+        (base / '.env').write_text('FEISHU_GROUP_POLICY=disabled\n', encoding='utf-8')
+        (base / 'channel_directory.json').write_text(
+            json.dumps({'platforms': {'feishu': [{'type': 'group', 'name': 'g'}]}}), encoding='utf-8')
+        self.gk.ENV_FILE = str(base / '.env')
+        self.gk.CHANNEL_DIR = str(base / 'channel_directory.json')
+        self.gk.STATE_FILE = str(base / 'cache' / 'state.json')
+        self.gk.is_gateway_running = lambda: (True, 'pid=1 alive')
+        rc, out = self._run_main_with_gbk_stdout()
+        self.assertEqual(rc, 1)
+        self.assertIn('配置异常'.encode('utf-8'), out)
+        # 崩溃事故的核心伤害：去重状态没落盘 → 每5分钟重复刷屏。必须已写盘。
+        self.assertTrue(P(self.gk.STATE_FILE).exists(), 'config_fault 去重状态未落盘')
 
 
 if __name__ == '__main__':

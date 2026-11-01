@@ -30,6 +30,20 @@ import subprocess
 import sys
 from datetime import datetime, timezone, timedelta
 
+# 2026-11-01 23:39 事故：schtask/bat 以 GBK 管道重定向 stdout，keeper 打印 ✓/✗/⚠️
+# 时 UnicodeEncodeError 崩溃，告警正文丢失。守卫自己的输出必须任何 locale 下可写：
+# 强制 UTF-8 + errors=replace（字节流照常落盘，读日志按 UTF-8 解码）。
+def _force_utf8_output():
+    for _s in (sys.stdout, sys.stderr):
+        if _s is not None and hasattr(_s, "reconfigure"):
+            try:
+                _s.reconfigure(encoding="utf-8", errors="replace")
+            except (OSError, ValueError):
+                pass
+
+
+_force_utf8_output()  # 进程启动即生效（真实 bat/schtask GBK 管道场景）
+
 HERMES_HOME = os.environ.get(
     "HERMES_HOME",
     r"D:\Hermes Agent CN Desktop\data\hermes-home",
@@ -209,6 +223,7 @@ def restart_gateway():
 
 
 def main():
+    _force_utf8_output()  # stdout 可能在本模块加载后被替换（测试/cron 捕获管道）——入口再压一次
     state = load_state()
     messages = []
 
