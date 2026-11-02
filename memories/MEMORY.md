@@ -54,11 +54,11 @@ ETF网格盘前条件建议推送时间：原09:31→09:24(2026-10-16)→09:20(2
 §
 纳指趋势持有方案存档 reports/nasdaq-etf-trend-holding-plan.md（4c7add2）：底仓40%+回撤≥8%加仓（cap8）+反弹≥10%卖加仓；513300；回测9买9卖全+10~12%离场；当前未到买点，触发价2.208。
 §
-cron script字段铁律（10-29第4/5次部署事故）：①script=脚本文件名/路径，绝不能塞shell命令（会拼成路径→Script not found）；②cron会话的 sys.executable=hermes CLI二进制非纯python——cron脚本里起子进程禁用sys.executable，一律显式SYSTEM_PY绝对路径（错误特征：报错含'usage: hermes'）；③新建任何cron后必须先手动run触发一次并读真实输出才算部署完成——手动跑+3.14跑都通过≠cron会通过，唯一生产级验收=真实cron run触发并读输出文件。
+cron script铁律：①script=脚本文件名，不塞shell命令；②cron的sys.executable=hermes CLI二进制，子进程一律显式SYSTEM_PY路径（错误特征'usage: hermes'）；③部署完成=真实cron run触发并读输出；④schtask/bat GBK管道打印✓✗⚠️会UnicodeEncodeError（11-01 keeper事故：吞告警正文+去重状态不落盘致刷屏）——守卫脚本入口_force_utf8_output()。
 §
 hermes-home仓库（公开!）已净化（10-29 d4b959a）：软重置剔除backups/、config.yaml.bak*、installs/、shared/nous_auth.json（含活refresh_token，曾躺在公开远端）；.gitignore加固；git_daily_push.py加提交前秘密守卫（TDD 6测试）。OpenRouter key从未到达远端。待办：用户需在Nous Portal轮换refresh_token。备份分支backup/pre-scrub-20261029仅存本地。
 §
-OpenViking守卫双保险（10-29）：①Hermes cron 1861dff8e422（*/5min，no_agent，openviking_auto_heal.py，健康静默/挂了重启；10-31起策略=成功也静默、只有失败才推+抖动≥3次/小时告警，脚本恒exit0以免被cron套failed外壳）；②Windows任务 OpenViking_Supervisor。排障：tasklist/curl查1933；agent.log报'not found'=服务器死；schtasks /query查任务是否在。
+OpenViking守卫双保险：①Hermes cron 1861dff8e422（*/5min，openviking_auto_heal.py，恒exit0，成功静默/失败推+抖动≥3次/h告警）；②Windows任务OpenViking_Supervisor（11-01发现已死3天：仅登录触发，退出码3221225786；已加固=登录+5min重复触发IgnoreNew）。排障：curl查1933；agent.log'not found'=死。
 §
 全局暂停买入已落地（88643e5，10-30）：holdings.json per-ETF buy_paused=true → plan() 拦买入出⛔，卖出保留；589720/159363/512980 已暂停，恢复=改 false/删字段。同提交修 quota 断点（holdings quota 从未同步进 state，现 plan 兜底读 holdings）。
 §

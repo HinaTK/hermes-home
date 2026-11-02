@@ -1,6 +1,6 @@
 ---
 name: hermes-memory-providers
-description: "Use when configuring Hermes external memory providers."
+description: "Use when configuring Hermes external memory providers, or explaining how MEMORY.md / provider recall works across sessions."
 version: 1.0.0
 ---
 
@@ -16,6 +16,21 @@ Machine-specific paths and the verified local OpenViking layout live in `referen
 ### Known issue: `experiences` memory type never extracts
 
 OpenViking v0.4.21–v0.4.23 has a hardcoded filter that drops `stage: agent` schemas (including `experiences` and `trajectories`) during session-commit extraction. The Agent Experience page in Studio will show "还没有 Agent 经验" regardless of `agent_evolution.enabled`. See `references/openviking-experiences-bug.md` for root cause, workaround, and when to care.
+
+## Recall channels — "will a new session remember X?"
+
+Four independent channels move knowledge across sessions; they differ in hit reliability:
+
+| Channel | How it fires | Hit reliability |
+|---|---|---|
+| MEMORY.md / USER.md entries | Frozen snapshot injected into the system prompt at session start | 100% — present every turn, no retrieval step |
+| Provider per-turn prefetch | Hermes queries the provider with the current conversation before each turn (background, non-blocking) | Probabilistic — only when semantically related |
+| `viking_search` / provider tools | Agent searches deliberately when the topic touches past events or preferences | High, but requires the agent to think of searching |
+| `session_search` | FTS5 over the local session DB | Keyword-literal hits only |
+
+Reliability ranking for facts that MUST survive a session boundary: MEMORY.md entry > skill > provider auto-extraction. Provider extraction fires on session commit — long-lived gateway sessions may not commit for weeks, and the `experiences` type is dropped by the bug above, so user-correction events mostly survive as `events`.
+
+When the user asks whether something will be recalled: answer with the channel model, then demonstrate live — one `viking_search` plus one `session_search` on their own example. Machine-verified detail: `references/recall-channels.md`.
 
 ## Hard rules
 
@@ -42,6 +57,8 @@ hermes.cmd memory setup openviking
 hermes.cmd config set memory.provider openviking
 hermes.cmd config get memory
 ```
+
+From git-bash (MSYS), `cmd.exe /c "D:\...\hermes.cmd" ...` with a quoted spaced path gets mangled (GBK `不是内部或外部命令`). Working form: `cd` into `desktop-bin` first, then `cmd.exe /c hermes.cmd <subcommand>` with the bare filename.
 
 ## OpenViking (self-hosted) workflow
 
