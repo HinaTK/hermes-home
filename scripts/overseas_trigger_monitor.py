@@ -79,7 +79,7 @@ def check_nasdaq():
 
 
 def check_nikkei():
-    """159866：第一档触价判定=现价或盘中最低 ≤1.600（触价回升也报，防漏）。"""
+    """159866 三档监控：一档已成交(11-03)，盯二档≤1.52、三档≤1.42；触价=min(现价,日低)。"""
     q = _quote('sz159866')
     price = q['price']
     # 脏数据退化：盘前/异常 low=0 时用现价
@@ -91,10 +91,18 @@ def check_nikkei():
             and qt[8:12] >= '0930')
     if not live:
         return fires, dict(price=price, low=low, quote_time=qt)
-    if price <= 1.600:
-        fires.append(('nikkei_t1', f"🟢 159866 现价 {price:.3f} 已进入第一档 1.59-1.60 建仓区——按三档方案执行：本档买入30%（约9,000份），止损=成本×0.75", True))
-    elif low <= 1.600:
-        fires.append(('nikkei_t1', f"⚠️ 159866 盘中最低 {low:.3f} 已触及第一档 1.600，现价 {price:.3f} 已回升——触价≠成交；第一档方案为 1.59-1.60 买入30%（约9,000份），现价高于建仓区，是否追高由你定，未执行则等回落再触发", False))
+    # 2026-11-03 第一档已成交（9,000份@1.600，账本 overseas-positions.json）→ 盯二档/三档
+    TRANCHES = (
+        ('t2', 1.52, "第二档 1.50-1.52 买入30%（约9,000份）"),
+        ('t3', 1.42, "第三档 1.40-1.42 买入最后40%（约12,000份）"),
+    )
+    for tag, level, act in TRANCHES:
+        if price <= level:
+            fires.append((f'nikkei_{tag}', f"🟢 159866 现价 {price:.3f} 进入{act}", True))
+            break
+        if low <= level:
+            fires.append((f'nikkei_{tag}', f"⚠️ 159866 盘中最低 {low:.3f} 触及{act.split('买入')[0]}触发线，现价 {price:.3f} 回升——触价≠成交，未执行则等回落再触发", False))
+            break
     return fires, dict(price=price, low=low, quote_time=qt)
 
 
