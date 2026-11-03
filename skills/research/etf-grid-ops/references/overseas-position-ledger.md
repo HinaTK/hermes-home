@@ -35,3 +35,20 @@ Per code:
 ## Commission/price verification rule
 
 User-reported fills are booked at the reported price with computed fee. Cross-check the price against the tranche band and same-day quote; if the reported price is outside the band or the day's range, flag 待核 before booking rather than silently accepting.
+
+## Exit semantics — what "一直拿着" actually means (2026-11-03 user confirmation)
+
+User asked "这个就是一直拿着的是吗？除非到止损线？" — confirmed management model, encode it for future "什么时候卖" questions:
+
+- **Add-on tranches are not sells**: dropping into the T2/T3 bands is buying (cost averaging), never an exit trigger.
+- **Stop line (weighted cost × 0.75) is a re-evaluation line, not a mechanical sell**: when hit, the thesis is presumed broken — lay out why it fell / how much / stay-vs-leave for the user to decide. No script auto-liquidates. The line is RECOMPUTED after each new tranche fills (lower fills pull weighted cost down, moving the absolute stop).
+- **No fixed take-profit on the upside**: index positions ride the whole trend; a target price amputates the fat tail. Upside exits are managed by trend-break rules (same family as the Nasdaq plan's "drawdown from 1y peak ≥8%"), pushed to the user when triggered.
+- Between the lines the user does nothing; the 10-minute monitor owns both lower boundaries.
+
+## Tranche advance must realign companion tests (2026-11-03 incident)
+
+The commit that switched the monitor to T2/T3 left `test_overseas_trigger_monitor.py` in the T1 era — 3 of 9 red, discovered during a routine state check. Rules:
+
+- Editing the monitor's TRANCHES ladder is a behavior change → realign the test file in the SAME change (RED→GREEN, per the user's standing TDD mandate).
+- Encode the ladder priority semantic in tests: `break` fires only the FIRST unfilled tranche — a deep day-low touching both T2 and T3 levels pushes T2 alone; T3's line arms only after T2 is booked.
+- Running the monitor's test file is part of any monitor health check — a red suite means deployed logic and its spec have drifted.

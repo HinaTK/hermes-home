@@ -43,3 +43,21 @@ git push --dry-run origin main                                  # "Everything up
 ```
 
 The push-protection block URL can be used to unblock a specific secret, but purging the commit from branch history is the durable fix. Also keep a pre-commit secret guard in the push script itself so new commits never re-introduce keys.
+
+## 2026-11-03: relay `print()` newline doubling broke Feishu tables
+
+Symptom: user replied "这都不是表格" to the watchtower (观察哨) cron push — the markdown table rendered as broken prose.
+
+Chain (byte-verified against `cron/output/0740a34e4711/2026-11-03_15-51-*.md`):
+1. Child monitor prints in Windows text mode → `\r\n` per line.
+2. Wrapper does `print(r.stdout.decode(...))` → wrapper's own text-mode stdout translates the `\n` again → pipe carries `\r\r\n`.
+3. Hermes reads with universal newlines → two newlines per line → every line separated by a blank line.
+4. Blank line between `| 哨 | 状态 | 读数 |` and `| --- |` → Feishu does not recognize a table.
+
+Why the first grep found nothing: the archived .md normalizes to CRLF, so `b"\r\r"` appears 0 times across ALL cron outputs. The surviving scar is a blank line between every pair of adjacent table rows. Audit via row-index gaps (`[i for i,l in enumerate(lines) if l.strip().startswith('|')]`, adjacent gaps must be 1). That audit showed: watchtower 3/3 pushes broken, rate_ignition wrapper carried the same latent pattern, direct-print jobs (market_phase_monitor) clean. Blank lines between a table and a following heading are normal markdown — only gaps INSIDE one table block are the defect.
+
+Fix (hermes-home d664cbe): both wrappers extracted `relay(raw)` — decode, normalize `\r\n`/`\r` → `\n`, write via `sys.stdout.buffer`. TDD: `scripts/test_cron_relay_newline.py` RED on missing `relay`, GREEN after; full scripts suite 43 tests pass; end-to-end acceptance ran the real wrapper under `subprocess.run(..., capture_output=True)` and byte-checked the table (6 rows, all gaps == 1).
+
+Also found during TDD: `watchtower_wrapper.py` ran its monitor at import time (module-level code outside `__main__`) — importing it in a test executed the entire live pipeline.
+
+Companion bug in the same push (different repo, AH_analyse 6fb8828): the "🔔A级命中" alert itself was a false positive — "该工具创设以来的第三次操作" ("since the tool's creation") matched the keyword 创设. Keyword-tier grading must strip historical-reference phrases before matching; see the market-phase-monitoring skill for watchtower grading rules.

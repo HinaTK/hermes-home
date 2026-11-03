@@ -141,7 +141,6 @@ The `errors="replace"` fallback is intentional — it prevents a crash on unexpe
 ### Self-heal scripts must be tested, not assumed (2026-10-31 incident)
 
 A "fix" to a health-check script can become the outage. On 2026-10-31 a commit added crash-log capture to `openviking_auto_heal.py` as `OV_HOME / "logs" / "server-autoheal.log"` — but `OV_HOME` is a **str**, so `start_server()` raised `TypeError: unsupported operand type(s) for /: 'str' and 'str'` on every attempt. The guard had already been verified healthy that same day, so the regression shipped and turned the guard itself into the failure point: the server could no longer be restarted at all.
-
 Rules for every auto-heal script:
 
 1. **Any edit to the restart path requires a test that actually exercises `start_server()`**, not just the healthy branch. Mocking `is_healthy()` to return healthy passes even when launching is completely broken.
@@ -149,6 +148,8 @@ Rules for every auto-heal script:
 3. **Close the log handle in `finally`.** `subprocess.Popen(stdout=log_fh)` duplicates the handle into the child; the parent must still close its copy or every restart leaks one handle. On Windows this surfaces as `PermissionError [WinError 32]` when a test tries to clean up its temp dir — a useful canary, not a test artifact.
 4. **Every success branch returns 0.** A "late recovery" branch (healthy after the readiness window expired) is still a successful self-heal; returning 1 makes cron render a working recovery as `Status: script failed` and trains the user to ignore real alerts.
 5. Verify the recovery path by **killing the service for real** and firing one real cron run — not by reasoning about the code.
+6. **Diagnose the timeline before blaming the present (2026-10-31 recurrence):** when a user forwards a failure notification, first compare the notification timestamp against the script's git history and the latest cron output. The 13:55 "script failed" alert the user saw was actually a **successful 13-second auto-restart** that returned exit 1 by design — and an older crash stack found in a log file (glm-4.6v 404) was a September-era artifact, not today's cause. Old log tails are not evidence of current failure; the only usable evidence for the current incident is output produced after the last known-good state.
+7. **DEVNULL swallows crash causes.** A supervised service launched with `stdout=DEVNULL, stderr=DEVNULL` leaves zero forensics when it dies. Redirect child output to an append-mode log file from the supervisor so the NEXT crash is diagnosable; when the current one already lost its stack, say so plainly instead of speculating about the cause.
 
 ### Detached children and Job objects
 
@@ -174,6 +175,32 @@ Durable rules for every script registered as a cron `script=`:
 3. The cron `script` field takes a file name/path only — never a shell command (it gets joined into a path → `Script not found`).
 
 See `references/cron-script-deployment-incidents.md` for the incident log and deployment acceptance protocol.
+
+### Wrapper stdout relay: `print()` doubles newlines and breaks tables (2026-11-03)
+
+A cron wrapper that runs a child script with `capture_output=True` and re-emits its stdout via `print(child_output)` corrupts the stream on Windows. The child writes text-mode `\r\n`; the wrapper's own text-mode stdout translates the `\n` again, so the pipe carries `\r\r\n`; any universal-newline reader then sees TWO newlines per line. Markdown tables are the canary: the blank line inserted between the header row and the `|---|` separator makes the renderer treat the table as plain text (user-visible symptom: the pushed "table" is not a table at all).
+
+Byte-level diagnosis, not eyeballing: the archived cron output normalizes to CRLF on write, so grepping every archive for `\r\r` finds **zero** hits even in broken pushes — the surviving scar is a blank line between every pair of adjacent table rows. Audit that pattern instead (indices of `|`-prefixed rows must differ by exactly 1), and compare against a job whose script prints directly with no relay (those are clean). The mechanism is provable in one experiment: run a child that prints two lines, relay with `print()`, read the pipe — `b'|a|\r\r\n|---|\r\r\n'`.
+
+Fix pattern (blueprint `scripts/watchtower_wrapper.py`, `scripts/rate_ignition_monitor_wrapper.py` in hermes-home):
+
+```python
+def relay(raw: bytes):
+    """Relay child stdout verbatim: normalize newlines to \n, write binary."""
+    if not raw:
+        return
+    text = raw.decode("utf-8", errors="replace")
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    sys.stdout.flush()
+    sys.stdout.buffer.write(text.encode("utf-8"))
+    sys.stdout.buffer.flush()
+```
+
+Rules:
+1. Re-emitting captured child output = binary relay via `sys.stdout.buffer` after newline normalization — never `print(text)`.
+2. Guard all wrapper work under `if __name__ == '__main__'`. A wrapper that runs its monitor at module level executes the entire live pipeline the moment a test imports it (found exactly that way during TDD).
+3. TDD lock: feed a `\r\n`-joined markdown table through `relay()` into a BytesIO-backed stdout; assert no `\r\r\n`, adjacent table rows stay adjacent (index gap == 1), and empty-in-empty-out preserves watchdog silence.
+4. Acceptance must read the live pipe (`subprocess.run([SYSTEM_PY, 'wrapper.py'], capture_output=True)`), because the archived cron output has already normalized newlines and can hide the defect.
 
 ## Stale cron-failure notifications: diagnose the timeline first
 

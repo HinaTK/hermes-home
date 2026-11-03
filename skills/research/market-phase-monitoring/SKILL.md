@@ -67,6 +67,15 @@ market-phase-detection / buy-sell-points / half-position-confirm 能力卡——
 
 并行会话可能在你看不到的时段改过门控规则。本会话凭旧记忆答"589720 可以买"，实际前一晚另一会话已把纯 ADX 联动升级为四级门控（五线全破拦截），被用户拿当日推送打脸。固定动作：①`git log --oneline -10 -- confirmed_runtime.py tools/etf_research/gate_check.py`；②重跑推送预演（grid_weixin_execute.py --phase preview）；③只把脚本输出里的判定措辞照抄给用户，不凭印象转述。ADX 三参数（ADX/+DI/-DI）的门控分工、梯度 U 型证据及"宣称放行前先沿 gate 代码路径走"的教训，见 skill `etf-strategy-research` 的 `references/adx-gradient-study-2026-10-27.md`。
 
+## 观察哨（watchtower）哨④政策判级：关键词先剔历史指称短语（2026-11-03 事故）
+
+watchtower_monitor.py（AH_analyse/tools/，cron 15:50 任务 0740a34e4711，wrapper=hermes-home/scripts/watchtower_wrapper.py）是历史类比四哨盘后监控（哨①量能地量<0.33 / 哨②两融出清<2.2万亿 / 哨③AI财报季窗口 / 哨④924级政策快讯扫描），与 market_phase_check 同属市况监控 cron 家族。哨④用关键词规则判级：A级=新创设工具/扩容≥2000亿/双工具组合拳（反转开关候选），B级=机制完善/常规操作（仅记录不操作）。
+
+- **"创设以来"是历史指称，不是新创设**：2026-11-03 平安证券快讯"这是该工具创设以来的第三次操作"——SFISF 是 2024 年存量工具，第三次常规操作按口径应为 B级，关键词"创设"撞短语误触发 A级·反转开关候选 推给了用户。修复：`grade_policy_text` 判 A 级前先剔 `GRADE_A_PHRASE_EXCLUDES = ("创设以来",)` 再匹配新创设词（AH_analyse 6fb8828）。
+- 通用规则：**关键词判级/触发前先剔同形历史或惯用短语**（"X以来""第N次"类），存量工具的例行操作才不会伪装成新事件；机构中标额度（如国泰海通中标 SFISF 100亿）≠ 央行扩总量，不升级。
+- 判级回归锁必须用**当日真实快讯原文**写测试（tests/test_watchtower_policy_grading.py 的 test_grade_since_creation_phrase_not_A / test_today_20261103_real_batch_is_B），先 RED 复现误判再 GREEN；前一日的实战锁（2026-11-02 三快讯整批判 B）同文件维护。
+- 该 wrapper 的推送表格曾因中转 `print()` 换行倍增碎裂（用户"这都不是表格"）——relay 修复与字节级诊断法见 skill `local-service-reliability` 的 "Wrapper stdout relay" 节。
+
 ## 实现要点
 - 数据源：东财 push2his K线，`klt=101` 日线 / `klt=102` 周线（KDJ 必须直接拉周K，不要自己从日K聚合）。详见 [references/eastmoney-kline-api.md](references/eastmoney-kline-api.md)
 - 测试夹具与指标单元测试的坑（对称K线RSV恒50、减速下跌低位金叉、monkeypatch 按 klt 分流）详见 [references/indicator-test-fixtures.md](references/indicator-test-fixtures.md)

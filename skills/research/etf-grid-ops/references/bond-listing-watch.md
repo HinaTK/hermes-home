@@ -15,7 +15,7 @@ First occurrence 2026-10-14 (中鼎转2), recurred 2026-10-26 (中鼎转03) desp
 5. **Cron cadence.** Trading days, three ticks (9:10 / 10:10 / 14:10). Listing is a discrete event; do not burn a per-minute job. Job id and script path belong in the memory entry so the task can be paused after the user sells.
 6. **Alert content.** Current price/high/low + vendor timestamp + hands held + "check the broker app to sell" + T+0 note (convertible bonds trade T+0 on listing day). SZ convertibles have listing-day intraday halts (20%/30% rules) — mention if relevant.
 7. **Market expectation.** Search public analysis for the expected listing range (中鼎转03: 127–130 expected, ~270–300 profit per 手) and include it in the setup reply, explicitly labeled as market expectation, not a promise.
-8. **Lifecycle.** After the user confirms they sold, pause/remove the cron job — no zombie monitors.
+8. **Lifecycle.** After the user confirms they sold, pause/remove the cron job — no zombie monitors. Removal is two-step (2026-10-31): `cronjob action=remove` deletes the job AND delete the script file itself; get the job_id from `cronjob list` first, never from memory.
 
 ## Instance artifacts
 
