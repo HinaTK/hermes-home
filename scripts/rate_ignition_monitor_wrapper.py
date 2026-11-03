@@ -39,6 +39,21 @@ def run_monitor():
     return json.loads(r.stdout.decode("utf-8", errors="replace"))
 
 
+def relay(raw: bytes):
+    """子进程 stdout 原样中转：换行统一为 \\n 后二进制写出，禁止文本模式二次翻译。
+
+    （2026-11-03 观察哨表格事故同款根因：print 中转把 \\r\\n 变 \\r\\r\\n，
+    通用换行读取下每行之间多一个空行，飞书表格表头与分隔行被隔开即不渲染。）
+    """
+    if not raw:
+        return
+    text = raw.decode("utf-8", errors="replace")
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    sys.stdout.flush()
+    sys.stdout.buffer.write(text.encode("utf-8"))
+    sys.stdout.buffer.flush()
+
+
 def main():
     data = run_monitor()
     sigs = data.get("signals", [])
@@ -64,7 +79,7 @@ def main():
 
     if should_push:
         r = subprocess.run([SYSTEM_PY, MONITOR], capture_output=True, timeout=180)
-        print(r.stdout.decode("utf-8", errors="replace"))
+        relay(r.stdout)
         if cleared:
             print(f"\nℹ️ 已解除: {', '.join(cleared)}（状态回落，仅告知一次）")
     else:
