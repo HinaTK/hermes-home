@@ -50,40 +50,47 @@ def _quote_f(price, high, low):
 
 
 class TestNikkeiTouch(unittest.TestCase):
+    """2026-11-03 一档已成交(9,000@1.600)，监控切二档≤1.52/三档≤1.42。"""
 
     def setUp(self):
         self.otm = _load()
         self.otm.date = FakeDate
 
-    def test_intraday_low_touches_tier1_even_if_price_rebounded(self):
-        """盘中最低1.595≤1.600、现价1.616已回升 → 必须触发触价提醒。"""
-        self.otm._quote = lambda sym: _quote_f(1.616, 1.617, 1.595)
+    def test_intraday_low_touches_t2_even_if_price_rebounded(self):
+        """盘中最低1.515≤1.52、现价1.55已回升 → 必须触发二档触价提醒。"""
+        self.otm._quote = lambda sym: _quote_f(1.55, 1.56, 1.515)
         fires, data = self.otm.check_nikkei()
         keys = [f[0] for f in fires]
-        self.assertIn('nikkei_t1', keys)
-        msg = [f[1] for f in fires if f[0] == 'nikkei_t1'][0]
+        self.assertIn('nikkei_t2', keys)
+        msg = [f[1] for f in fires if f[0] == 'nikkei_t2'][0]
         self.assertIn('盘中最低', msg)
-        self.assertIn('1.595', msg)
-        self.assertIn('1.616', msg, '触价提醒必须同时给现价，防止误导追高')
+        self.assertIn('1.515', msg)
+        self.assertIn('1.55', msg, '触价提醒必须同时给现价，防止误导追高')
 
     def test_no_touch_no_fire(self):
-        """日低1.610未及1.600 → 不触发。"""
+        """日低1.610未及1.52 → 不触发。"""
         self.otm._quote = lambda sym: _quote_f(1.616, 1.617, 1.610)
         fires, _ = self.otm.check_nikkei()
         self.assertEqual([f[0] for f in fires], [])
 
-    def test_current_in_zone_is_persistent(self):
-        """现价1.598仍在建仓区 → 持续触发，必须带persistent=True。"""
-        self.otm._quote = lambda sym: _quote_f(1.598, 1.617, 1.595)
+    def test_current_in_t2_zone_is_persistent(self):
+        """现价1.51仍在二档区 → 持续触发，必须带persistent=True。"""
+        self.otm._quote = lambda sym: _quote_f(1.51, 1.517, 1.505)
         fires, _ = self.otm.check_nikkei()
-        self.assertEqual([f[0] for f in fires], ['nikkei_t1'])
+        self.assertEqual([f[0] for f in fires], ['nikkei_t2'])
         self.assertTrue(fires[0][2], '现价在建仓区属持续触发，必须标记persistent')
 
     def test_touch_only_is_not_persistent(self):
         """触价已回升 → persistent=False，不进active。"""
-        self.otm._quote = lambda sym: _quote_f(1.616, 1.617, 1.595)
+        self.otm._quote = lambda sym: _quote_f(1.55, 1.56, 1.515)
         fires, _ = self.otm.check_nikkei()
         self.assertFalse(fires[0][2])
+
+    def test_deep_touch_fires_t2_first(self):
+        """日低1.41同时触及三档，但二档未成交 → 只推二档（break优先级）。"""
+        self.otm._quote = lambda sym: _quote_f(1.55, 1.56, 1.41)
+        fires, _ = self.otm.check_nikkei()
+        self.assertEqual([f[0] for f in fires], ['nikkei_t2'])
 
     def test_low_invalid_falls_back_to_price(self):
         """脏数据 low=0（开盘前）→ 退化为现价判定，不得误报触价。"""
@@ -93,9 +100,9 @@ class TestNikkeiTouch(unittest.TestCase):
 
     def test_data_records_low(self):
         """快照数据必须记录盘中最低，供排查与解除消息引用。"""
-        self.otm._quote = lambda sym: _quote_f(1.616, 1.617, 1.595)
+        self.otm._quote = lambda sym: _quote_f(1.55, 1.56, 1.515)
         _, data = self.otm.check_nikkei()
-        self.assertEqual(data.get('low'), 1.595)
+        self.assertEqual(data.get('low'), 1.515)
 
 
 class TestTouchPushDedup(unittest.TestCase):
