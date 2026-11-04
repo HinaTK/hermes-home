@@ -9,7 +9,17 @@ cron b3097b45fafa (weekdays 15:20) → `scripts/grid_eod_decision.py` → `confi
 - `grid_summary.summarize_account(root)` reads every `confirmed-*.json` sub-ledger: per-ETF totals plus `daily[day]` buckets.
 - `_daily_stats` keys a completed round to the **SELL trade's date** (round completes when the sell fills); a rebuy without a same-day matching sell is a half-cycle and never counts; null dates are ignored entirely. Each day carries `by_etf` with per-code `rounds/t_net/n_buys/n_sells/buy_amount/sell_amount`; the day-level totals always equal the sum of the per-ETF buckets.
 - `eod_report` embeds `summary`; a summary failure (OSError/ValueError) does NOT block the EOD report — it degrades to `summary=None` and the renderer prints ⚠️ and omits the T tables.
-- `render_eod` emits: ⚠️ warning → 持仓概览 table → 累计做T table (+ bold totals row + “区间 start → end｜交易日 N 天｜净投入合计 X” line) → 当日做T table (+ totals row, or 当日无成交) → 剩余操作建议 → 来源 line.
+- `render_eod` joins with `\n` and emits: ⚠️ warning → 持仓概览 table → 累计做T table (+ bold totals row + “区间 start → end｜交易日 N 天｜净投入合计 X” line) → 当日做T table (+ totals row, or 当日无成交) → 来源 line. Since 2026-10-26 it does **not** append 剩余操作建议 (that belongs to the 09:20 job).
+- Launcher `scripts/grid_eod_decision.py` only calls `safe_entrypoint(eod_main, True)`, which `print`s that string. No newline-rewriting wrapper.
+
+## Quoted Feishu text is not the artifact (2026-11-04)
+
+User asked why the 15:20 持仓概览 arrived as `\|` instead of a table. The saved run `cron/output/b3097b45fafa/2026-11-04_15-20-26-*.md` was a normal pipe table (literal `|`, one row per line, CRLF from the cron capture, zero `\r\r\n`). Feishu's quote/reply plain-text conversion escapes `|`. Diagnose in this order:
+
+1. Read the dated cron output file (or re-run the launcher) before touching `render_eod`.
+2. Literal pipes and contiguous rows → renderer is fine; explain the quote escape. Do not rewrite the script to "unescape" `\|`.
+3. Blank line between every row, or `\r\r\n` in a *wrapper's* stdout → that is the 2026-11-03 `print()` double-translation bug. This 15:20 job does not use `relay()`; do not port that fix here unless a wrapper is added.
+4. Cells still come only from the saved renderer output, never from the quoted message.
 
 ## Iron rules
 

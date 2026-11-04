@@ -58,7 +58,7 @@ cron script铁律：①script=脚本文件名；②cron的sys.executable=hermes 
 §
 hermes-home仓库（公开!）已净化（10-29 d4b959a）：软重置剔除backups/、config.yaml.bak*、installs/、shared/nous_auth.json（含活refresh_token，曾躺在公开远端）；.gitignore加固；git_daily_push.py加提交前秘密守卫（TDD 6测试）。OpenRouter key从未到达远端。待办：用户需在Nous Portal轮换refresh_token。备份分支backup/pre-scrub-20261029仅存本地。
 §
-全局暂停买入已落地（88643e5，10-30）：holdings.json per-ETF buy_paused=true → plan() 拦买入出⛔，卖出保留；589720/159363/512980 已暂停，恢复=改 false/删字段。同提交修 quota 断点（holdings quota 从未同步进 state，现 plan 兜底读 holdings）。
+buy_paused总闸已撤（2026-11-04用户纠正：10-30“都暂停买入”是临时意思不是永久闸，总闸压过市况门控导致行情好转也不放行）。现只剩市况门控(方案F)：589720/159363五线全破no_entry拦截（止跌自动恢复），512980 probe_only放行首格A 10,200@0.780。缓存任务11-02/03连续3600s超时被杀，11-03已修（30分钟自限+增量落盘），11-04手动重跑9.9秒成功。
 §
 高股息/个股筛选一律走 divi_* 脚本链→divi_decision_engine.py 四维交叉（10-27固化85fa811）：买入=股息≥4.5%+盈利收益率≥7%+PE分位<50%+价格分位<60%+非空头；红旗回避；余等回调/等消化给锚价。禁口算。
 §

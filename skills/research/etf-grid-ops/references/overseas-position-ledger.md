@@ -28,8 +28,9 @@ Per code:
 
 ## Monitor mechanics (overseas_trigger_monitor.py, cron 9b7100f3c8b1)
 
-- Nasdaq 513300: premium <5% (plan-start signal) and NAV drawdown from 1y peak ≥8% (add-on signal), NAV via 天天基金 pingzhongdata `Data_netWorthTrend`, spot via Tencent.
-- Nikkei 159866: tranche ladder (T2/T3 after T1 filled 2026-11-03), touch = min(price, day_low), quote-time gate (same-day snapshot, ≥09:30) to avoid yesterday-extreme false fires.
+- Nasdaq 513300 (premium rules tightened 2026-11-04, user decision 跨境溢价>3%放弃): start signal = premium <3%; add-on signal = NAV drawdown from 1y peak ≥8% **AND** premium <3%. Premium is a HARD gate, not advisory text — at premium ≥3% both signals are fully silent. The old <5% start line is abolished. NAV via 天天基金 pingzhongdata `Data_netWorthTrend`, spot via Tencent.
+- Nikkei 159866: tranche ladder (T2/T3 after T1 filled 2026-11-03), touch = min(price, day_low), quote-time gate (same-day snapshot, ≥09:30) to avoid yesterday-extreme false fires. Buy tranches are gated by premium >2% (2026-11-04 user decision: no new buys/adds when exceeded); the stop line is checked BEFORE the premium gate and is never premium-gated. If the NAV source fails (premium = None) the gate is soft — record None, do not hard-block; the user still has same-day live IOPV as the final manual check before executing.
+- Live state file (migrated 2026-11-04): `D:/Code/AH_analyse/.cache/grid-home/cache/grid-account/overseas-triggers.json` (the ledger root named by run_and_push.py; copy-not-cut, hermes side kept as frozen backup). The hermes-side `HERMES_HOME/cache/grid-account/overseas-triggers.json` is a FROZEN pre-migration snapshot — diagnosing from it gives stale `active[]` (after the gate voided `nasdaq_drawdown` it still listed that key). Always read the AH-side live file.
 - Watchdog discipline: silent when nothing fires; state-flip only (new trigger → push once; resolved → push once).
 
 ## Commission/price verification rule
@@ -52,3 +53,12 @@ The commit that switched the monitor to T2/T3 left `test_overseas_trigger_monito
 - Editing the monitor's TRANCHES ladder is a behavior change → realign the test file in the SAME change (RED→GREEN, per the user's standing TDD mandate).
 - Encode the ladder priority semantic in tests: `break` fires only the FIRST unfilled tranche — a deep day-low touching both T2 and T3 levels pushes T2 alone; T3's line arms only after T2 is booked.
 - Running the monitor's test file is part of any monitor health check — a red suite means deployed logic and its spec have drifted.
+
+## Rule tightening that voids an active trigger → one-time "已解除" transitional noise (2026-11-04 incident)
+
+Deploying a new hard gate (or any rule change) that newly suppresses a signal already sitting in the state file's `active[]` makes the state-flip loop push a single "ℹ️ 触发已解除：<key>" on the next run. Real case: the 2026-11-04 premium gate went live at 09:31; legacy `nasdaq_drawdown` (recorded 11-03 under no-gate rules: drawdown -10.4% met the add-on line but premium was +12.8%) was voided by the gate, and the 09:40 run pushed "触发已解除" — the user read it as an alarm and asked "这是触发了什么 我没看懂".
+
+Rules:
+- **"触发已解除" right after a rule change means "the old signal was voided by the new rule", NOT "all clear / safe to buy".** Say this explicitly so the user cannot misread the direction.
+- When deploying a gate that will suppress a known-active trigger: pre-clear that key from `active[]` in the same change, or warn the user the one-shot "已解除" push is coming and what it means.
+- When the user asks what a monitor push meant, diagnose from evidence, then answer conclusion-first in plain language: (1) per-run files in the cron output dir for job `9b7100f3c8b1` (each shows silent vs fired, the exact message and fire time), (2) the LIVE AH-side state file, (3) the currently-deployed script's rules. Translate the machine message into what it means for money: "no action needed / old advice voided / real signal — act". The job is silent unless something actually fires, so an unexplained push always has a one-line cause in one of those three places.
