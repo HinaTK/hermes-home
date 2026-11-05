@@ -131,6 +131,20 @@ date** (a rebase stamps today's timestamp onto week-old commits, which reads as 
 See `references/update-channel-diagnostics.md` for the state files, endpoints, curl probes, and the
 verified transcript.
 
+## The "provider failed after retries" fallback: look past Hermes logs
+
+When chat shows `⚠️ The model provider failed after retries. I kept raw provider details out of chat`, that is Hermes's generic gateway fallback, not a diagnosis. It is often a **context-window overflow on a downstream model behind a local relay**, not a channel outage and not a Hermes crash. Evidence chain that closes the case:
+
+1. Hermes side: `logs/agent.log` — `Streaming failed before delivery: Error code: 400 - ...`, `Non-retryable client error`, plus `gateway.run: Skipping transcript persistence for context-overflow failure`, and `Sending response (120 chars)` in `gateway.log` (the 120-char message IS the fallback — count those to count what the user actually saw). Note the preceding `API call #N: ... in=XXX total=YYY` and `history=NNN` for the bloated-session size.
+2. **Local relay side: `%LOCALAPPDATA%/magpie/logs/app.log`** (the `http://127.0.0.1:3425/v1` gateway). This is where the swallowed detail lives, e.g. `OpenRouter: This endpoint's maximum context length is 512000 tokens. However, you requested about 903557 tokens (...)`. Hermes only logs the wrapped `OpenRouter: Provider returned error`; the relay logs the exact ceiling and the requested breakdown. Grep both `smart-split` and `maximum context length` for the day.
+3. `context_length_cache.yaml` — the declared window for the routed model. A declared `1048576` against a real `512000` ceiling means Hermes's preflight compression threshold (`ctx x 0.75`, so ~786432) never fires at 300-500k real usage. That is why one long session grows until it hits the wall, and why the same error recurs across days.
+
+Count the user-visible events with `grep -c "Sending response (120 chars)"` in gateway.log (cross-day) — the user saying "出现过很多次" usually matches a cross-day structural problem, not just today's two hits. Distinguish the wrapped `Provider returned error` (no explicit ceiling) from the explicit `maximum context length` line: the former is a high-confidence same-family inference, the latter is verbatim proof. Do not claim verbatim confirmation for the wrapped one.
+
+Other same-day 400/403/502/402 lines in the relay log (claude-* daily quota, `Devin: This model is no longer available`, opendesign insufficient_balance, 499 agent-cancelled) are separate routing/entitlement failures — list them as noise, do not fold them into the root cause.
+
+A long diagnostic session can itself be killed by the same bug (response truncated by output limit, then model downgraded to a small free model), leaving the user with "还没查清". Say so plainly and deliver the verdict in a fresh clean session.
+
 ## Common pitfalls
 
 - A running process does not prove an adapter is connected.
