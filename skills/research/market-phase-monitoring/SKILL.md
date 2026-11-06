@@ -124,6 +124,8 @@ watchtower_monitor.py（AH_analyse/tools/，cron 15:50 任务 0740a34e4711，wra
   暂停买只拦单边**下跌**动能；强动能+DI主导的反弹不是"单边下跌"，不得拦。
   合并统一门控时曾把方向检查丢掉，靠"充分反弹后应解除"的测试抓回。改这一级时
   必须保留方向条件。
+- **缓存生产者必须与生产 mode 同源（2026-11-06 发现，未修）**：15:30 `grid_regime_cache.py`→`_regimes_to_cache` 仍调 legacy `gate_check.gate`（四级），而 09:20 现拉消费走 `RegimeGate(mode='f')`（patrol_f）。切换生产 mode 后只改了消费端，缓存判定函数没跟着换 → 同一 ETF 缓存/现场结论相反（589720 缓存放行/F 拦 ATR1.21；159363 缓存拦/F 放行 ATR1.05；512980 缓存放行/F 拦 ATR1.17）。诊断：缓存 reason 含「强动能跌势/ADX/试错仓」= legacy，「F方案·」= patrol_f。**盘前结论以实际消费的缓存为准，现场现拉只用于发现分歧**；切 mode 必须同步改缓存生成脚本。全链数字见 skill `etf-grid-maintenance` 的 `references/gate-cache-mode-parity.md`。
+- **「拦截用了旧数据/这几天超时」类外部质疑：先查拦截真实触发源**。四层逐层取证：总闸 buy_paused（不读行情）/ 门控 / 缓存判定 / 数据新鲜度。11-05/06 三条 ⛔ 实为 buy_paused 总闸触发，与 11-02/03 缓存任务超时无关；用户并纠正「没有让你彻底拦截的意思」→ 临时「暂停买入」不该做成压过门控的持久总闸（已撤，只剩方案F 止跌自动恢复）。别把「任务失败」直接推成「结论错误」。
 - 门控已接入回测引擎：`run_research(regime_gate=True)`（65e065e），回测口径与 09:20
   生产判定同一套代码。接线坑（喂窗口数据 fail-open、continue 跳净值记录、夹具
   ATR=0 等）见 skill `etf-grid-backtest-engine` 的 `references/regime-gate-integration.md`。

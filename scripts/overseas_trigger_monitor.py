@@ -43,6 +43,23 @@ STATE = Path('D:/Code/AH_analyse/.cache/grid-home/cache/grid-account/overseas-tr
 #（run_and_push.py L44 指定的账本根），复制不剪切、hermes 侧留冻结备份；
 # 迁移操作记录见 cache/confirmed-runtime-deploy/20261104-* 目录。
 
+# 2026-11-05 23:0x Master 指令：纳指/日经暂停买入，待次日复核并修复后再开。
+# 标志文件与 STATE 同目录，两条链共读一份；删除文件或置 paused=false 即恢复，无需改代码。
+PAUSE_FLAG = STATE.parent / 'overseas-buy-pause.json'
+# 买入类信号：暂停时整体静默。nikkei_stop 属风控卖出，不受买入闸门约束。
+BUY_SIGNAL_KEYS = {'nasdaq_premium', 'nasdaq_drawdown', 'nikkei_t2', 'nikkei_t3'}
+
+
+def _buy_paused():
+    """跨境买入总闸：标志存在且 paused=true → 静默全部买入类信号。
+
+    标志缺失 / paused=false / 内容损坏 → 不暂停（可逆开关，坏文件不锁死交易）。
+    """
+    try:
+        return bool(json.loads(PAUSE_FLAG.read_text(encoding='utf-8')).get('paused'))
+    except Exception:
+        return False
+
 
 def _nav_series(code, n=250):
     url = f"https://fund.eastmoney.com/pingzhongdata/{code}.js"
@@ -159,6 +176,7 @@ def check_nikkei():
 
 def main():
     today = date.today().isoformat()
+    paused = _buy_paused()
     state = {}
     if STATE.exists():
         try:
@@ -177,9 +195,15 @@ def main():
 
     messages = []
     all_fires = n_fires + k_fires
+    # 暂停买入（2026-11-05 Master 指令）：只过滤买入类信号，止损信号照常。
+    # 同时把 prev_active 里的买入键剔除，避免暂停首轮误推「触发已解除」噪音。
+    if paused:
+        all_fires = [f for f in all_fires if f[0] not in BUY_SIGNAL_KEYS]
     now_active = set(key for key, _, persistent in all_fires if persistent)
     touch_keys = set(key for key, _, persistent in all_fires if not persistent)
     prev_active = set(state.get('active', []))
+    if paused:
+        prev_active = {k for k in prev_active if k not in BUY_SIGNAL_KEYS}
     # 持续型新触发 → 推送；已解除 → 推送一次"已解除"（触价型不产生解除噪音）
     for key, msg, persistent in all_fires:
         if persistent and key not in prev_active:
@@ -196,6 +220,7 @@ def main():
     state['active'] = sorted(now_active)
     state['touch'] = touch
     state['last_run'] = today
+    state['buy_paused'] = paused
     state['nasdaq'] = n_data
     state['nikkei'] = k_data
     STATE.parent.mkdir(parents=True, exist_ok=True)
