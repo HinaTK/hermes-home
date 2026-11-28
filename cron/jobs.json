@@ -259,15 +259,15 @@
       "schedule_display": "every day at 11pm",
       "repeat": {
         "times": null,
-        "completed": 47
+        "completed": 48
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-10T15:51:35.652537+08:00",
-      "next_run_at": "2026-11-28T23:00:00+08:00",
-      "last_run_at": "2026-11-26T23:01:04.906825+08:00",
+      "next_run_at": "2026-11-29T23:00:00+08:00",
+      "last_run_at": "2026-11-27T23:00:56.889308+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -279,8 +279,8 @@
       ],
       "workdir": "D:\\Code\\AH_analyse",
       "fire_claim": {
-        "at": "2026-11-27T23:00:41.324937+08:00",
-        "by": "MS-22110429259:16304:27423c735ef04cada227543239fecb77"
+        "at": "2026-11-28T23:00:26.664846+08:00",
+        "by": "MS-22110429259:16304:e08858c076e34d6c96a006fd93100d71"
       }
     },
     {
@@ -308,15 +308,15 @@
       "schedule_display": "1 0 * * *",
       "repeat": {
         "times": null,
-        "completed": 45
+        "completed": 46
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-13T19:58:55.899046+08:00",
-      "next_run_at": "2026-11-28T00:01:00+08:00",
-      "last_run_at": "2026-11-27T00:02:01.451638+08:00",
+      "next_run_at": "2026-11-29T00:01:00+08:00",
+      "last_run_at": "2026-11-28T00:01:54.071852+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -396,15 +396,15 @@
       "schedule_display": "*/5 * * * *",
       "repeat": {
         "times": null,
-        "completed": 8871
+        "completed": 9159
       },
       "enabled": true,
       "state": "scheduled",
       "paused_at": null,
       "paused_reason": null,
       "created_at": "2026-10-26T16:04:54.417527+08:00",
-      "next_run_at": "2026-11-27T23:05:00+08:00",
-      "last_run_at": "2026-11-27T23:00:43.820881+08:00",
+      "next_run_at": "2026-11-28T23:05:00+08:00",
+      "last_run_at": "2026-11-28T23:00:29.569068+08:00",
       "last_status": "ok",
       "last_error": null,
       "last_delivery_error": null,
@@ -671,5 +671,5 @@
       "fire_claim": null
     }
   ],
-  "updated_at": "2026-11-27T23:00:43.825377+08:00"
+  "updated_at": "2026-11-28T23:00:29.574352+08:00"
 }
